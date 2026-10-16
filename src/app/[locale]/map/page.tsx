@@ -1,35 +1,39 @@
 import { asLocale } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { PubMap } from "@/components/PubMap";
-import { listPubs } from "@/lib/queries";
-import { PIN } from "@/lib/map";
+import { MapExplorer } from "@/components/MapExplorer";
+import { listLines, listPubs } from "@/lib/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("map");
   return { title: t("title") };
 }
 
-export default async function MapPage({ params }: PageProps<"/[locale]/map">) {
+export default async function MapPage({ params, searchParams }: PageProps<"/[locale]/map">) {
   const { locale } = await params;
   setRequestLocale(asLocale(locale));
-  const t = await getTranslations("map");
-  const st = await getTranslations("status");
-  const pubs = await listPubs();
-  const statusLabels = { open: st("open"), maybe_open: st("maybe_open"), unknown: st("unknown"), closed: st("closed") };
+  const sp = await searchParams;
+  const one = (v: string | string[] | undefined) => (typeof v === "string" ? v : undefined);
+  const [pubs, lines] = await Promise.all([listPubs(), listLines()]);
 
   return (
-    <div className="relative h-[calc(100dvh-60px-64px)] md:h-[calc(100dvh-60px)]">
-      <h1 className="sr-only">{t("title")}</h1>
-      <PubMap pubs={pubs} statusLabels={statusLabels} />
-      <div className="absolute bottom-4 left-4 z-10 flex gap-4 rounded-sm bg-card px-3 py-2 text-sm shadow-card">
-        <span className="flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded-full" style={{ background: PIN.open }} /> {t("legendOpen")}
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded-full" style={{ background: PIN.unknown }} /> {t("legendMaybe")}
-        </span>
-      </div>
-    </div>
+    <MapExplorer
+      pubs={pubs.map((p) => ({
+        slug: p.slug,
+        name: p.name,
+        station: p.station,
+        stationId: p.stationId,
+        status: p.status,
+        kind: p.kind,
+        lines: p.lines,
+        monthsAgo: p.monthsAgo,
+        lat: p.lat,
+        lon: p.lon,
+      }))}
+      lines={lines.map((l) => ({ number: l.number, name: l.name }))}
+      initialLine={one(sp.line)}
+      initialPub={one(sp.pub)}
+      locate={sp.near === "1"}
+    />
   );
 }

@@ -1,27 +1,44 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import { usePathname, useRouter } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
 
-export function LanguageSwitch({ label, ariaLabel }: { label: string; ariaLabel: string }) {
+/** CS | EN switch; the current language is the white segment. */
+export function LanguageSwitch() {
+  const t = useTranslations("nav");
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams();
-  const next = locale === "cs" ? "en" : "cs";
 
   return (
-    <button
-      type="button"
-      aria-label={ariaLabel}
-      onClick={() =>
-        // @ts-expect-error -- params always match the current pathname
-        router.replace({ pathname, params }, { locale: next })
-      }
-      className="rounded-sm border border-primary-mist px-3 py-1.5 text-sm font-semibold text-primary-foreground hover:bg-primary-deep"
+    <div
+      role="group"
+      aria-label={t("languageGroup")}
+      className="flex overflow-hidden rounded-lg border border-[#3a5590] font-mono text-[13px] font-semibold"
     >
-      {label}
-    </button>
+      {routing.locales.map((l) => {
+        const current = l === locale;
+        return (
+          <button
+            key={l}
+            type="button"
+            lang={l}
+            aria-label={t(l)}
+            aria-pressed={current}
+            onClick={() =>
+              current ||
+              // @ts-expect-error -- params always match the current pathname
+              router.replace({ pathname, params }, { locale: l })
+            }
+            className={`px-3 py-2.5 uppercase ${current ? "bg-white text-sign" : "text-sign-mist hover:bg-sign-deep hover:text-white"}`}
+          >
+            {l}
+          </button>
+        );
+      })}
+    </div>
   );
 }

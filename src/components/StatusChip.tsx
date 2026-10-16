@@ -1,14 +1,7 @@
 import { useTranslations } from "next-intl";
 import type { PubStatus } from "@/lib/queries";
 
-const cls: Record<PubStatus, string> = {
-  open: "chip-open",
-  maybe_open: "chip-maybe",
-  unknown: "chip-unknown",
-  closed: "chip-closed",
-};
-
-export function StatusChip({ status }: { status: PubStatus }) {
+export function StatusChip({ status, className = "" }: { status: PubStatus; className?: string }) {
   const t = useTranslations("status");
-  return <span className={`chip ${cls[status]}`}>{t(status)}</span>;
+  return <span className={`chip chip-${status} ${className}`}>{t(status)}</span>;
 }

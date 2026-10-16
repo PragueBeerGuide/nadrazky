@@ -1,150 +1,208 @@
 @import "tailwindcss";
 
 /*
- * Prague Beer Guides design system — tokens copied from the
- * "Prague Beer Guides" design system (tokens.json, source: pragueguide.beer).
- * Keep names in sync with the design system; light theme only.
+ * Nádražky "Departures" design tokens: Czech railway signage.
+ * Station-sign blue, timetable yellow and the departure board.
+ * Status colours differ in lightness, not only hue. Light theme only.
+ * Map pins repeat these values in src/lib/map.ts (MapLibre needs literal colours).
  */
 :root {
-  --primary: oklch(34% 0.22 282);
-  --primary-deep: oklch(29% 0.21 280);
-  --primary-mist: oklch(81% 0.11 284);
-  --primary-foreground: oklch(100% 0 0);
-  --secondary: oklch(64% 0.21 38);
-  --secondary-foreground: oklch(100% 0 0);
-  --foreground: oklch(5% 0.02 290);
-  --background: oklch(87% 0.02 320);
-  --card: oklch(95% 0.01 320);
-  --card-foreground: var(--foreground);
-  --accent: oklch(95% 0.03 285);
-  --accent-foreground: oklch(8% 0.02 290);
-  --muted-foreground: oklch(67% 0.1 282);
-  --border: oklch(86% 0.08 285);
-  --input: oklch(75% 0.02 50);
-  --ring: oklch(84% 0.01 50);
-  --destructive: oklch(60.4% 0.191 22.216);
-  --star: oklch(82.8% 0.189 84.429);
+  --sign: #12306a;
+  --sign-deep: #0b1f4a;
+  --sign-line: #5a72a6;
+  --sign-mist: #d5def0;
+  --sign-tint: #e6ebf5;
+  --board: #0b1424;
+  --board-rule: #1c2a44;
+  --board-text: #b9c3d4;
+  --board-muted: #8e9ab0;
+  --ink: #0e1a2b;
+  --yellow: #f4c21b;
+  --platform: #f3f4f1;
+  --rule: #d8dbd4;
+  --rule-soft: #e7e9ed;
+  --field: #b8bdb4;
+  --muted: #566070;
 
-  --shadow-card: 0 8px 16px rgb(0 0 0 / 0.4);
+  --open: #1e8a4f;
+  --open-bg: #dcf0e3;
+  --open-ink: #135c34;
+  --open-board: #7fd39e;
+  --maybe: #e3a21a;
+  --maybe-bg: #fbefd0;
+  --maybe-ink: #6e4800;
+  --unknown: #a3abb6;
+  --unknown-bg: #e7e9ed;
+  --unknown-ink: #475162;
+  --closed: #b8402f;
+  --closed-bg: #f5dedb;
+  --closed-ink: #8a2b21;
 }
 
 @theme inline {
-  --color-primary: var(--primary);
-  --color-primary-deep: var(--primary-deep);
-  --color-primary-mist: var(--primary-mist);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-foreground: var(--foreground);
-  --color-background: var(--background);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-destructive: var(--destructive);
-  --color-star: var(--star);
+  --color-sign: var(--sign);
+  --color-sign-deep: var(--sign-deep);
+  --color-sign-line: var(--sign-line);
+  --color-sign-mist: var(--sign-mist);
+  --color-sign-tint: var(--sign-tint);
+  --color-board: var(--board);
+  --color-board-rule: var(--board-rule);
+  --color-board-text: var(--board-text);
+  --color-board-muted: var(--board-muted);
+  --color-ink: var(--ink);
+  --color-yellow: var(--yellow);
+  --color-platform: var(--platform);
+  --color-rule: var(--rule);
+  --color-rule-soft: var(--rule-soft);
+  --color-field: var(--field);
+  --color-muted: var(--muted);
+  --color-open: var(--open);
+  --color-open-bg: var(--open-bg);
+  --color-open-ink: var(--open-ink);
+  --color-open-board: var(--open-board);
+  --color-maybe: var(--maybe);
+  --color-maybe-bg: var(--maybe-bg);
+  --color-maybe-ink: var(--maybe-ink);
+  --color-unknown: var(--unknown);
+  --color-unknown-bg: var(--unknown-bg);
+  --color-unknown-ink: var(--unknown-ink);
+  --color-closed: var(--closed);
+  --color-closed-bg: var(--closed-bg);
+  --color-closed-ink: var(--closed-ink);
 
-  --font-display: var(--font-oswald), "Arial Narrow", Arial, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 10px;
-  --radius-2xl: 16px;
-  --radius-3xl: 24px;
-
-  --shadow-card: var(--shadow-card);
-  --text-pbg-sm: 0.8125rem;
+  --font-display: var(--font-barlow), "Arial Narrow", Arial, sans-serif;
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
 @layer base {
   body {
-    background: var(--background);
-    color: var(--foreground);
+    background: var(--platform);
+    color: var(--ink);
     font-family: var(--font-sans);
+    line-height: 1.5;
   }
   h1,
   h2,
   h3 {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.025em;
+    font-weight: 700;
+    line-height: 1;
   }
   :focus-visible {
-    outline: 2px solid var(--primary);
+    outline: 3px solid var(--yellow);
     outline-offset: 2px;
+  }
+  a {
+    color: inherit;
   }
 }
 
 @layer components {
-  .eyebrow {
-    font-size: 0.75rem;
-    line-height: 1rem;
+  /* Mono, spaced capitals: timetable labels */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
     font-weight: 600;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--secondary);
+    color: var(--muted);
   }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--yellow);
+  }
+  .link {
+    font-weight: 600;
+    color: var(--sign);
+    text-underline-offset: 3px;
+  }
+  .link:hover {
+    text-decoration: underline;
+  }
+
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    border-radius: var(--radius-sm);
-    padding: 0.75rem 1.5rem;
+    gap: 0.625rem;
+    min-height: 3rem;
+    border-radius: 10px;
+    padding: 0 1.375rem;
     font-size: 1rem;
-    line-height: 1.5rem;
     font-weight: 600;
+    white-space: nowrap;
     transition: background-color 0.15s, color 0.15s, border-color 0.15s;
   }
-  .btn-primary {
-    background: var(--secondary);
-    color: var(--secondary-foreground);
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.6;
   }
-  .btn-primary:hover {
-    background: color-mix(in oklab, var(--secondary) 88%, black);
+  .btn-yellow {
+    background: var(--yellow);
+    color: var(--ink);
+    font-weight: 700;
   }
-  .btn-violet {
-    background: var(--primary);
-    color: var(--primary-foreground);
+  .btn-yellow:not(:disabled):hover {
+    background: #e5b40f;
   }
-  .btn-violet:hover {
-    background: var(--primary-deep);
+  .btn-sign {
+    background: var(--sign);
+    color: #fff;
+  }
+  .btn-sign:hover {
+    background: var(--sign-deep);
+  }
+  .btn-ink {
+    background: var(--ink);
+    color: #fff;
+  }
+  .btn-ink:hover {
+    background: #000;
   }
   .btn-outline {
-    border: 1px solid var(--primary);
-    color: var(--primary);
+    border: 1px solid var(--field);
+    background: #fff;
+    color: var(--ink);
   }
   .btn-outline:hover {
-    background: var(--accent);
+    border-color: var(--ink);
   }
+  .btn-ghost-dark {
+    border: 1px solid var(--sign-line);
+    color: #fff;
+  }
+  .btn-ghost-dark:hover {
+    background: var(--sign-deep);
+  }
+
   .field {
     width: 100%;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--input);
-    background: white;
-    padding: 0.625rem 0.875rem;
+    height: 2.875rem;
+    border-radius: 8px;
+    border: 1px solid var(--field);
+    background: #fff;
+    padding: 0 0.875rem;
     font-size: 1rem;
+    color: var(--ink);
   }
   .field:focus {
-    outline: 2px solid var(--primary);
-    outline-offset: 0;
-    border-color: var(--primary);
+    outline: 3px solid var(--sign);
+    outline-offset: -1px;
   }
-  .card {
-    background: var(--card);
-    color: var(--card-foreground);
-    border-radius: var(--radius-2xl);
-    border: 1px solid var(--border);
-  }
-}
 
-/* Nádražky additions */
-@layer components {
+  .card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+  }
+
+  /* Status chips: tinted background, dark text, solid dot */
   .chip {
     flex-shrink: 0;
     white-space: nowrap;
@@ -153,23 +211,99 @@
     gap: 0.375rem;
     border-radius: 9999px;
     padding: 0.125rem 0.625rem;
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     line-height: 1.25rem;
   }
-  .chip-open { background: oklch(92% 0.08 150); color: oklch(30% 0.1 150); }
-  .chip-maybe { background: oklch(93% 0.07 75); color: oklch(35% 0.09 60); }
-  .chip-unknown { background: var(--accent); color: var(--primary); }
-  .chip-closed { background: oklch(92% 0 0); color: oklch(35% 0 0); }
-  .board {
-    font-family: var(--font-display);
-    letter-spacing: 0.02em;
+  .chip::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .chip-open { background: var(--open-bg); color: var(--open-ink); }
+  .chip-open::before { background: var(--open); }
+  .chip-maybe_open { background: var(--maybe-bg); color: var(--maybe-ink); }
+  .chip-maybe_open::before { background: var(--maybe); }
+  .chip-unknown { background: var(--unknown-bg); color: var(--unknown-ink); }
+  .chip-unknown::before { background: var(--unknown); }
+  .chip-closed { background: var(--closed-bg); color: var(--closed-ink); }
+  .chip-closed::before { background: var(--closed); }
+
+  /* Line numbers always sit on timetable yellow */
+  .line-chip {
+    display: inline-block;
+    flex-shrink: 0;
+    background: var(--yellow);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    padding: 1px 7px;
+    border-radius: 4px;
+  }
+  .line-chip-lg {
+    font-size: 1.375rem;
+    line-height: 1.75rem;
+    padding: 4px 12px;
+    border-radius: 6px;
+  }
+  .line-chip-xl {
+    font-size: clamp(2.75rem, 7vw, 4.5rem);
+    line-height: 1;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+  }
+
+  /* Sleepers between two rails */
+  .track {
+    height: 18px;
+    border-top: 3px solid #8fa3c8;
+    border-bottom: 3px solid #8fa3c8;
+    background: var(--sign) repeating-linear-gradient(90deg, #2c4a86 0 8px, transparent 8px 26px);
+  }
+  @media (max-width: 767px) {
+    .track {
+      height: 14px;
+      background: var(--sign) repeating-linear-gradient(90deg, #2c4a86 0 6px, transparent 6px 20px);
+    }
   }
 }
 
+/* MapLibre controls and popup in the Departures look */
 @layer components {
-  .btn:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
+  .maplibregl-ctrl-group {
+    border-radius: 10px !important;
+    box-shadow: 0 2px 8px rgb(14 26 43 / 0.18) !important;
+    overflow: hidden;
+  }
+  .maplibregl-ctrl-group button {
+    width: 44px !important;
+    height: 44px !important;
+  }
+  .maplibregl-popup-content {
+    border-radius: 14px !important;
+    padding: 16px !important;
+    box-shadow: 0 16px 40px rgb(14 26 43 / 0.28) !important;
+    font-family: var(--font-sans);
+  }
+  .maplibregl-popup-close-button {
+    width: 32px;
+    height: 32px;
+    top: 10px !important;
+    right: 10px !important;
+    border-radius: 8px;
+    background: var(--platform) !important;
+    font-size: 18px;
+    line-height: 1;
+  }
+}
+
+/* On a phone the map's own search bar and chips sit where the zoom buttons would be. */
+@media (max-width: 767px) {
+  .map-explorer .maplibregl-ctrl-top-right {
+    display: none;
   }
 }

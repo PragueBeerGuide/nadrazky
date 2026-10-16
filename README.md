@@ -4,7 +4,7 @@ The database of railway station pubs in the Czech Republic — find a station pu
 
 ## Stack
 
-- Next.js 16 (App Router) + Tailwind CSS 4, styled with the Prague Beer Guides design system tokens (`src/app/globals.css`)
+- Next.js 16 (App Router) + Tailwind CSS 4, with the "Departures" design: Czech railway signage tokens (sign blue, timetable yellow, departure board) in `src/app/globals.css`; Barlow Condensed, IBM Plex Sans and IBM Plex Mono via `next/font`
 - next-intl for Czech (`/cs/...`, default) and English (`/en/...`) with translated URLs (`/cs/hospoda/…`, `/en/pub/…`); texts live in `messages/cs.json` and `messages/en.json`
 - PostgreSQL + Drizzle ORM (`src/db/schema.ts`, migrations in `drizzle/`); PGlite (embedded Postgres) for local development
 - MapLibre GL with free OpenFreeMap tiles (no API key)

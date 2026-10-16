@@ -1,7 +1,8 @@
 import { asLocale } from "@/i18n/routing";
 import type { Metadata } from "next";
-import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { PageHero } from "@/components/PageHero";
 import { listRegions } from "@/lib/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -10,27 +11,38 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RegionsPage({ params }: PageProps<"/[locale]/regions">) {
-  const { locale } = await params;
-  setRequestLocale(asLocale(locale));
+  const { locale: raw } = await params;
+  const locale = asLocale(raw);
+  setRequestLocale(locale);
   const t = await getTranslations("regions");
-  const regions = await listRegions(asLocale(locale));
-  const isCs = (await getLocale()) === "cs";
+  const regions = await listRegions(locale);
+  const isCs = locale === "cs";
+  const max = Math.max(1, ...regions.map((r) => r.pubCount));
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="text-4xl text-primary">{t("title")}</h1>
-      <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+    <>
+      <PageHero title={t("title")} subtitle={t("subtitle")} />
+      <ul className="mx-auto grid max-w-7xl grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3 px-4 py-8 md:px-6 md:py-12">
         {regions.map((r) => (
           <li key={r.slug}>
             <Link
               href={{ pathname: "/region/[slug]", params: { slug: r.slug } }}
-              className="card flex items-center justify-between p-4 hover:bg-accent"
+              className="card flex flex-col gap-3 rounded-xl p-4 hover:border-sign md:p-5"
             >
-              <span className="board text-xl font-semibold text-primary">{isCs ? r.nameCs : r.nameEn}</span>
-              <span className="text-sm">{t("pubCount", { count: r.pubCount })}</span>
+              <span className="flex items-baseline justify-between gap-3">
+                <span className="font-display text-[26px] leading-none font-bold">{isCs ? r.nameCs : r.nameEn}</span>
+                <span className="font-mono text-[15px] font-semibold text-sign">{r.pubCount}</span>
+              </span>
+              <span className="block h-1.5 overflow-hidden rounded-full bg-rule-soft">
+                <span className="block h-full rounded-full bg-sign" style={{ width: `${Math.round((r.pubCount / max) * 100)}%` }} />
+              </span>
+              <span className="flex justify-between text-sm text-muted">
+                <span>{t("pubCount", { count: r.pubCount })}</span>
+                <span className="font-semibold text-open-ink">{t("openCount", { count: r.openCount })}</span>
+              </span>
             </Link>
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 }
