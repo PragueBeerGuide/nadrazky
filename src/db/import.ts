@@ -6,9 +6,8 @@
  *   npm run db:import
  */
 import { readFileSync } from "node:fs";
-import postgres from "postgres";
-import { drizzle } from "drizzle-orm/postgres-js";
-import { sql } from "drizzle-orm";
+import { count, sql } from "drizzle-orm";
+import { createDb } from "./client";
 import * as s from "./schema";
 import { REGIONS } from "./regions";
 import { slugify } from "../lib/slug";
@@ -29,12 +28,8 @@ type SeedRow = {
   location_match: "exact" | "prefix" | "manual" | "review" | "none";
 };
 
-const url = process.env.DATABASE_URL;
-if (!url) throw new Error("DATABASE_URL is not set");
-const client = postgres(url, { max: 1 });
-const db = drizzle(client, { schema: s });
-
 async function main() {
+  const { db, close } = await createDb();
   const rows: SeedRow[] = JSON.parse(readFileSync("data/seed/nadrazky-pubs-located.json", "utf8"));
 
   // Regions
@@ -128,13 +123,12 @@ async function main() {
       });
   }
 
-  const [{ n }] = await client`select count(*)::int as n from pubs`;
+  const [{ n }] = await db.select({ n: count() }).from(s.pubs);
   console.log(`Imported ${rows.length} rows: ${stationIds.size} stations, ${lines.size} rail lines, ${n} pubs in the database.`);
+  await close();
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exitCode = 1;
-  })
-  .finally(() => client.end());
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

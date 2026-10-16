@@ -6,20 +6,20 @@ The database of railway station pubs in the Czech Republic — find a station pu
 
 - Next.js 16 (App Router) + Tailwind CSS 4, styled with the Prague Beer Guides design system tokens (`src/app/globals.css`)
 - next-intl for Czech (`/cs/...`, default) and English (`/en/...`) with translated URLs (`/cs/hospoda/…`, `/en/pub/…`); texts live in `messages/cs.json` and `messages/en.json`
-- PostgreSQL + Drizzle ORM (`src/db/schema.ts`, migrations in `drizzle/`)
+- PostgreSQL + Drizzle ORM (`src/db/schema.ts`, migrations in `drizzle/`); PGlite (embedded Postgres) for local development
 - MapLibre GL with free OpenFreeMap tiles (no API key)
 
 ## Run locally
 
+Needs Node.js 20 or newer. The local database is an embedded Postgres (PGlite) in `data/pglite`, so nothing else has to be installed.
+
 ```bash
-cp .env.example .env.local          # points at a local Postgres
-# local Postgres, e.g.:
-docker run -d --name nadrazky-db -e POSTGRES_USER=nadrazky -e POSTGRES_PASSWORD=nadrazky -e POSTGRES_DB=nadrazky -p 5432:5432 postgres:16
 npm install
-set -a; . ./.env.local; set +a
-npm run db:setup                    # migrations + import of the pub list
-npm run dev                         # http://localhost:3000
+npm run setup      # create the database and import the 782 pubs (about 10 s)
+npm run dev        # http://localhost:3000
 ```
+
+To use a real Postgres server instead (Neon in production), set `DATABASE_URL=postgresql://…` in `.env.local` and run `npm run setup` again.
 
 ## Data
 

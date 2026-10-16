@@ -1,14 +1,12 @@
 import "server-only";
-import postgres from "postgres";
-import { drizzle } from "drizzle-orm/postgres-js";
+import { createDb, type Db } from "./client";
 import * as schema from "./schema";
 
-const url = process.env.DATABASE_URL;
-if (!url) throw new Error("DATABASE_URL is not set — copy .env.example to .env.local");
+const globalForDb = globalThis as unknown as { db?: Promise<Db> };
 
-const globalForDb = globalThis as unknown as { sql?: postgres.Sql };
-const sql = globalForDb.sql ?? postgres(url, { max: 5 });
-if (process.env.NODE_ENV !== "production") globalForDb.sql = sql;
+// Reuse one connection across hot reloads in development.
+const dbPromise = globalForDb.db ?? createDb().then((c) => c.db);
+if (process.env.NODE_ENV !== "production") globalForDb.db = dbPromise;
 
-export const db = drizzle(sql, { schema });
+export const db: Db = await dbPromise;
 export { schema };
