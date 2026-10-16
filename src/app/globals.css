@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+/*
+ * Prague Beer Guides design system — tokens copied from the
+ * "Prague Beer Guides" design system (tokens.json, source: pragueguide.beer).
+ * Keep names in sync with the design system; light theme only.
+ */
+:root {
+  --primary: oklch(34% 0.22 282);
+  --primary-deep: oklch(29% 0.21 280);
+  --primary-mist: oklch(81% 0.11 284);
+  --primary-foreground: oklch(100% 0 0);
+  --secondary: oklch(64% 0.21 38);
+  --secondary-foreground: oklch(100% 0 0);
+  --foreground: oklch(5% 0.02 290);
+  --background: oklch(87% 0.02 320);
+  --card: oklch(95% 0.01 320);
+  --card-foreground: var(--foreground);
+  --accent: oklch(95% 0.03 285);
+  --accent-foreground: oklch(8% 0.02 290);
+  --muted-foreground: oklch(67% 0.1 282);
+  --border: oklch(86% 0.08 285);
+  --input: oklch(75% 0.02 50);
+  --ring: oklch(84% 0.01 50);
+  --destructive: oklch(60.4% 0.191 22.216);
+  --star: oklch(82.8% 0.189 84.429);
+
+  --shadow-card: 0 8px 16px rgb(0 0 0 / 0.4);
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-deep: var(--primary-deep);
+  --color-primary-mist: var(--primary-mist);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-star: var(--star);
+
+  --font-display: var(--font-oswald), "Arial Narrow", Arial, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
+
+  --shadow-card: var(--shadow-card);
+  --text-pbg-sm: 0.8125rem;
+}
+
+@layer base {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--secondary);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 600;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .btn-primary {
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+  }
+  .btn-primary:hover {
+    background: color-mix(in oklab, var(--secondary) 88%, black);
+  }
+  .btn-violet {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .btn-violet:hover {
+    background: var(--primary-deep);
+  }
+  .btn-outline {
+    border: 1px solid var(--primary);
+    color: var(--primary);
+  }
+  .btn-outline:hover {
+    background: var(--accent);
+  }
+  .field {
+    width: 100%;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--input);
+    background: white;
+    padding: 0.625rem 0.875rem;
+    font-size: 1rem;
+  }
+  .field:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 0;
+    border-color: var(--primary);
+  }
+  .card {
+    background: var(--card);
+    color: var(--card-foreground);
+    border-radius: var(--radius-2xl);
+    border: 1px solid var(--border);
+  }
+}
+
+/* Nádražky additions */
+@layer components {
+  .chip {
+    flex-shrink: 0;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: 9999px;
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+  }
+  .chip-open { background: oklch(92% 0.08 150); color: oklch(30% 0.1 150); }
+  .chip-maybe { background: oklch(93% 0.07 75); color: oklch(35% 0.09 60); }
+  .chip-unknown { background: var(--accent); color: var(--primary); }
+  .chip-closed { background: oklch(92% 0 0); color: oklch(35% 0 0); }
+  .board {
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+  }
+}
+
+@layer components {
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "title": "Nádražky — Czech railway station pubs",
+    "description": "The database of railway station pubs in the Czech Republic. Find an open station pub on your line, check in and collect badges."
+  },
+  "nav": {
+    "home": "Home",
+    "map": "Map",
+    "pubs": "Pubs",
+    "regions": "Regions",
+    "lines": "Lines",
+    "about": "About",
+    "language": "Česky",
+    "languageLabel": "Přepnout do češtiny"
+  },
+  "home": {
+    "eyebrow": "Railway station pubs in Czechia",
+    "title": "Next stop: the station pub",
+    "lead": "Find a nádražka on your line, have one on the platform and collect badges for regions and rail lines.",
+    "openMap": "Open the map",
+    "browse": "Browse pubs",
+    "stats": {
+      "pubs": "{count, plural, one {# pub} other {# pubs}}",
+      "stations": "{count, plural, one {# station} other {# stations}}",
+      "open": "{count, plural, one {# confirmed open} other {# confirmed open}}"
+    },
+    "byRegion": "By region",
+    "byLine": "By rail line",
+    "allRegions": "All regions",
+    "allLines": "All lines",
+    "helpTitle": "Help us keep it current",
+    "helpText": "For most pubs we don't know if they are still open. Every on-the-spot check-in confirms it."
+  },
+  "pubs": {
+    "title": "Station pubs",
+    "searchLabel": "Search a station or pub",
+    "searchPlaceholder": "e.g. Breclav or Bufet",
+    "search": "Search",
+    "region": "Region",
+    "anyRegion": "All regions",
+    "status": "Status",
+    "anyStatus": "Any status",
+    "results": "{count, plural, one {# pub} other {# pubs}}",
+    "empty": "Nothing found. Try another station name."
+  },
+  "pub": {
+    "station": "Station",
+    "region": "Region",
+    "lines": "Rail lines",
+    "type": "Type",
+    "status": "Status",
+    "lastConfirmed": "Last confirmed",
+    "monthsAgo": "{count, plural, one {# month ago} other {# months ago}}",
+    "unknownDate": "unknown",
+    "alsoHere": "Other pubs at this station",
+    "checkIn": "Check in",
+    "checkInSoon": "Check-ins are coming soon",
+    "reportChange": "Report a change",
+    "source": "Data source",
+    "positionNote": "The position shown is the station's, not the pub's door yet.",
+    "reviewNote": "The station match is waiting for review.",
+    "navigate": "Directions"
+  },
+  "status": {
+    "open": "Open",
+    "maybe_open": "Maybe open",
+    "unknown": "Status unknown",
+    "closed": "Closed"
+  },
+  "kind": {
+    "pub": "Pub",
+    "restaurant": "Restaurant",
+    "kiosk": "Buffet / kiosk",
+    "cafe": "Café",
+    "unknown": "Unknown type"
+  },
+  "regions": {
+    "title": "Regions",
+    "pubCount": "{count, plural, one {# pub} other {# pubs}}"
+  },
+  "lines": {
+    "title": "Rail lines",
+    "line": "Line {number}",
+    "pubCount": "{count, plural, one {# pub} other {# pubs}}"
+  },
+  "map": {
+    "title": "Station pub map",
+    "legendOpen": "Open",
+    "legendMaybe": "Maybe / unknown",
+    "detail": "Pub details"
+  },
+  "about": {
+    "title": "About",
+    "body": "Nádražky is a database of railway station pubs in the Czech Republic where you can check in and collect badges. It is made by Prague Beer Guides.",
+    "dataTitle": "Where the data comes from",
+    "dataBody": "The pub list comes from nadrazky.eu and is used with its author's consent. Station positions, regions and rail lines come from Wikidata (CC0).",
+    "credit": "Made by Prague Beer Guides"
+  },
+  "notFound": {
+    "title": "This train doesn't stop here",
+    "body": "We couldn't find that page. Try the map or the pub list.",
+    "back": "Back to the start"
+  },
+  "footer": {
+    "data": "Data: nadrazky.eu (with consent), Wikidata, © OpenStreetMap contributors",
+    "by": "Made by Prague Beer Guides"
+  }
+}

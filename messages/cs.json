@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "title": "Nádražky — nádražní hospody v Česku",
+    "description": "Databáze nádražních hospod v České republice. Najdi otevřenou nádražku na své trati, odbav se a sbírej odznaky."
+  },
+  "nav": {
+    "home": "Domů",
+    "map": "Mapa",
+    "pubs": "Hospody",
+    "regions": "Kraje",
+    "lines": "Tratě",
+    "about": "O aplikaci",
+    "language": "English",
+    "languageLabel": "Switch to English"
+  },
+  "home": {
+    "eyebrow": "Nádražní hospody v Česku",
+    "title": "Další zastávka: nádražka",
+    "lead": "Najdi nádražní hospodu na své trati, dej si jedno na peróně a sbírej odznaky za kraje a tratě.",
+    "openMap": "Otevřít mapu",
+    "browse": "Procházet hospody",
+    "stats": {
+      "pubs": "{count, plural, one {# hospoda} few {# hospody} other {# hospod}}",
+      "stations": "{count, plural, one {# stanice} few {# stanice} other {# stanic}}",
+      "open": "{count, plural, one {# ověřeně otevřená} few {# ověřeně otevřené} other {# ověřeně otevřených}}"
+    },
+    "byRegion": "Podle krajů",
+    "byLine": "Podle tratí",
+    "allRegions": "Všechny kraje",
+    "allLines": "Všechny tratě",
+    "helpTitle": "Pomoz nám s daty",
+    "helpText": "U většiny hospod nevíme, jestli ještě fungují. Každé odbavení na místě potvrdí, že je otevřeno."
+  },
+  "pubs": {
+    "title": "Nádražní hospody",
+    "searchLabel": "Hledat stanici nebo hospodu",
+    "searchPlaceholder": "např. Břeclav nebo Bufet",
+    "search": "Hledat",
+    "region": "Kraj",
+    "anyRegion": "Všechny kraje",
+    "status": "Stav",
+    "anyStatus": "Jakýkoli stav",
+    "results": "{count, plural, one {# hospoda} few {# hospody} other {# hospod}}",
+    "empty": "Nic jsme nenašli. Zkus jiný název stanice."
+  },
+  "pub": {
+    "station": "Stanice",
+    "region": "Kraj",
+    "lines": "Tratě",
+    "type": "Typ podniku",
+    "status": "Stav",
+    "lastConfirmed": "Naposledy ověřeno",
+    "monthsAgo": "{count, plural, one {před # měsícem} few {před # měsíci} other {před # měsíci}}",
+    "unknownDate": "neznámo",
+    "alsoHere": "Další hospody na této stanici",
+    "checkIn": "Odbavit se",
+    "checkInSoon": "Odbavení spustíme brzy",
+    "reportChange": "Nahlásit změnu",
+    "source": "Zdroj dat",
+    "positionNote": "Poloha je zatím poloha stanice, ne přímo hospody.",
+    "reviewNote": "Přiřazení ke stanici čeká na kontrolu.",
+    "navigate": "Navigovat"
+  },
+  "status": {
+    "open": "V provozu",
+    "maybe_open": "Možná v provozu",
+    "unknown": "Neznámý stav",
+    "closed": "Zavřeno"
+  },
+  "kind": {
+    "pub": "Hospoda",
+    "restaurant": "Restaurace",
+    "kiosk": "Bufet / stánek",
+    "cafe": "Kavárna",
+    "unknown": "Neznámý typ"
+  },
+  "regions": {
+    "title": "Kraje",
+    "pubCount": "{count, plural, one {# hospoda} few {# hospody} other {# hospod}}"
+  },
+  "lines": {
+    "title": "Tratě",
+    "line": "Trať {number}",
+    "pubCount": "{count, plural, one {# hospoda} few {# hospody} other {# hospod}}"
+  },
+  "map": {
+    "title": "Mapa nádražek",
+    "legendOpen": "V provozu",
+    "legendMaybe": "Možná / neznámo",
+    "detail": "Detail hospody"
+  },
+  "about": {
+    "title": "O aplikaci",
+    "body": "Nádražky jsou databáze nádražních hospod v České republice, kde se můžeš odbavovat a sbírat odznaky. Aplikaci připravuje Prague Beer Guides.",
+    "dataTitle": "Odkud jsou data",
+    "dataBody": "Seznam hospod pochází z webu nadrazky.eu a používáme ho se souhlasem jeho autora. Polohy stanic, kraje a tratě jsou z Wikidat (CC0).",
+    "credit": "Vytvořilo Prague Beer Guides"
+  },
+  "notFound": {
+    "title": "Tenhle vlak sem nejede",
+    "body": "Stránku jsme nenašli. Zkus mapu nebo seznam hospod.",
+    "back": "Zpět na úvod"
+  },
+  "footer": {
+    "data": "Data: nadrazky.eu (se souhlasem), Wikidata, © přispěvatelé OpenStreetMap",
+    "by": "Vytvořilo Prague Beer Guides"
+  }
+}
