@@ -44,6 +44,12 @@ Station positions, regions and rail lines come from [Wikidata](https://www.wikid
 
 `npm run db:import` is idempotent: it updates existing pubs by their nadrazky.eu id.
 
+## Deploy
+
+The app runs on Vercel (project `nadrazky`, functions in Frankfurt, `vercel.json`) with a Neon Postgres database in Frankfurt, added through the Vercel Marketplace. Neon sets `DATABASE_URL` (pooled, for the app) and `DATABASE_URL_UNPOOLED` (direct) on the project; every preview deployment gets its own Neon branch.
+
+Pushing to `main` deploys production, and every pull request gets a preview. On Vercel the build runs `scripts/vercel-build.sh`: it applies migrations, imports the pubs only if the database has none (`db:import -- --if-empty`, so pubs fixed by hand are never overwritten), then runs `next build`. To re-import into a database that already has pubs, run `npm run db:import` against it.
+
 ## Routes
 
 | Czech | English | Page |
