@@ -4,11 +4,14 @@ export const MAP_STYLE = "https://tiles.openfreemap.org/styles/liberty";
 /** Bounding box of the Czech Republic: [west, south, east, north]. */
 export const CZ_BOUNDS: [number, number, number, number] = [12.09, 48.55, 18.86, 51.06];
 
-/** Map pin colours, matching the design-system tokens (MapLibre needs literal colours). */
+/** Map pin colours, matching the Departures tokens in globals.css (MapLibre needs literal colours). */
 export const PIN = {
-  open: "#ef4c00", // secondary
-  maybe_open: "#34009a", // primary
-  unknown: "#8b8dd1", // muted violet
-  closed: "#9a9a9a",
-  stroke: "#ffffff",
+  open: "#1E8A4F",
+  maybe_open: "#E3A21A",
+  unknown: "#A3ABB6",
+  closed: "#B8402F",
+  /** Text on a pin of that colour. */
+  ink: { open: "#FFFFFF", maybe_open: "#0E1A2B", unknown: "#0E1A2B", closed: "#FFFFFF" },
+  stroke: "#FFFFFF",
+  selected: "#12306A",
 } as const;

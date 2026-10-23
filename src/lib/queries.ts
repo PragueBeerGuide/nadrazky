@@ -2,6 +2,7 @@ import "server-only";
 import { and, asc, count, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { db, schema as s } from "@/db";
 import { fold } from "./slug";
+import { orderAlongLine } from "./lineOrder";
 
 const { pubs, stations, regions, railLines, stationLines } = s;
 
@@ -16,7 +17,15 @@ const pubListFields = {
   status: pubs.status,
   station: stations.name,
   stationSlug: stations.slug,
+  stationId: stations.id,
   regionSlug: stations.regionSlug,
+  regionCs: regions.nameCs,
+  regionEn: regions.nameEn,
+  monthsAgo: pubs.sourceLastUpdateMonthsAgo,
+  /** Rail line numbers through the station, ascending. */
+  lines: sql<string[]>`(select coalesce(string_agg(${stationLines.lineNumber}, ',' order by ${stationLines.lineNumber}), '') from ${stationLines} where ${stationLines.stationId} = ${stations.id})`.mapWith(
+    (v: string) => (v ? v.split(",") : []),
+  ),
   lat: sql<number>`coalesce(${pubs.lat}, ${stations.lat})`,
   lon: sql<number>`coalesce(${pubs.lon}, ${stations.lon})`,
 };
@@ -55,6 +64,7 @@ export async function listPubs(filters: {
     .select(pubListFields)
     .from(pubs)
     .innerJoin(stations, eq(stations.id, pubs.stationId))
+    .leftJoin(regions, eq(regions.slug, stations.regionSlug))
     .where(and(...where))
     .orderBy(asc(stations.name), asc(pubs.name))
     .limit(filters.limit ?? 1000);
@@ -84,7 +94,7 @@ export async function getPub(slug: string) {
     .where(eq(stationLines.stationId, row.station.id))
     .orderBy(asc(railLines.number));
   const neighbours = await db
-    .select({ slug: pubs.slug, name: pubs.name, status: pubs.status })
+    .select({ slug: pubs.slug, name: pubs.name, status: pubs.status, kind: pubs.kind })
     .from(pubs)
     .where(and(eq(pubs.stationId, row.station.id), sql`${pubs.id} <> ${row.pub.id}`));
   return { ...row, lines, neighbours };
@@ -136,8 +146,44 @@ export async function getTotals() {
     .select({
       pubs: count(),
       open: sql<number>`count(*) filter (where ${pubs.status} = 'open')`.mapWith(Number),
+      unknown: sql<number>`count(*) filter (where ${pubs.status} = 'unknown')`.mapWith(Number),
       stations: sql<number>`count(distinct ${pubs.stationId})`.mapWith(Number),
     })
     .from(pubs);
   return row;
 }
+
+/**
+ * The stations of a rail line that have a pub, laid out as a route, each with its pubs.
+ * The data has no stop sequence, so the order is estimated from station positions.
+ */
+export async function getLineStops(number: string, lineName: string) {
+  const rows = await listPubs({ line: number });
+  const byStation = new Map<number, LineStop>();
+  for (const p of rows) {
+    let stop = byStation.get(p.stationId);
+    if (!stop) {
+      stop = { stationId: p.stationId, station: p.station, lat: p.lat, lon: p.lon, pubs: [], best: "closed" };
+      byStation.set(p.stationId, stop);
+    }
+    stop.pubs.push(p);
+  }
+  const stops = [...byStation.values()];
+  for (const s of stops) {
+    s.pubs.sort((a, b) => STATUS_RANK[a.status] - STATUS_RANK[b.status]);
+    s.best = s.pubs[0].status;
+  }
+  return orderAlongLine(stops, lineName);
+}
+
+export type LineStop = {
+  stationId: number;
+  station: string;
+  lat: number;
+  lon: number;
+  pubs: PubListItem[];
+  best: PubStatus;
+};
+
+/** Lower is better: open pubs first. */
+export const STATUS_RANK: Record<PubStatus, number> = { open: 0, maybe_open: 1, unknown: 2, closed: 3 };
