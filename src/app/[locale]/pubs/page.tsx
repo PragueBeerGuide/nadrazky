@@ -6,17 +6,11 @@ import { Ago } from "@/components/Ago";
 import { LineChip } from "@/components/LineChip";
 import { StatusChip } from "@/components/StatusChip";
 import { listLines, listPubs, listRegions, type PubListItem, type PubStatus } from "@/lib/queries";
+import { czechInitial } from "@/lib/czech";
 import { PIN } from "@/lib/map";
 
 const STATUSES: PubStatus[] = ["open", "maybe_open", "unknown", "closed"];
 const collator = new Intl.Collator("cs");
-
-/** Czech alphabet initial: Č, Ch, Ř, Š and Ž are letters of their own; Á, Ú, Ů… file under A, U. */
-function initial(name: string) {
-  if (/^ch/i.test(name)) return "CH";
-  const first = name.charAt(0).toLocaleUpperCase("cs");
-  return "ČŘŠŽ".includes(first) ? first : first.normalize("NFD").charAt(0);
-}
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("pubs");
@@ -49,7 +43,7 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
   );
   const groups: { letter: string; pubs: PubListItem[] }[] = [];
   for (const p of pubs) {
-    const letter = initial(p.station);
+    const letter = czechInitial(p.station);
     const group = groups.find((g) => g.letter === letter);
     if (group) group.pubs.push(p);
     else groups.push({ letter, pubs: [p] });

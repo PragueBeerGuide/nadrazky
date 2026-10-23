@@ -21,6 +21,17 @@ npm run dev        # http://localhost:3000
 
 To use a real Postgres server instead (Neon in production), set `DATABASE_URL=postgresql://…` in `.env.local` and run `npm run setup` again.
 
+## Tests
+
+```bash
+npm test             # unit tests (Vitest): line ordering, Czech letters, dates, messages, components
+npm run test:e2e     # end-to-end tests (Playwright) on a computer-sized and a phone-sized browser
+```
+
+Unit tests sit next to the code (`src/**/*.test.ts`). Pages are async Server Components, which Vitest can't render, so they are covered by the Playwright tests in `e2e/` instead: every route in Czech and English, filters, the map, and no errors in the browser console.
+
+`npm run test:e2e` builds the app and starts it on port 3200 with its own database in `data/pglite-e2e`, so it can run next to `npm run dev`. The first time, install the browser with `npx playwright install chromium`. If a server is already running on port 3200, the tests reuse it.
+
 ## Data
 
 `data/seed/nadrazky-pubs-located.json` holds the 782 station pubs that are not marked closed on [nadrazky.eu](https://nadrazky.eu) (used with the author's consent), matched to their stations. Station positions, regions and rail lines come from [Wikidata](https://www.wikidata.org) (CC0). Positions are the station's, not the pub door's, until corrected.

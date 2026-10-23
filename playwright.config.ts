@@ -1,0 +1,32 @@
+import { defineConfig, devices } from "@playwright/test";
+
+const PORT = 3200;
+
+/**
+ * End-to-end tests against a production build, as the Next.js testing guide recommends.
+ * The server runs on its own port with its own embedded database (data/pglite-e2e),
+ * so it can run next to `npm run dev` without sharing the dev database.
+ */
+export default defineConfig({
+  testDir: "e2e",
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 2 : 4,
+  reporter: process.env.CI ? "github" : "list",
+  use: {
+    baseURL: `http://localhost:${PORT}`,
+    trace: "retain-on-failure",
+  },
+  projects: [
+    { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },
+    { name: "phone", use: { ...devices["Pixel 7"] } },
+  ],
+  webServer: {
+    command: `npm run setup && npm run build && npx next start -p ${PORT}`,
+    url: `http://localhost:${PORT}/cs`,
+    reuseExistingServer: !process.env.CI,
+    timeout: 300_000,
+    env: { DATABASE_URL: "pglite://./data/pglite-e2e" },
+  },
+});

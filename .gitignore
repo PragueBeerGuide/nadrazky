@@ -46,3 +46,10 @@ next-env.d.ts
 
 # local embedded database
 /data/pglite/
+
+# end-to-end tests
+/data/pglite-e2e/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
