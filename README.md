@@ -32,6 +32,12 @@ Unit tests sit next to the code (`src/**/*.test.ts`). Pages are async Server Com
 
 `npm run test:e2e` builds the app and starts it on port 3200 with its own database in `data/pglite-e2e`, so it can run next to `npm run dev`. The first time, install the browser with `npx playwright install chromium`. If a server is already running on port 3200, the tests reuse it.
 
+GitHub Actions runs lint, the unit tests and the end-to-end tests on every push and pull request (`.github/workflows/test.yml`). If the end-to-end tests fail, the run uploads the Playwright report and traces as an artifact. To run the tests the way CI does (fresh server, retries, GitHub reporter), set `CI`:
+
+```bash
+CI=1 npm run test:e2e
+```
+
 ## Data
 
 `data/seed/nadrazky-pubs-located.json` holds the 782 station pubs that are not marked closed on [nadrazky.eu](https://nadrazky.eu) (used with the author's consent), matched to their stations. Station positions, regions and rail lines come from [Wikidata](https://www.wikidata.org) (CC0). Positions are the station's, not the pub door's, until corrected.
