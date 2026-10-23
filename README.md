@@ -23,7 +23,7 @@ To use a real Postgres server instead (Neon in production), set `DATABASE_URL=po
 
 ## Data
 
-`data/seed/nadrazky-pubs-located.json` holds the 782 station pubs that are not marked closed on [nadrazky.eu](https://nadrazky.eu) (used with the author's consent), matched to their stations. Station positions, regions and rail lines come from [Wikidata](https://www.wikidata.org) (CC0). Positions are the station's, not the pub door's, until corrected.
+Station positions, regions and rail lines come from [Wikidata](https://www.wikidata.org) (CC0). Positions are the station's, not the pub door's, until corrected.
 
 `npm run db:import` is idempotent: it updates existing pubs by their nadrazky.eu id.
 
