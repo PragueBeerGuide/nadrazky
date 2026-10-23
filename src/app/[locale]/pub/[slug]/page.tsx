@@ -220,11 +220,6 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
           <div className="card flex flex-col gap-2 p-5">
             <span className="label">{t("source")}</span>
             <p className="text-[15px]">{t("sourceText")}</p>
-            {pub.sourceUrl && (
-              <a href={pub.sourceUrl} className="link text-[15px]">
-                {t("viewSource")}
-              </a>
-            )}
           </div>
         </aside>
       </div>

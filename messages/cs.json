@@ -116,8 +116,7 @@
     "checkIns": "Odbavení",
     "checkInsSoonText": "Brzy tu půjde odbavením přímo na místě potvrdit, že {name} funguje.",
     "source": "Zdroj dat",
-    "sourceText": "Převzato z nadrazky.eu se souhlasem autora. Stanice z Wikidat.",
-    "viewSource": "Zobrazit na nadrazky.eu →",
+    "sourceText": "Stanice, její poloha a tratě jsou z Wikidat.",
     "openOnMap": "Otevřít na velké mapě →",
     "positionNote": "Poloha je zatím poloha stanice, ne přímo hospody.",
     "reviewNote": "Přiřazení ke stanici čeká na kontrolu.",
@@ -197,7 +196,7 @@
     "title": "O aplikaci",
     "body": "Nádražky jsou databáze nádražních hospod v České republice, kde se můžeš odbavovat a sbírat odznaky. Aplikaci připravuje Prague Beer Guides.",
     "dataTitle": "Odkud jsou data",
-    "dataBody": "Seznam hospod pochází z webu nadrazky.eu a používáme ho se souhlasem jeho autora. Polohy stanic, kraje a tratě jsou z Wikidat (CC0).",
+    "dataBody": "Polohy stanic, kraje a tratě jsou z Wikidat (CC0). Mapové podklady jsou z OpenStreetMap.",
     "credit": "Vytvořilo Prague Beer Guides"
   },
   "notFound": {

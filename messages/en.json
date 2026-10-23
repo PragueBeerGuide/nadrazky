@@ -116,8 +116,7 @@
     "checkIns": "Check-ins",
     "checkInsSoonText": "Soon you'll be able to confirm that {name} is open by checking in on the spot.",
     "source": "Data source",
-    "sourceText": "Listed on nadrazky.eu, used with its author's consent. Station from Wikidata.",
-    "viewSource": "View on nadrazky.eu →",
+    "sourceText": "The station, its position and rail lines come from Wikidata.",
     "openOnMap": "Open on the big map →",
     "positionNote": "The position shown is the station's, not the pub's door yet.",
     "reviewNote": "The station match is waiting for review.",
@@ -197,7 +196,7 @@
     "title": "About",
     "body": "Nádražky is a database of railway station pubs in the Czech Republic where you can check in and collect badges. It is made by Prague Beer Guides.",
     "dataTitle": "Where the data comes from",
-    "dataBody": "The pub list comes from nadrazky.eu and is used with its author's consent. Station positions, regions and rail lines come from Wikidata (CC0).",
+    "dataBody": "Station positions, regions and rail lines come from Wikidata (CC0). The map is based on OpenStreetMap.",
     "credit": "Made by Prague Beer Guides"
   },
   "notFound": {
