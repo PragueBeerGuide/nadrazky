@@ -4,6 +4,7 @@
  * Idempotent: re-running updates rows by their nadrazky.eu id.
  *
  *   npm run db:import
+ *   npm run db:import -- --if-empty   only when there are no pubs yet (used on deploy)
  */
 import { readFileSync } from "node:fs";
 import { count, sql } from "drizzle-orm";
@@ -30,6 +31,17 @@ type SeedRow = {
 
 async function main() {
   const { db, close } = await createDb();
+
+  // Deploys only fill an empty database, so they never overwrite pubs fixed by hand.
+  if (process.argv.includes("--if-empty")) {
+    const [{ n }] = await db.select({ n: count() }).from(s.pubs);
+    if (n > 0) {
+      console.log(`Import skipped: ${n} pubs already in the database.`);
+      await close();
+      return;
+    }
+  }
+
   const rows: SeedRow[] = JSON.parse(readFileSync("data/seed/nadrazky-pubs-located.json", "utf8"));
 
   // Regions
