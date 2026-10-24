@@ -8,7 +8,7 @@
  */
 import { readFileSync } from "node:fs";
 import { count, sql } from "drizzle-orm";
-import { createDb } from "./client";
+import { openDb } from "./client";
 import * as s from "./schema";
 import { REGIONS } from "./regions";
 import { slugify } from "../lib/slug";
@@ -30,7 +30,7 @@ type SeedRow = {
 };
 
 async function main() {
-  const { db, close } = await createDb();
+  const { db, close } = openDb();
 
   // Deploys only fill an empty database, so they never overwrite pubs fixed by hand.
   if (process.argv.includes("--if-empty")) {

@@ -11,6 +11,7 @@ const routes = [
   { cs: "/cs/trate", en: "/en/lines" },
   { cs: "/cs/trat/210", en: "/en/line/210" },
   { cs: "/cs/o-aplikaci", en: "/en/about" },
+  { cs: "/cs/prihlaseni", en: "/en/login" },
 ];
 
 for (const route of routes) {

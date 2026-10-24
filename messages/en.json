@@ -16,7 +16,8 @@
     "breadcrumb": "Breadcrumb",
     "languageGroup": "Language",
     "cs": "Čeština",
-    "en": "English"
+    "en": "English",
+    "login": "Log in"
   },
   "ago": {
     "months": "{count, plural, =0 {this month} one {# month ago} other {# months ago}}",
@@ -207,5 +208,54 @@
   "footer": {
     "data": "Data: Wikidata, © OpenStreetMap contributors",
     "by": "Made by Prague Beer Guides"
+  },
+  "auth": {
+    "title": "Log in",
+    "subtitle": "Log in or sign up to check in at station pubs. No passwords: use Google or a link sent to your email.",
+    "adultsOnly": "Nádražky is for adults: you must be 18 or over to sign up.",
+    "google": "Continue with Google",
+    "or": "or",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "sendLink": "Email me a sign-in link",
+    "sending": "Sending…",
+    "invalidEmail": "Enter a valid email address.",
+    "sentTitle": "Check your inbox",
+    "sentText": "We've sent a sign-in link to {email}. It's valid for 24 hours.",
+    "sentTextNoEmail": "We've sent you a sign-in link. It's valid for 24 hours.",
+    "tryAgain": "Use another email",
+    "devTitle": "Dev login",
+    "devText": "Local development only: signs in with any email, no check.",
+    "devSubmit": "Sign in (dev)",
+    "notConfigured": "Signing in isn't set up on this server yet.",
+    "errors": {
+      "OAuthAccountNotLinked": "This email is already used with another sign-in method. Use that one.",
+      "Verification": "That sign-in link has expired or was already used. Ask for a new one.",
+      "AccessDenied": "Sign-in was cancelled.",
+      "CredentialsSignin": "Sign-in failed.",
+      "default": "Sign-in failed. Please try again."
+    },
+    "finishTitle": "Finish signing up",
+    "finishText": "Pick a username. It is shown next to your check-ins.",
+    "username": "Username",
+    "usernameHint": "3–20 characters: letters a–z, digits and _",
+    "usernameInvalid": "Use 3–20 characters: letters a–z, digits and _.",
+    "usernameTaken": "That username is taken. Try another.",
+    "language": "Language",
+    "adultConfirm": "I confirm I am 18 or over.",
+    "adultRequired": "You must be 18 or over to use Nádražky.",
+    "finish": "Finish sign-up",
+    "saving": "Saving…",
+    "signedInAs": "Signed in as {email}",
+    "notYou": "Not you? Log out",
+    "logIn": "Log in",
+    "logOut": "Log out",
+    "account": "Account",
+    "finishLink": "Finish signing up",
+    "roles": {
+      "user": "Member",
+      "moderator": "Moderator",
+      "admin": "Admin"
+    }
   }
 }

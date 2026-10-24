@@ -14,6 +14,7 @@ export const routing = defineRouting({
     "/lines": { cs: "/trate", en: "/lines" },
     "/line/[number]": { cs: "/trat/[number]", en: "/line/[number]" },
     "/about": { cs: "/o-aplikaci", en: "/about" },
+    "/login": { cs: "/prihlaseni", en: "/login" },
   },
 });
 

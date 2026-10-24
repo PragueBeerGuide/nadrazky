@@ -1,3 +1,5 @@
+import type { AdapterAccountType } from "next-auth/adapters";
+import { sql } from "drizzle-orm";
 import {
   doublePrecision,
   index,
@@ -8,6 +10,7 @@ import {
   serial,
   text,
   timestamp,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 export const pubStatus = pgEnum("pub_status", ["open", "maybe_open", "unknown", "closed"]);
@@ -84,6 +87,67 @@ export const pubs = pgTable(
   (t) => [index("pubs_station_idx").on(t.stationId), index("pubs_status_idx").on(t.status)],
 );
 
+export const userRole = pgEnum("user_role", ["user", "moderator", "admin"]);
+export const userLanguage = pgEnum("user_language", ["cs", "en"]);
+
+/**
+ * Accounts. Auth.js creates the row on the first sign-in (Google or an email link);
+ * the user then picks a username and confirms they are 18+ (adultConfirmedAt).
+ * Until both are set the sign-up is not finished. Roles are set by hand for now.
+ */
+export const users = pgTable(
+  "users",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    name: text("name"),
+    username: text("username"),
+    email: text("email").unique(),
+    emailVerified: timestamp("email_verified", { withTimezone: true, mode: "date" }),
+    image: text("image"),
+    language: userLanguage("language").notNull().default("cs"),
+    role: userRole("role").notNull().default("user"),
+    adultConfirmedAt: timestamp("adult_confirmed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  // Usernames are unique regardless of case: "Pivo" and "pivo" are the same person.
+  (t) => [uniqueIndex("users_username_idx").on(sql`lower(${t.username})`)],
+);
+
+/** Sign-in methods linked to a user (Google). Used by the Auth.js Drizzle adapter. */
+export const accounts = pgTable(
+  "accounts",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").$type<AdapterAccountType>().notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("provider_account_id").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
+  },
+  (t) => [primaryKey({ columns: [t.provider, t.providerAccountId] }), index("accounts_user_idx").on(t.userId)],
+);
+
+/** One-time email sign-in links. Sessions themselves are signed cookies (JWT), not rows. */
+export const verificationTokens = pgTable(
+  "verification_tokens",
+  {
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull(),
+    expires: timestamp("expires", { withTimezone: true, mode: "date" }).notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.identifier, t.token] })],
+);
+
 export type Pub = typeof pubs.$inferSelect;
+export type User = typeof users.$inferSelect;
 export type Station = typeof stations.$inferSelect;
 export type Region = typeof regions.$inferSelect;
