@@ -1,0 +1,143 @@
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
+import { PageHero } from "@/components/PageHero";
+import { Link, getPathname } from "@/i18n/navigation";
+import { asLocale } from "@/i18n/routing";
+import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
+import { getRegionProgress, getUserStats, listVisitedPubs } from "@/lib/checkins";
+import { TIME_ZONE } from "@/lib/checkin";
+import { getTotals } from "@/lib/queries";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("profile");
+  return { title: t("title"), robots: { index: false } };
+}
+
+/** The signed-in user's own profile: how much of the station-pub network they have covered. */
+export default async function ProfilePage({ params }: PageProps<"/[locale]/profile">) {
+  const { locale: raw } = await params;
+  const locale = asLocale(raw);
+  setRequestLocale(locale);
+
+  const user = await getCurrentUser();
+  if (!user || !signUpFinished(user)) {
+    redirect(getPathname({ locale, href: { pathname: "/login", query: { next: getPathname({ locale, href: "/profile" }) } } }));
+  }
+
+  const [t, format, stats, regions, visited, totals] = await Promise.all([
+    getTranslations("profile"),
+    getFormatter(),
+    getUserStats(user.id),
+    getRegionProgress(user.id),
+    listVisitedPubs(user.id),
+    getTotals(),
+  ]);
+  const date = (d: Date) => format.dateTime(d, { day: "numeric", month: "short", year: "numeric", timeZone: TIME_ZONE });
+  const collator = new Intl.Collator(locale);
+  const regionName = (r: (typeof regions)[number]) => (locale === "cs" ? r.nameCs : r.nameEn);
+  const sortedRegions = [...regions].sort((a, b) => b.visited - a.visited || collator.compare(regionName(a), regionName(b)));
+
+  const numbers = [
+    { key: "pubs", n: stats.pubs, total: totals.pubs, color: "text-sign" },
+    { key: "checkIns", n: stats.checkIns },
+    { key: "stations", n: stats.stations },
+    { key: "regions", n: stats.regions, total: regions.length },
+    { key: "lines", n: stats.lines },
+  ] as const;
+  const had = (["beers", "shots", "nonAlcoholic", "snacks"] as const).filter((k) => stats[k] > 0);
+
+  return (
+    <>
+      <PageHero eyebrow={t("title")} title={`@${user.username}`} subtitle={t("memberSince", { date: date(user.createdAt) })} />
+
+      <section aria-label={t("statsTitle")} className="border-b border-rule bg-white px-4 py-6 md:px-6 md:py-10">
+        <dl className="mx-auto grid max-w-7xl grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
+          {numbers.map(({ key, n, ...rest }) => (
+            // column-reverse keeps <dt> first for screen readers; justify-end lines the numbers up at the top.
+            <div key={key} className="flex flex-col-reverse justify-end gap-1" data-testid={`stat-${key}`}>
+              <dt className="text-sm text-muted md:text-base">
+                {t(key, { count: n })}
+                {"total" in rest && <span className="block font-mono text-xs">{t("outOf", { total: rest.total })}</span>}
+              </dt>
+              <dd className={`font-display text-5xl leading-none font-bold md:text-[64px] ${"color" in rest ? rest.color : ""}`}>{n}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <div className="mx-auto flex max-w-7xl flex-col gap-10 px-4 py-8 md:px-6 md:py-12">
+        {stats.checkIns === 0 ? (
+          <section className="card flex flex-col items-start gap-3 p-5 md:p-7">
+            <h2 className="text-[28px]">{t("emptyTitle")}</h2>
+            <p className="text-muted">{t("emptyText")}</p>
+            <Link href="/pubs" className="btn btn-yellow">
+              {t("emptyCta")}
+            </Link>
+          </section>
+        ) : (
+          <>
+            {had.length > 0 && (
+              <section className="flex flex-col gap-4">
+                <h2 className="text-[28px] md:text-[32px]">{t("hadTitle")}</h2>
+                <ul className="flex flex-wrap gap-2">
+                  {had.map((k) => (
+                    <li key={k} className="rounded-full bg-sign-tint px-3.5 py-1.5 font-semibold text-sign">
+                      {t(k, { count: stats[k] })}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            <div className="flex flex-wrap items-start gap-10">
+              <section className="flex min-w-0 flex-[999_1_480px] flex-col gap-4" aria-labelledby="visited-title">
+                <h2 id="visited-title" className="text-[28px] md:text-[32px]">
+                  {t("visitedTitle")}
+                </h2>
+                <ul className="card divide-y divide-rule-soft">
+                  {visited.map((p) => (
+                    <li key={p.slug}>
+                      <Link
+                        href={{ pathname: "/pub/[slug]", params: { slug: p.slug } }}
+                        className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-4 py-3.5 hover:bg-platform md:px-5"
+                      >
+                        <span className="flex min-w-0 flex-col">
+                          <span className="font-semibold">{p.name}</span>
+                          <span className="text-sm text-muted">{p.station}</span>
+                        </span>
+                        <span className="font-mono text-xs text-muted">
+                          {t("visits", { count: p.visits })}
+                          {p.last && <> · {t("lastVisit", { date: date(new Date(p.last)) })}</>}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+
+              <section className="flex min-w-0 flex-[1_1_300px] flex-col gap-4" aria-labelledby="regions-title">
+                <h2 id="regions-title" className="text-[28px] md:text-[32px]">
+                  {t("regionsTitle")}
+                </h2>
+                <ul className="card flex flex-col gap-3.5 p-4 md:p-5">
+                  {sortedRegions.map((r) => (
+                    <li key={r.slug} className="flex flex-col gap-1.5">
+                      <span className="flex items-baseline justify-between gap-3 text-[15px]">
+                        <span className={r.visited ? "font-semibold" : "text-muted"}>{regionName(r)}</span>
+                        <span className="font-mono text-xs text-muted">{t("regionProgress", { visited: r.visited, total: r.total })}</span>
+                      </span>
+                      <span className="h-2 overflow-hidden rounded-full bg-rule-soft" aria-hidden="true">
+                        <span className="block h-full rounded-full bg-yellow" style={{ width: `${r.total ? (r.visited / r.total) * 100 : 0}%` }} />
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            </div>
+          </>
+        )}
+      </div>
+    </>
+  );
+}

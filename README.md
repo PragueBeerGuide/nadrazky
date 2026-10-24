@@ -100,6 +100,7 @@ Checking in needs an account but no location: the app never asks for or stores t
 | `/cs/trate`, `/cs/trat/[number]` | `/en/lines`, `/en/line/[number]` | Rail lines |
 | `/cs/hospoda/[slug]/odbaveni` | `/en/pub/[slug]/check-in` | Check in at a pub (needs an account) |
 | `/cs/prihlaseni` | `/en/login` | Log in, sign up, finish sign-up |
+| `/cs/profil` | `/en/profile` | Your profile: pubs, stations, regions and lines visited (signed-in users) |
 | `/cs/ochrana-soukromi` | `/en/privacy` | Privacy policy (controller and contact in `src/lib/privacy.ts`) |
 
 ## Next
