@@ -1,6 +1,7 @@
 import "server-only";
 import { and, asc, count, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { db, schema as s } from "@/db";
+import { compareCzech } from "./czech";
 import { fold } from "./slug";
 import { orderAlongLine } from "./lineOrder";
 
@@ -41,12 +42,12 @@ const pubListFields = {
 
 export type PubListItem = Awaited<ReturnType<typeof listPubs>>[number];
 
+/** Pubs matching the filters, by station then pub name in Czech alphabetical order. */
 export async function listPubs(filters: {
   q?: string;
   region?: string;
   line?: string;
   status?: PubStatus[];
-  limit?: number;
 } = {}) {
   const where = [];
   if (filters.region) where.push(eq(stations.regionSlug, filters.region));
@@ -69,14 +70,13 @@ export async function listPubs(filters: {
       ),
     );
   }
-  return db
+  const rows = await db
     .select(pubListFields)
     .from(pubs)
     .innerJoin(stations, eq(stations.id, pubs.stationId))
     .leftJoin(regions, eq(regions.slug, stations.regionSlug))
-    .where(and(...where))
-    .orderBy(asc(stations.name), asc(pubs.name))
-    .limit(filters.limit ?? 1000);
+    .where(and(...where));
+  return rows.sort((a, b) => compareCzech(a.station, b.station) || compareCzech(a.name, b.name));
 }
 
 // Czech + common accents for SQL translate(); keeps the DB free of extensions.
@@ -107,6 +107,7 @@ export async function getPub(slug: string) {
     .select({ slug: pubs.slug, name: pubs.name, status: pubs.status, kind: pubs.kind })
     .from(pubs)
     .where(and(eq(pubs.stationId, row.station.id), sql`${pubs.id} <> ${row.pub.id}`));
+  neighbours.sort((a, b) => compareCzech(a.name, b.name));
   return { ...row, lines, neighbours };
 }
 
