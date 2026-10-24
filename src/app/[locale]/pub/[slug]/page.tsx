@@ -80,7 +80,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
           ] as [string, React.ReactNode],
         ]
       : []),
-    [t("lastConfirmed"), <Ago key="a" months={confirmedMonthsAgo} />],
+    [t("lastConfirmed"), <Ago key="a" months={confirmedMonthsAgo} date={pub.lastConfirmedAt} />],
     [
       t("openingHours"),
       pub.openingHours ?? (

@@ -27,6 +27,7 @@ export default async function MapPage({ params, searchParams }: PageProps<"/[loc
         kind: p.kind,
         lines: p.lines,
         monthsAgo: p.monthsAgo,
+        lastConfirmedAt: p.lastConfirmedAt?.toISOString() ?? null,
         lat: p.lat,
         lon: p.lon,
       }))}
