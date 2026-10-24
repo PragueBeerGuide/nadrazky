@@ -27,7 +27,7 @@ Accounts work locally without any keys: under `npm run dev` the login page has a
 ## Tests
 
 ```bash
-npm test             # unit tests (Vitest): line ordering, Czech letters, dates, messages, components
+npm test             # unit tests (Vitest): line ordering, Czech letters, dates, messages, components, sign-in, check-in rules
 npm run test:e2e     # end-to-end tests (Playwright) on a computer-sized and a phone-sized browser
 ```
 
@@ -93,6 +93,10 @@ Preview deployments have changing URLs that Google won't accept as redirect URIs
 
 The email is in Czech and English. Links are valid for 24 hours.
 
+## Check-ins
+
+Every check-in is verified by GPS: the check-in page asks the browser for its position once, and the server saves the check-in only if that position is within **300 m** of the pub's point (`CHECKIN_RADIUS_M` in `src/lib/checkin.ts`). Pub points are mostly the station's, so the circle covers the station area. Each user gets **one check-in per pub per day** (the day in Prague time), enforced by a unique index on `checkins (user_id, pub_id, day)`. Optional details: beer, a shot, a non-alcoholic drink, a snack (ticks), a rating from 1 to 5, a note (up to 280 characters), and whether the pub was open or closed. The visitor's position is not stored, only the distance from the pub and the GPS accuracy. The pub page shows the number of check-ins, the last visit and the latest five check-ins.
+
 ## Routes
 
 | Czech | English | Page |
@@ -103,8 +107,9 @@ The email is in Czech and English. Links are valid for 24 hours.
 | `/cs/hospoda/[slug]` | `/en/pub/[slug]` | Pub detail |
 | `/cs/kraje`, `/cs/kraj/[slug]` | `/en/regions`, `/en/region/[slug]` | Regions |
 | `/cs/trate`, `/cs/trat/[number]` | `/en/lines`, `/en/line/[number]` | Rail lines |
+| `/cs/hospoda/[slug]/odbaveni` | `/en/pub/[slug]/check-in` | Check in at a pub (needs an account and GPS) |
 | `/cs/prihlaseni` | `/en/login` | Log in, sign up, finish sign-up |
 
 ## Next
 
-GPS-verified check-ins, badges, "report a change" and the moderation queue — see the app plan.
+Photos on check-ins, badges, "report a change" and the moderation queue — see the app plan.

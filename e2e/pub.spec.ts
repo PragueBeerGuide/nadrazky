@@ -10,9 +10,10 @@ test("shows the station sign, status and line", async ({ page }) => {
   await expect(page.locator(".chip-open").first()).toHaveText("Open");
 });
 
-test("check-ins are shown as coming soon", async ({ page }) => {
-  await expect(page.getByRole("button", { name: "Check in" })).toBeDisabled();
-  await expect(page.getByText("Check-ins are coming soon").first()).toBeVisible();
+test("signed out, check-in asks to log in and the check-ins are listed", async ({ page }) => {
+  await expect(page.getByRole("link", { name: "Log in to check in" })).toHaveAttribute("href", `/en/pub/${DAVLE_PUB}/check-in`);
+  await expect(page.getByRole("heading", { name: "Check-ins" })).toBeVisible();
+  await expect(page.getByTestId("checkin-count")).toHaveText(/check-in/);
 });
 
 test("the along-line strip marks this station", async ({ page }) => {

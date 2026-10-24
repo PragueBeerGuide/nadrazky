@@ -1,6 +1,9 @@
 import type { AdapterAccountType } from "next-auth/adapters";
 import { sql } from "drizzle-orm";
 import {
+  boolean,
+  check,
+  date,
   doublePrecision,
   index,
   integer,
@@ -8,6 +11,7 @@ import {
   pgTable,
   primaryKey,
   serial,
+  smallint,
   text,
   timestamp,
   uniqueIndex,
@@ -145,6 +149,42 @@ export const verificationTokens = pgTable(
     expires: timestamp("expires", { withTimezone: true, mode: "date" }).notNull(),
   },
   (t) => [primaryKey({ columns: [t.identifier, t.token] })],
+);
+
+/**
+ * GPS-verified visits. Saved only when the phone was within CHECKIN_RADIUS_M of the pub
+ * (checked on the server); one per user, pub and Prague calendar day. The visitor's
+ * position itself isn't kept, only how far from the pub it was and how accurate.
+ */
+export const checkins = pgTable(
+  "checkins",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    pubId: integer("pub_id")
+      .notNull()
+      .references(() => pubs.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    /** The calendar day in Prague (YYYY-MM-DD) the check-in counts for. */
+    day: date("day", { mode: "string" }).notNull(),
+    hadBeer: boolean("had_beer").notNull().default(false),
+    hadShot: boolean("had_shot").notNull().default(false),
+    hadNonAlcoholic: boolean("had_non_alcoholic").notNull().default(false),
+    hadSnack: boolean("had_snack").notNull().default(false),
+    rating: smallint("rating"),
+    note: text("note"),
+    pubWasOpen: boolean("pub_was_open").notNull(),
+    distanceM: integer("distance_m").notNull(),
+    accuracyM: integer("accuracy_m"),
+  },
+  (t) => [
+    uniqueIndex("checkins_user_pub_day_idx").on(t.userId, t.pubId, t.day),
+    index("checkins_pub_idx").on(t.pubId, t.createdAt),
+    check("checkins_rating_check", sql`${t.rating} between 1 and 5`),
+    check("checkins_note_check", sql`char_length(${t.note}) <= 280`),
+  ],
 );
 
 export type Pub = typeof pubs.$inferSelect;
