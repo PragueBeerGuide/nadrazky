@@ -12,6 +12,7 @@ import { openDb } from "./client";
 import * as s from "./schema";
 import { REGIONS } from "./regions";
 import { slugify } from "../lib/slug";
+import { statusFromSource } from "../lib/status";
 
 type SeedRow = {
   source_id: number;
@@ -116,7 +117,7 @@ async function main() {
         name: r.name,
         stationId: stationIds.get(r.station)!,
         kind: r.kind,
-        status: r.status,
+        status: statusFromSource(r.status),
         locationMatch: r.location_match,
         sourceId: r.source_id,
         sourceUrl: r.source_url,

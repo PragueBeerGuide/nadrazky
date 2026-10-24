@@ -50,6 +50,13 @@
       "when": 1792869535535,
       "tag": "0006_pub_last_confirmed",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792872299121,
+      "tag": "0007_drop_maybe_open",
+      "breakpoints": true
     }
   ]
 }

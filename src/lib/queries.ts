@@ -196,4 +196,4 @@ export type LineStop = {
 };
 
 /** Lower is better: open pubs first. */
-export const STATUS_RANK: Record<PubStatus, number> = { open: 0, maybe_open: 1, unknown: 2, closed: 3 };
+export const STATUS_RANK: Record<PubStatus, number> = { open: 0, unknown: 1, closed: 2 };

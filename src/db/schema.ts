@@ -17,7 +17,8 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
-export const pubStatus = pgEnum("pub_status", ["open", "maybe_open", "unknown", "closed"]);
+/** Check-ins and reports only ever set "open" or "closed"; "unknown" is where every pub starts. */
+export const pubStatus = pgEnum("pub_status", ["open", "unknown", "closed"]);
 export const pubKind = pgEnum("pub_kind", ["pub", "restaurant", "kiosk", "cafe", "unknown"]);
 export const locationMatch = pgEnum("location_match", ["exact", "prefix", "manual", "review", "none"]);
 

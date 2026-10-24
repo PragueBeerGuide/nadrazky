@@ -255,7 +255,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
                         <span className={`chip ${c.pubWasOpen ? "chip-open" : "chip-closed"}`}>{t(c.pubWasOpen ? "reportedOpen" : "reportedClosed")}</span>
                         {c.rating && (
                           <span className="font-mono text-sm font-semibold" aria-label={t("rating", { count: c.rating })}>
-                            <span aria-hidden="true" className="text-maybe">
+                            <span aria-hidden="true" className="text-star">
                               {"★".repeat(c.rating)}
                             </span>
                             <span aria-hidden="true" className="text-rule">

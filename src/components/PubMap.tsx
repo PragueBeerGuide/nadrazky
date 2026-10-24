@@ -12,7 +12,7 @@ import type { MapPub } from "./MapExplorer";
 /** A station with the visible pubs at it, best status first. */
 export type MapStation = { id: number; name: string; lat: number; lon: number; best: PubStatus; pubs: MapPub[] };
 
-const statusColor: ExpressionSpecification = ["match", ["get", "best"], "open", PIN.open, "maybe_open", PIN.maybe_open, "closed", PIN.closed, PIN.unknown];
+const statusColor: ExpressionSpecification = ["match", ["get", "best"], "open", PIN.open, "closed", PIN.closed, PIN.unknown];
 const statusInk: ExpressionSpecification = ["match", ["get", "best"], "open", PIN.ink.open, "closed", PIN.ink.closed, PIN.ink.unknown];
 const noop = () => () => {};
 const desktop = () => window.matchMedia("(min-width: 768px)").matches;
@@ -74,11 +74,10 @@ export function PubMap({
         clusterMaxZoom: 10,
         clusterProperties: {
           open: ["+", ["case", ["==", ["get", "best"], "open"], 1, 0]],
-          maybe: ["+", ["case", ["==", ["get", "best"], "maybe_open"], 1, 0]],
           pubs: ["+", ["get", "count"]],
         },
       });
-      const clusterBest: ExpressionSpecification = ["case", [">", ["get", "open"], 0], "open", [">", ["get", "maybe"], 0], "maybe_open", "unknown"];
+      const clusterBest: ExpressionSpecification = ["case", [">", ["get", "open"], 0], "open", "unknown"];
       map.addLayer({
         id: "clusters-shadow",
         type: "circle",
@@ -97,7 +96,7 @@ export function PubMap({
         source: "stations",
         filter: ["has", "point_count"],
         paint: {
-          "circle-color": ["match", clusterBest, "open", PIN.open, "maybe_open", PIN.maybe_open, PIN.unknown],
+          "circle-color": ["match", clusterBest, "open", PIN.open, PIN.unknown],
           "circle-radius": ["step", ["get", "pubs"], 15, 10, 18, 50, 22],
           "circle-stroke-color": PIN.stroke,
           "circle-stroke-width": 3,
