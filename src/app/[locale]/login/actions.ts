@@ -4,7 +4,6 @@ import { and, eq, ne, sql } from "drizzle-orm";
 import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { z } from "zod";
 import { signIn, signOut } from "@/auth";
 import { db, schema } from "@/db";
 import { getPathname } from "@/i18n/navigation";
@@ -22,20 +21,6 @@ function loginPage(formData: FormData) {
 
 export async function signInWithGoogle(formData: FormData) {
   await signIn("google", { redirectTo: loginPage(formData) });
-}
-
-export type EmailState = { status: "idle" | "sent" | "invalid" | "error"; email?: string };
-
-export async function signInWithEmail(_: EmailState, formData: FormData): Promise<EmailState> {
-  const email = z.email().safeParse(String(formData.get("email") ?? "").trim().toLowerCase());
-  if (!email.success) return { status: "invalid" };
-  try {
-    await signIn("email", { email: email.data, redirectTo: loginPage(formData), redirect: false });
-  } catch (e) {
-    if (e instanceof AuthError) return { status: "error", email: email.data };
-    throw e;
-  }
-  return { status: "sent", email: email.data };
 }
 
 export async function devSignIn(formData: FormData) {

@@ -95,7 +95,7 @@ export const userRole = pgEnum("user_role", ["user", "moderator", "admin"]);
 export const userLanguage = pgEnum("user_language", ["cs", "en"]);
 
 /**
- * Accounts. Auth.js creates the row on the first sign-in (Google or an email link);
+ * Accounts. Auth.js creates the row on the first sign-in with Google;
  * the user then picks a username and confirms they are 18+ (adultConfirmedAt).
  * Until both are set the sign-up is not finished. Roles are set by hand for now.
  */
@@ -138,17 +138,6 @@ export const accounts = pgTable(
     session_state: text("session_state"),
   },
   (t) => [primaryKey({ columns: [t.provider, t.providerAccountId] }), index("accounts_user_idx").on(t.userId)],
-);
-
-/** One-time email sign-in links. Sessions themselves are signed cookies (JWT), not rows. */
-export const verificationTokens = pgTable(
-  "verification_tokens",
-  {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: timestamp("expires", { withTimezone: true, mode: "date" }).notNull(),
-  },
-  (t) => [primaryKey({ columns: [t.identifier, t.token] })],
 );
 
 /**

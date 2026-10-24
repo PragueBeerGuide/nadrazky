@@ -1,7 +1,7 @@
 /**
- * Auth.js: Google sign-in and email links, no passwords. Sessions are signed JWT cookies;
- * users, linked Google accounts and pending email links are stored with the Drizzle adapter.
- * Every sign-in method is switched on by its environment variables (src/lib/auth/config.ts).
+ * Auth.js: sign-in with a Google account only, no passwords. Sessions are signed JWT
+ * cookies; users and their linked Google accounts are stored with the Drizzle adapter.
+ * Google is switched on by its environment variables (src/lib/auth/config.ts).
  */
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { eq } from "drizzle-orm";
@@ -12,29 +12,12 @@ import Google from "next-auth/providers/google";
 import { z } from "zod";
 import { db, schema } from "@/db";
 import { authProviders, authSecret } from "@/lib/auth/config";
-import { sendSignInLink } from "@/lib/auth/email";
 
 const enabled = authProviders();
 const providers: Provider[] = [];
 
 if (enabled.google) {
-  providers.push(
-    // Google only hands out verified addresses, so a Google sign-in may join an
-    // account first made with an email link to the same address.
-    Google({ allowDangerousEmailAccountLinking: true }),
-  );
-}
-
-if (enabled.email) {
-  providers.push({
-    id: "email",
-    type: "email",
-    name: "Email",
-    from: process.env.AUTH_EMAIL_FROM ?? "Nádražky <dev@localhost>",
-    maxAge: 24 * 60 * 60,
-    sendVerificationRequest: sendSignInLink,
-    options: {},
-  });
+  providers.push(Google);
 }
 
 if (enabled.dev) {
@@ -61,14 +44,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db, {
     usersTable: schema.users,
     accountsTable: schema.accounts,
-    verificationTokensTable: schema.verificationTokens,
   }),
   providers,
   secret: authSecret(),
   // The dev login can't create database sessions, so sessions are JWT cookies everywhere.
   session: { strategy: "jwt", maxAge: 90 * 24 * 60 * 60 },
   // next-intl sends /login to /cs/prihlaseni or /en/login.
-  pages: { signIn: "/login", error: "/login", verifyRequest: "/login?sent=1" },
+  pages: { signIn: "/login", error: "/login" },
   callbacks: {
     session({ session, token }) {
       if (token.sub) session.user.id = token.sub;
