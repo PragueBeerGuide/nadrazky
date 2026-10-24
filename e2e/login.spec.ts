@@ -37,7 +37,7 @@ test("Continue with Google goes to Google's sign-in page", async ({ page }) => {
 
 test("the header links to the login page", async ({ page }) => {
   await page.goto("/cs");
-  await page.getByRole("banner").getByRole("link", { name: "Přihlásit se" }).click();
+  await page.getByRole("banner").getByRole("link", { name: "Přihlásit", exact: true }).click();
   await expect(page).toHaveURL(/\/cs\/prihlaseni$/);
 });
 

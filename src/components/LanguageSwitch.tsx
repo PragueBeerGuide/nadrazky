@@ -33,7 +33,7 @@ export function LanguageSwitch() {
               // @ts-expect-error -- params always match the current pathname
               router.replace({ pathname, params }, { locale: l })
             }
-            className={`px-3 py-2.5 uppercase ${current ? "bg-white text-sign" : "text-sign-mist hover:bg-sign-deep hover:text-white"}`}
+            className={`px-2.5 py-2.5 uppercase md:px-3 ${current ? "bg-white text-sign" : "text-sign-mist hover:bg-sign-deep hover:text-white"}`}
           >
             {l}
           </button>
