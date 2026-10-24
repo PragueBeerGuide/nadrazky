@@ -28,6 +28,7 @@ export default defineConfig({
     url: `http://localhost:${PORT}/cs`,
     reuseExistingServer: !process.env.CI,
     timeout: 300_000,
-    env: { DATABASE_URL: "pglite://./data/pglite-e2e" },
+    // The dev login lets the tests sign in without Google or email (never on Vercel).
+    env: { DATABASE_URL: "pglite://./data/pglite-e2e", AUTH_DEV_LOGIN: "1", AUTH_TRUST_HOST: "true" },
   },
 });

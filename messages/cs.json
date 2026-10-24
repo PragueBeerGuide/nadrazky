@@ -16,7 +16,8 @@
     "breadcrumb": "Drobečková navigace",
     "languageGroup": "Jazyk",
     "cs": "Čeština",
-    "en": "English"
+    "en": "English",
+    "login": "Přihlášení"
   },
   "ago": {
     "months": "{count, plural, =0 {tento měsíc} one {před # měsícem} few {před # měsíci} other {před # měsíci}}",
@@ -207,5 +208,54 @@
   "footer": {
     "data": "Data: Wikidata, © přispěvatelé OpenStreetMap",
     "by": "Vytvořilo Prague Beer Guides"
+  },
+  "auth": {
+    "title": "Přihlášení",
+    "subtitle": "Přihlas se nebo se zaregistruj a odbavuj se v nádražkách. Žádná hesla: stačí Google nebo odkaz poslaný e-mailem.",
+    "adultsOnly": "Nádražky jsou pro dospělé: registrovat se můžeš až od 18 let.",
+    "google": "Pokračovat přes Google",
+    "or": "nebo",
+    "email": "E-mail",
+    "emailPlaceholder": "ty@example.com",
+    "sendLink": "Poslat přihlašovací odkaz",
+    "sending": "Posílám…",
+    "invalidEmail": "Zadej platnou e-mailovou adresu.",
+    "sentTitle": "Mrkni do schránky",
+    "sentText": "Na {email} jsme poslali přihlašovací odkaz. Platí 24 hodin.",
+    "sentTextNoEmail": "Poslali jsme ti přihlašovací odkaz. Platí 24 hodin.",
+    "tryAgain": "Použít jiný e-mail",
+    "devTitle": "Vývojářské přihlášení",
+    "devText": "Jen pro lokální vývoj: přihlásí s jakýmkoli e-mailem bez ověření.",
+    "devSubmit": "Přihlásit (dev)",
+    "notConfigured": "Přihlašování na tomto serveru zatím není nastavené.",
+    "errors": {
+      "OAuthAccountNotLinked": "Tenhle e-mail už používáš s jiným způsobem přihlášení. Přihlas se jím.",
+      "Verification": "Přihlašovací odkaz vypršel nebo už byl použit. Nech si poslat nový.",
+      "AccessDenied": "Přihlášení bylo zrušeno.",
+      "CredentialsSignin": "Přihlášení se nepovedlo.",
+      "default": "Přihlášení se nepovedlo. Zkus to znovu."
+    },
+    "finishTitle": "Dokonči registraci",
+    "finishText": "Vyber si přezdívku. Uvidí ji ostatní u tvých odbavení.",
+    "username": "Přezdívka",
+    "usernameHint": "3–20 znaků: písmena a–z, číslice a _",
+    "usernameInvalid": "Použij 3–20 znaků: písmena a–z, číslice a _.",
+    "usernameTaken": "Tahle přezdívka je obsazená. Zkus jinou.",
+    "language": "Jazyk",
+    "adultConfirm": "Potvrzuji, že je mi 18 let nebo víc.",
+    "adultRequired": "Nádražky můžeš používat až od 18 let.",
+    "finish": "Dokončit registraci",
+    "saving": "Ukládám…",
+    "signedInAs": "Přihlášen(a) jako {email}",
+    "notYou": "Nejsi to ty? Odhlásit se",
+    "logIn": "Přihlásit se",
+    "logOut": "Odhlásit se",
+    "account": "Účet",
+    "finishLink": "Dokončit registraci",
+    "roles": {
+      "user": "Člen",
+      "moderator": "Moderátor",
+      "admin": "Správce"
+    }
   }
 }
