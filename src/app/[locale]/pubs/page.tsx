@@ -10,7 +10,6 @@ import { czechInitial } from "@/lib/czech";
 import { PIN } from "@/lib/map";
 
 const STATUSES: PubStatus[] = ["open", "unknown", "closed"];
-const collator = new Intl.Collator("cs");
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("pubs");
@@ -38,9 +37,8 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
   ]);
   const isCs = locale === "cs";
   const counts = Object.fromEntries(STATUSES.map((s) => [s, all.filter((p) => p.status === s).length])) as Record<PubStatus, number>;
-  const pubs = (status ? all.filter((p) => p.status === status) : all).sort(
-    (a, b) => collator.compare(a.station, b.station) || collator.compare(a.name, b.name),
-  );
+  // listPubs already returns them in Czech alphabetical order.
+  const pubs = status ? all.filter((p) => p.status === status) : all;
   const groups: { letter: string; pubs: PubListItem[] }[] = [];
   for (const p of pubs) {
     const letter = czechInitial(p.station);
