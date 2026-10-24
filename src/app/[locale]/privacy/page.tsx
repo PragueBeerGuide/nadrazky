@@ -63,7 +63,7 @@ export default async function PrivacyPage({ params }: PageProps<"/[locale]/priva
       body: (
         <>
           <p>{t("checkins.p1")}</p>
-          <p>{t.rich("checkins.p2", tags)}</p>
+          <p>{t("checkins.p2")}</p>
           <p>{t("checkins.p3")}</p>
         </>
       ),
@@ -81,7 +81,7 @@ export default async function PrivacyPage({ params }: PageProps<"/[locale]/priva
     {
       id: "basis",
       title: t("basis.title"),
-      body: <List items={[t("basis.account"), t("basis.logs"), t("basis.location")]} />,
+      body: <List items={[t("basis.account"), t("basis.logs")]} />,
     },
     {
       id: "processors",
@@ -128,7 +128,7 @@ export default async function PrivacyPage({ params }: PageProps<"/[locale]/priva
           <h2 id="summary" className="text-[28px]">
             {t("summaryTitle")}
           </h2>
-          <List items={[t("summary.browse"), t("summary.google"), t("summary.location"), t("summary.public")]} />
+          <List items={[t("summary.browse"), t("summary.google"), t("summary.checkins"), t("summary.public")]} />
         </section>
         {sections.map((s) => (
           <section key={s.id} id={s.id} aria-labelledby={`${s.id}-title`} className="flex scroll-mt-6 flex-col gap-3 text-[17px] leading-relaxed">

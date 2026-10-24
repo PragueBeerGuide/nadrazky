@@ -140,11 +140,7 @@ export const accounts = pgTable(
   (t) => [primaryKey({ columns: [t.provider, t.providerAccountId] }), index("accounts_user_idx").on(t.userId)],
 );
 
-/**
- * GPS-verified visits. Saved only when the phone was within CHECKIN_RADIUS_M of the pub
- * (checked on the server); one per user, pub and Prague calendar day. The visitor's
- * position itself isn't kept, only how far from the pub it was and how accurate.
- */
+/** Visits to a pub: one per user, pub and Prague calendar day. No location is used or kept. */
 export const checkins = pgTable(
   "checkins",
   {
@@ -165,8 +161,6 @@ export const checkins = pgTable(
     rating: smallint("rating"),
     note: text("note"),
     pubWasOpen: boolean("pub_was_open").notNull(),
-    distanceM: integer("distance_m").notNull(),
-    accuracyM: integer("accuracy_m"),
   },
   (t) => [
     uniqueIndex("checkins_user_pub_day_idx").on(t.userId, t.pubId, t.day),

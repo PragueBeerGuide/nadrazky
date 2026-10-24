@@ -1,14 +1,8 @@
 import { devSignUp, newUser, signUp } from "./auth";
 import { expect, test } from "./fixtures";
 
-// Davle station: its three pubs share the station's point.
 const PUB = "davle-sk-marina-chyse";
 const PUB_NAME = "SK Marína Chýše";
-const NEAR = { latitude: 49.888139, longitude: 14.398494 }; // about 60 m north of the pub
-const PRAHA = { latitude: 50.0833, longitude: 14.4353 }; // Praha hl. n., about 22 km away
-
-// The browser shares a position near the pub unless a test says otherwise.
-test.use({ permissions: ["geolocation"], geolocation: NEAR });
 
 test("signed out, check-in goes through the login and back", async ({ page }, testInfo) => {
   await page.goto(`/en/pub/${PUB}`);
@@ -45,15 +39,24 @@ test("checks in on the spot with details, once a day", async ({ page }, testInfo
   await expect(page.getByRole("button", { name: "Check in here" })).toHaveCount(0);
 });
 
-test("refuses a check-in from too far away and saves nothing", async ({ page, context }, testInfo) => {
+test("checks in from anywhere, without asking for the location", async ({ page }, testInfo) => {
+  // Record any request for the position; the browser grants none in this test.
+  await page.addInitScript(() => {
+    const w = window as unknown as { geoCalls: number };
+    w.geoCalls = 0;
+    const record = () => {
+      w.geoCalls++;
+    };
+    Object.defineProperty(navigator, "geolocation", {
+      configurable: true,
+      value: { getCurrentPosition: record, watchPosition: record, clearWatch: () => {} },
+    });
+  });
   const user = await signUp(page, testInfo, `/en/pub/${PUB}/check-in`);
-  await context.setGeolocation(PRAHA);
   await page.getByRole("button", { name: "Check in here" }).click();
-  await expect(page.getByRole("main").getByRole("alert")).toHaveText("You're 21.9 km from the pub. Check in within 300 m of it.");
-
-  await page.goto(`/en/pub/${PUB}`);
-  await expect(page.getByRole("link", { name: "Check in" })).toBeVisible();
-  await expect(page.getByRole("region", { name: "Check-ins" }).getByText(`@${user.username}`)).toHaveCount(0);
+  await expect(page).toHaveURL(new RegExp(`/en/pub/${PUB}$`));
+  await expect(page.getByRole("region", { name: "Check-ins" }).getByText(`@${user.username}`)).toBeVisible();
+  expect(await page.evaluate(() => (window as unknown as { geoCalls: number }).geoCalls)).toBe(0);
 });
 
 test("the server counts one check-in per pub per day", async ({ page, context }, testInfo) => {
@@ -67,13 +70,6 @@ test("the server counts one check-in per pub per day", async ({ page, context },
 
   await second.getByRole("button", { name: "Check in here" }).click();
   await expect(second.getByRole("main").getByRole("alert")).toHaveText("You've already checked in here today. Come back tomorrow.");
-});
-
-test("asks for location access when it is blocked", async ({ page, context }, testInfo) => {
-  await signUp(page, testInfo, `/en/pub/${PUB}/check-in`);
-  await context.clearPermissions();
-  await page.getByRole("button", { name: "Check in here" }).click();
-  await expect(page.getByRole("main").getByRole("alert")).toContainText("Allow this site to use your location");
 });
 
 test("checks in in Czech, reporting the pub closed", async ({ page }, testInfo) => {

@@ -86,7 +86,7 @@ Preview deployments have changing URLs that Google won't accept as redirect URIs
 
 ## Check-ins
 
-Every check-in is verified by GPS: the check-in page asks the browser for its position once, and the server saves the check-in only if that position is within **300 m** of the pub's point (`CHECKIN_RADIUS_M` in `src/lib/checkin.ts`). Pub points are mostly the station's, so the circle covers the station area. Each user gets **one check-in per pub per day** (the day in Prague time), enforced by a unique index on `checkins (user_id, pub_id, day)`. Optional details: beer, a shot, a non-alcoholic drink, a snack (ticks), a rating from 1 to 5, a note (up to 280 characters), and whether the pub was open or closed. The visitor's position is not stored, only the distance from the pub and the GPS accuracy. The pub page shows the number of check-ins, the last visit and the latest five check-ins.
+Checking in needs an account but no location: the app never asks for or stores the visitor's position. Each user gets **one check-in per pub per day** (the day in Prague time), enforced by a unique index on `checkins (user_id, pub_id, day)`. Optional details: beer, a shot, a non-alcoholic drink, a snack (ticks), a rating from 1 to 5, a note (up to 280 characters), and whether the pub was open or closed. The pub page shows the number of check-ins, the last visit and the latest five check-ins.
 
 ## Routes
 
@@ -98,7 +98,7 @@ Every check-in is verified by GPS: the check-in page asks the browser for its po
 | `/cs/hospoda/[slug]` | `/en/pub/[slug]` | Pub detail |
 | `/cs/kraje`, `/cs/kraj/[slug]` | `/en/regions`, `/en/region/[slug]` | Regions |
 | `/cs/trate`, `/cs/trat/[number]` | `/en/lines`, `/en/line/[number]` | Rail lines |
-| `/cs/hospoda/[slug]/odbaveni` | `/en/pub/[slug]/check-in` | Check in at a pub (needs an account and GPS) |
+| `/cs/hospoda/[slug]/odbaveni` | `/en/pub/[slug]/check-in` | Check in at a pub (needs an account) |
 | `/cs/prihlaseni` | `/en/login` | Log in, sign up, finish sign-up |
 | `/cs/ochrana-soukromi` | `/en/privacy` | Privacy policy (controller and contact in `src/lib/privacy.ts`) |
 

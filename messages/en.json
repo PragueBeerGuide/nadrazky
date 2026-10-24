@@ -55,10 +55,10 @@
     "allRegions": "All regions →",
     "allLines": "All lines →",
     "helpTitle": "Help us keep it current",
-    "helpText": "For most pubs we don't know if they are still open. Every on-the-spot check-in confirms it.",
+    "helpText": "For most pubs we don't know if they are still open. Every check-in confirms it.",
     "helpWaiting": "{count, plural, one {# pub is still waiting for its check.} other {# pubs are still waiting for theirs.}}",
     "step1": "Get off at the station and find the pub.",
-    "step2": "Check in on the spot — your phone's location confirms you are there.",
+    "step2": "Check in and tell others whether it's open.",
     "step3": "Collect badges for regions and rail lines.",
     "soon": "Badges are coming soon.",
     "helpCta": "Find a pub to check",
@@ -112,7 +112,7 @@
     "alongLine": "Along line {number}",
     "youAreHere": "you are here",
     "checkInTitle": "Sitting here right now?",
-    "checkInText": "Check in on the spot. Your phone's location will confirm the pub is still open.",
+    "checkInText": "Check in and let others know the pub is still open.",
     "checkIn": "Check in",
     "checkIns": "Check-ins",
     "source": "Data source",
@@ -262,8 +262,6 @@
   },
   "checkIn": {
     "title": "Check in",
-    "howTitle": "You need to be at the pub",
-    "howText": "When you check in, we ask your phone for its location once. You must be within 300 m of the pub. Your position isn't saved, only how far you were.",
     "hadTitle": "What did you have?",
     "optional": "optional",
     "beer": "Beer",
@@ -280,14 +278,8 @@
     "open": "It was open",
     "closed": "It was closed",
     "submit": "Check in here",
-    "locating": "Finding your location…",
     "saving": "Checking in…",
     "errors": {
-      "geoDenied": "Allow this site to use your location, then try again. Check-ins need your phone's location.",
-      "geoUnavailable": "Your location isn't available right now. Turn on location services or step outside, then try again.",
-      "geoTimeout": "Finding your location took too long. Try again.",
-      "geoUnsupported": "This browser can't share its location, so you can't check in with it.",
-      "tooFar": "You're {distance} from the pub. Check in within 300 m of it.",
       "alreadyToday": "You've already checked in here today. Come back tomorrow.",
       "invalid": "Something in the form isn't right. Try again.",
       "signIn": "Log in to check in.",
@@ -296,7 +288,8 @@
     },
     "alreadyTitle": "Checked in today",
     "alreadyText": "You've already checked in at {name} today. One check-in per pub per day counts.",
-    "back": "Back to the pub"
+    "back": "Back to the pub",
+    "oncePerDay": "One check-in per pub per day counts."
   },
   "privacy": {
     "title": "Privacy",
@@ -305,7 +298,7 @@
     "summary": {
       "browse": "You can browse Nádražky without an account. There is no analytics, no advertising and no tracking.",
       "google": "To check in, you sign in with Google. We keep your name, email and profile picture from Google, and the username you choose.",
-      "location": "A check-in asks for your phone's location once. We use it to check you are at the pub and keep only the distance, never the position.",
+      "checkins": "Checking in doesn't use your location. We store the pub, the time and the details you add.",
       "public": "Your username and check-ins are public on the pub's page. You can have your account and everything in it deleted at any time."
     },
     "controller": {
@@ -326,10 +319,10 @@
       "p3": "Your username is public. Your name and email address are visible only to you and to us."
     },
     "checkins": {
-      "title": "Check-ins and your location",
-      "p1": "Every check-in is confirmed by GPS. When you press “Check in here”, your browser asks for permission and then shares your position once. Our server uses it only to work out how far you are from the pub; if you are more than 300 m away, nothing is saved.",
-      "p2": "<strong>We never store your position.</strong> For each check-in we store the pub, the time, your distance from the pub, how accurate your phone's location was, whether the pub was open, and the details you add: what you had, a rating and a note.",
-      "p3": "Check-ins are public: the pub's page shows your username with the time, the details and your note. The distance and the accuracy are not shown."
+      "title": "Check-ins",
+      "p1": "Checking in doesn't use your phone's location: we never ask for it and never store it.",
+      "p2": "For each check-in we store the pub, the time, whether the pub was open, and the details you add: what you had, a rating and a note.",
+      "p3": "Check-ins are public: the pub's page shows your username with the time, the details and your note."
     },
     "cookies": {
       "title": "Cookies",
@@ -340,8 +333,7 @@
     "basis": {
       "title": "Why we may use your data",
       "account": "Your account and check-ins: to provide the service you signed up for (Article 6(1)(b) GDPR).",
-      "logs": "Server logs: our legitimate interest in running a reliable and secure site (Article 6(1)(f) GDPR).",
-      "location": "Your location: used only when you check in, with your browser's permission, for that check-in."
+      "logs": "Server logs: our legitimate interest in running a reliable and secure site (Article 6(1)(f) GDPR)."
     },
     "processors": {
       "title": "Who else handles your data",
