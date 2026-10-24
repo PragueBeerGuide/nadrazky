@@ -285,7 +285,26 @@
     "emptyTitle": "No check-ins yet",
     "emptyText": "Check in at a station pub and it will show up here.",
     "emptyCta": "Find a pub",
-    "menuLink": "Your profile"
+    "menuLink": "Your profile",
+    "detailsTitle": "Your details",
+    "picture": "Profile picture",
+    "choosePicture": "Choose a picture",
+    "changePicture": "Change picture",
+    "removePicture": "Remove picture",
+    "pictureHint": "A photo of you, cropped to a square. It's shown next to your check-ins.",
+    "hometown": "Hometown",
+    "optional": "optional",
+    "hometownPlaceholder": "e.g. Česká Třebová",
+    "from": "From {hometown}",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved.",
+    "errors": {
+      "signIn": "Log in again to save your details.",
+      "hometown": "Keep your hometown to 60 characters.",
+      "pictureTooBig": "That picture is too big. Try another one.",
+      "pictureFormat": "We can't read that picture. Use a JPEG or PNG photo."
+    }
   },
   "checkIn": {
     "title": "Check in",
@@ -413,8 +432,8 @@
     "account": {
       "title": "Your account",
       "p1": "You can sign up only with a Google account. When you sign in, Google gives us your name, email address, profile picture and an ID for your Google account, and we store these to recognise you. We never see your Google password, and we don't keep Google's access tokens.",
-      "p2": "When you finish signing up, you choose a username and a language and confirm that you are 18 or over. We store the username, the language and when you confirmed your age.",
-      "p3": "Your username is public. Your name and email address are visible only to you and to us."
+      "p2": "When you finish signing up, you choose a username and a language and confirm that you are 18 or over. We store the username, the language and when you confirmed your age. On your profile you can also add your hometown and a profile picture; we keep the picture as a small square image, re-encoded so it carries no camera data such as location.",
+      "p3": "Your username and profile picture are public: they're shown next to your check-ins. Your name, email address and hometown are visible only to you and to us."
     },
     "checkins": {
       "title": "Check-ins",

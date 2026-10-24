@@ -8,6 +8,9 @@ import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
 import { getRegionProgress, getUserStats, listVisitedPubs } from "@/lib/checkins";
 import { TIME_ZONE } from "@/lib/checkin";
 import { getTotals } from "@/lib/queries";
+import { Avatar } from "@/components/Avatar";
+import { avatarUrl } from "@/lib/profile";
+import { ProfileForm } from "./ProfileForm";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("profile");
@@ -46,10 +49,25 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
     { key: "lines", n: stats.lines },
   ] as const;
   const had = (["beers", "shots", "nonAlcoholic", "snacks"] as const).filter((k) => stats[k] > 0);
+  const picture = avatarUrl(user.id, user.avatarUpdatedAt);
 
   return (
     <>
-      <PageHero eyebrow={t("title")} title={`@${user.username}`} subtitle={t("memberSince", { date: date(user.createdAt) })} />
+      <PageHero
+        eyebrow={t("title")}
+        title={
+          <span className="flex items-center gap-4 md:gap-5">
+            <Avatar url={picture} name={user.username ?? "?"} size={72} className="border-[3px] border-white" />
+            <span className="min-w-0 break-words">@{user.username}</span>
+          </span>
+        }
+        subtitle={
+          <>
+            {user.hometown && <span className="block font-semibold text-white">{t("from", { hometown: user.hometown })}</span>}
+            {t("memberSince", { date: date(user.createdAt) })}
+          </>
+        }
+      />
 
       <section aria-label={t("statsTitle")} className="border-b border-rule bg-white px-4 py-6 md:px-6 md:py-10">
         <dl className="mx-auto grid max-w-7xl grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
@@ -137,6 +155,7 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
             </div>
           </>
         )}
+        <ProfileForm username={user.username ?? ""} hometown={user.hometown} avatarUrl={picture} />
       </div>
     </>
   );

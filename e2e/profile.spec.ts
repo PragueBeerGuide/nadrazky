@@ -63,3 +63,62 @@ test("the profile is in Czech too", async ({ page }, testInfo) => {
   await expect(stat(page, "pubs").label).toHaveText("navštívená hospodaz celkem 782");
   await expect(page.getByText("1 pivo", { exact: true })).toBeVisible();
 });
+
+/** A 1600×1200 JPEG "photo": a yellow disc on station-sign blue. */
+async function photo() {
+  const { default: sharp } = await import("sharp");
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200"><rect width="100%" height="100%" fill="#12306a"/><circle cx="800" cy="600" r="380" fill="#f4c21b"/></svg>`;
+  return sharp(Buffer.from(svg)).jpeg({ quality: 90 }).toBuffer();
+}
+
+test("adds a hometown and a profile picture, shown in the header and next to check-ins", async ({ page }, testInfo) => {
+  const user = await signUp(page, testInfo, "/en/profile");
+  const details = page.getByRole("form", { name: "Your details" });
+  await details.locator('input[type="file"]').setInputFiles({ name: "me.jpg", mimeType: "image/jpeg", buffer: await photo() });
+  await details.getByLabel(/^Hometown/).fill("  Česká   Třebová ");
+  await details.getByRole("button", { name: "Save" }).click();
+  await expect(details.getByRole("status")).toHaveText("Saved.");
+
+  await page.reload();
+  await expect(page.getByText("From Česká Třebová")).toBeVisible();
+  const src = await page.locator("main h1 img").getAttribute("src");
+  expect(src).toMatch(/^\/api\/avatar\/[\w-]+\?v=\d+$/);
+  await expect(page.locator("header summary img")).toHaveAttribute("src", src!);
+
+  const picture = await page.request.get(src!);
+  expect(picture.status()).toBe(200);
+  expect(picture.headers()["content-type"]).toBe("image/webp");
+  const { default: sharp } = await import("sharp");
+  expect(await sharp(await picture.body()).metadata()).toMatchObject({ format: "webp", width: 256, height: 256 });
+
+  await checkIn(page, "davle-remagen");
+  const mine = page.getByRole("region", { name: "Check-ins" }).getByRole("listitem").filter({ hasText: `@${user.username}` });
+  await expect(mine.locator("img")).toHaveAttribute("src", src!);
+
+  // Removing it brings the initial back, and the old picture is gone.
+  await page.goto("/en/profile");
+  await page.getByRole("button", { name: "Remove picture" }).click();
+  await page.getByRole("form", { name: "Your details" }).getByRole("button", { name: "Save" }).click();
+  await expect(page.getByRole("form", { name: "Your details" }).getByRole("status")).toHaveText("Saved.");
+  await page.reload();
+  await expect(page.locator("main h1 img")).toHaveCount(0);
+  expect((await page.request.get(src!)).status()).toBe(404);
+});
+
+test("a file that isn't a picture is refused", async ({ page }, testInfo) => {
+  await signUp(page, testInfo, "/en/profile");
+  const details = page.getByRole("form", { name: "Your details" });
+  await details.locator('input[type="file"]').setInputFiles({ name: "notes.png", mimeType: "image/png", buffer: Buffer.from("not a picture") });
+  await expect(details.getByRole("alert")).toHaveText("We can't read that picture. Use a JPEG or PNG photo.");
+});
+
+test("the details form is in Czech too", async ({ page }, testInfo) => {
+  await signUp(page, testInfo);
+  await page.goto("/cs/profil");
+  const details = page.getByRole("form", { name: "Tvoje údaje" });
+  await details.getByLabel(/^Odkud jsi/).fill("Kolín");
+  await details.getByRole("button", { name: "Uložit" }).click();
+  await expect(details.getByRole("status")).toHaveText("Uloženo.");
+  await page.reload();
+  await expect(page.getByText("Odkud: Kolín")).toBeVisible();
+});

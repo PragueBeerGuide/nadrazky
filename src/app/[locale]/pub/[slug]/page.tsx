@@ -12,6 +12,8 @@ import { StationSign } from "@/components/StationSign";
 import { StatusChip } from "@/components/StatusChip";
 import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
 import { getCheckInSummary, hasCheckedInToday, listRecentCheckIns } from "@/lib/checkins";
+import { avatarUrl } from "@/lib/profile";
+import { Avatar } from "@/components/Avatar";
 import { getLineStops, getPub } from "@/lib/queries";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/pub/[slug]">): Promise<Metadata> {
@@ -248,7 +250,9 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
                   return (
                     <li key={c.id} className="flex flex-col gap-2 py-4">
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                        <span className="font-semibold">@{c.username}</span>
+                        <span className="flex items-center gap-2 font-semibold">
+                          <Avatar url={avatarUrl(c.userId, c.avatarUpdatedAt)} name={c.username ?? "?"} size={24} />@{c.username}
+                        </span>
                         <time dateTime={c.createdAt.toISOString()} className="font-mono text-xs text-muted">
                           {format.dateTime(c.createdAt, { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Prague" })}
                         </time>

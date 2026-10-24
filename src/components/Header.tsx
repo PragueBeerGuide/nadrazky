@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { authEnabled } from "@/lib/auth/config";
 import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
 import { canModerate } from "@/lib/auth/roles";
+import { avatarUrl } from "@/lib/profile";
 import { countOpenReports } from "@/lib/reports";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { NavLinks } from "./NavLinks";
@@ -28,7 +29,7 @@ export async function Header() {
         <div className="ml-auto flex shrink-0 items-center gap-2 md:gap-3">
           {user ? (
             <UserMenu
-              user={{ name: user.name, username: user.username, email: user.email, role: user.role }}
+              user={{ name: user.name, username: user.username, email: user.email, role: user.role, avatarUrl: avatarUrl(user.id, user.avatarUpdatedAt) }}
               finished={signUpFinished(user)}
               waiting={waiting}
             />

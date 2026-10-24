@@ -4,9 +4,10 @@ import { useEffect, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { logOut } from "@/app/[locale]/login/actions";
+import { Avatar } from "./Avatar";
 
 type Props = {
-  user: { name: string | null; username: string | null; email: string | null; role: "user" | "moderator" | "admin" };
+  user: { name: string | null; username: string | null; email: string | null; role: "user" | "moderator" | "admin"; avatarUrl: string | null };
   finished: boolean;
   /** Reports waiting for review; set only for moderators and admins. */
   waiting: number | null;
@@ -48,9 +49,7 @@ export function UserMenu({ user, finished, waiting }: Props) {
         aria-label={`${t("account")}: ${label}`}
         className="flex h-11 cursor-pointer list-none items-center gap-2 rounded-lg px-1.5 hover:bg-sign-deep md:pr-3 [&::-webkit-details-marker]:hidden"
       >
-        <span className="flex size-8 items-center justify-center rounded-full bg-yellow font-display text-lg font-bold text-ink" aria-hidden="true">
-          {initial}
-        </span>
+        <Avatar url={user.avatarUrl} name={initial} size={32} />
         <span className="hidden max-w-[16ch] truncate text-[15px] font-semibold md:inline">{label}</span>
         {!finished && <span className="size-2 rounded-full bg-yellow md:hidden" aria-hidden="true" />}
       </summary>
