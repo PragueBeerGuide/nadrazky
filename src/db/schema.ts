@@ -3,6 +3,7 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   check,
+  customType,
   date,
   doublePrecision,
   index,
@@ -94,6 +95,12 @@ export const pubs = pgTable(
   (t) => [index("pubs_station_idx").on(t.stationId), index("pubs_status_idx").on(t.status)],
 );
 
+/** Binary data (Postgres bytea), for profile pictures. */
+const bytea = customType<{ data: Buffer; driverData: Buffer | Uint8Array }>({
+  dataType: () => "bytea",
+  fromDriver: (value) => Buffer.from(value),
+});
+
 export const userRole = pgEnum("user_role", ["user", "moderator", "admin"]);
 export const userLanguage = pgEnum("user_language", ["cs", "en"]);
 
@@ -116,11 +123,27 @@ export const users = pgTable(
     language: userLanguage("language").notNull().default("cs"),
     role: userRole("role").notNull().default("user"),
     adultConfirmedAt: timestamp("adult_confirmed_at", { withTimezone: true }),
+    /** Optional, as the user writes it. */
+    hometown: text("hometown"),
+    /** When the profile picture (user_avatars) last changed; null without one. Busts caches in its URL. */
+    avatarUpdatedAt: timestamp("avatar_updated_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   // Usernames are unique regardless of case: "Pivo" and "pivo" are the same person.
-  (t) => [uniqueIndex("users_username_idx").on(sql`lower(${t.username})`)],
+  (t) => [
+    uniqueIndex("users_username_idx").on(sql`lower(${t.username})`),
+    check("users_hometown_check", sql`char_length(${t.hometown}) <= 60`),
+  ],
 );
+
+/** Profile pictures, as 256×256 WebP re-encoded on upload (src/lib/avatar.ts). */
+export const userAvatars = pgTable("user_avatars", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  image: bytea("image").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
 
 /** Sign-in methods linked to a user (Google). Used by the Auth.js Drizzle adapter. */
 export const accounts = pgTable(

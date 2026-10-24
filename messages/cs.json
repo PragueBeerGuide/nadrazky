@@ -285,7 +285,26 @@
     "emptyTitle": "Zatím žádné odbavení",
     "emptyText": "Odbav se v nějaké nádražce a objeví se tady.",
     "emptyCta": "Najdi hospodu",
-    "menuLink": "Tvůj profil"
+    "menuLink": "Tvůj profil",
+    "detailsTitle": "Tvoje údaje",
+    "picture": "Profilová fotka",
+    "choosePicture": "Vybrat fotku",
+    "changePicture": "Změnit fotku",
+    "removePicture": "Odebrat fotku",
+    "pictureHint": "Tvoje fotka, oříznutá do čtverce. Ukáže se u tvých odbavení.",
+    "hometown": "Odkud jsi",
+    "optional": "nepovinné",
+    "hometownPlaceholder": "např. Česká Třebová",
+    "from": "Odkud: {hometown}",
+    "save": "Uložit",
+    "saving": "Ukládám…",
+    "saved": "Uloženo.",
+    "errors": {
+      "signIn": "Pro uložení údajů se znovu přihlas.",
+      "hometown": "Odkud jsi může mít nejvýš 60 znaků.",
+      "pictureTooBig": "Fotka je moc velká. Zkus jinou.",
+      "pictureFormat": "Tuhle fotku neumíme načíst. Použij fotku ve formátu JPEG nebo PNG."
+    }
   },
   "checkIn": {
     "title": "Odbavení",
@@ -413,8 +432,8 @@
     "account": {
       "title": "Tvůj účet",
       "p1": "Zaregistrovat se jde jen přes účet Google. Když se přihlásíš, Google nám předá tvé jméno, e-mailovou adresu, profilovou fotku a identifikátor tvého účtu Google. Ukládáme je, abychom tě poznali. Tvoje heslo ke Googlu nikdy nevidíme a přístupové tokeny Googlu neuchováváme.",
-      "p2": "Při dokončení registrace si vybereš přezdívku a jazyk a potvrdíš, že ti je 18 let nebo víc. Ukládáme přezdívku, jazyk a kdy jsi věk potvrdil(a).",
-      "p3": "Tvoje přezdívka je veřejná. Jméno a e-mailovou adresu vidíš jen ty a my."
+      "p2": "Při dokončení registrace si vybereš přezdívku a jazyk a potvrdíš, že ti je 18 let nebo víc. Ukládáme přezdívku, jazyk a kdy jsi věk potvrdil(a). Na profilu si můžeš přidat i to, odkud jsi, a profilovou fotku; fotku ukládáme jako malý čtvercový obrázek, převedený tak, aby nenesla žádné údaje z fotoaparátu, jako je poloha.",
+      "p3": "Tvoje přezdívka a profilová fotka jsou veřejné: ukazují se u tvých odbavení. Jméno, e-mailovou adresu a to, odkud jsi, vidíš jen ty a my."
     },
     "checkins": {
       "title": "Odbavení",

@@ -57,6 +57,13 @@
       "when": 1792872299121,
       "tag": "0007_drop_maybe_open",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792877917252,
+      "tag": "0008_profile_details",
+      "breakpoints": true
     }
   ]
 }

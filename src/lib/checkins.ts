@@ -27,6 +27,8 @@ export async function listRecentCheckIns(pubId: number, limit = 5) {
       id: checkins.id,
       createdAt: checkins.createdAt,
       username: users.username,
+      userId: users.id,
+      avatarUpdatedAt: users.avatarUpdatedAt,
       hadBeer: checkins.hadBeer,
       hadShot: checkins.hadShot,
       hadNonAlcoholic: checkins.hadNonAlcoholic,

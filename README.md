@@ -84,6 +84,10 @@ Set these in Vercel (Project → Settings → Environment Variables) for Product
 
 Preview deployments have changing URLs that Google won't accept as redirect URIs, so Google sign-in works on production and locally, not on previews.
 
+## Profile pictures
+
+Users can add a hometown and a profile picture on their profile. The browser shrinks a chosen photo to at most 768 px and uploads it with the form (server actions accept up to 2 MB, `next.config.ts`); the server crops it to a 256×256 WebP with `sharp` (`src/lib/avatar.ts`), which drops camera metadata such as GPS, and stores it in the `user_avatars` table. `/api/avatar/[id]?v=…` serves it with a year-long cache; the `v` changes with every new picture. No file storage service is needed. The picture is shown in the header, on the profile and next to the user's check-ins; the hometown only on the user's own profile.
+
 ## Check-ins
 
 Checking in needs an account but no location: the app never asks for or stores the visitor's position. A pub's status is **open**, **closed** or **unknown** (where every pub starts; nadrazky.eu's "maybe open" is imported as unknown), and only check-ins and approved reports change it, always to open or closed. Every check-in updates the pub's "last confirmed" date (`pubs.last_confirmed_at`), and one that found the pub open also marks it **open**; one that found it closed leaves the status alone (closing a pub goes through "Report a change"). "Last confirmed" across the site counts from that date, or from nadrazky.eu's months when a pub has none yet. Each user gets **one check-in per pub per day** (the day in Prague time), enforced by a unique index on `checkins (user_id, pub_id, day)`. Optional details: beer, a shot, a non-alcoholic drink, a snack (ticks), a rating from 1 to 5, a note (up to 280 characters), and whether the pub was open or closed. The pub page shows the number of check-ins, the last visit and the latest five check-ins.
@@ -116,7 +120,7 @@ Under `npm run dev` and in the end-to-end tests the dev login has a role picker,
 | `/cs/hospoda/[slug]/nahlasit-zmenu` | `/en/pub/[slug]/report` | Report a change to a pub (signed-in users) |
 | `/cs/moderace` | `/en/moderation` | Moderation queue: approve or reject reports (moderators and admins) |
 | `/cs/prihlaseni` | `/en/login` | Log in, sign up, finish sign-up |
-| `/cs/profil` | `/en/profile` | Your profile: pubs, stations, regions and lines visited (signed-in users) |
+| `/cs/profil` | `/en/profile` | Your profile: pubs, stations, regions and lines visited; hometown and profile picture (signed-in users) |
 | `/cs/ochrana-soukromi` | `/en/privacy` | Privacy policy (controller and contact in `src/lib/privacy.ts`) |
 
 ## Next
