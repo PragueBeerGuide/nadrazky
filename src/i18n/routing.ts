@@ -10,6 +10,7 @@ export const routing = defineRouting({
     "/pubs": { cs: "/hospody", en: "/pubs" },
     "/pub/[slug]": { cs: "/hospoda/[slug]", en: "/pub/[slug]" },
     "/pub/[slug]/check-in": { cs: "/hospoda/[slug]/odbaveni", en: "/pub/[slug]/check-in" },
+    "/pub/[slug]/report": { cs: "/hospoda/[slug]/nahlasit-zmenu", en: "/pub/[slug]/report" },
     "/regions": { cs: "/kraje", en: "/regions" },
     "/region/[slug]": { cs: "/kraj/[slug]", en: "/region/[slug]" },
     "/lines": { cs: "/trate", en: "/lines" },

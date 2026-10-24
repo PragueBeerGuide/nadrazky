@@ -316,6 +316,54 @@
     "back": "Back to the pub",
     "oncePerDay": "One check-in per pub per day counts."
   },
+  "report": {
+    "title": "Report a change",
+    "intro": "Is something about {name} wrong or out of date? Tell us and we'll check it.",
+    "kindTitle": "What has changed?",
+    "kinds": {
+      "closed": "It has closed for good",
+      "reopened": "It's open again",
+      "name": "It has a different name",
+      "hours": "Opening hours",
+      "address": "Address",
+      "beers": "Beers on tap",
+      "location": "It's somewhere else on the map",
+      "other": "Something else"
+    },
+    "valueLabels": {
+      "name": "New name",
+      "hours": "Opening hours",
+      "address": "Address",
+      "beers": "On tap now"
+    },
+    "valuePlaceholders": {
+      "name": "e.g. Nádražní restaurace",
+      "hours": "e.g. Mon–Fri 10–22, Sat 12–22",
+      "address": "Street and number, town",
+      "beers": "e.g. Pilsner Urquell, Kozel 11°"
+    },
+    "current": "We show now: {value}",
+    "messageLabel": "Details",
+    "messagePlaceholder": "What did you see, and when were you there?",
+    "optional": "optional",
+    "submit": "Send report",
+    "sending": "Sending…",
+    "doneTitle": "Thank you!",
+    "doneText": "We've got your report about {name} and will check it. The pub page changes once it's approved.",
+    "back": "Back to the pub",
+    "another": "Report something else",
+    "errors": {
+      "kind": "Choose what has changed.",
+      "value": "Fill in the new value.",
+      "message": "Describe the change.",
+      "limit": "You've sent {max} reports today. Try again tomorrow.",
+      "signIn": "Log in to report a change.",
+      "finishSignUp": "Finish signing up to report a change.",
+      "notFound": "We couldn't find this pub."
+    },
+    "linkText": "Something wrong or out of date?",
+    "link": "Report a change"
+  },
   "privacy": {
     "title": "Privacy",
     "subtitle": "How Nádražky handles your personal data. Last updated {date}.",
@@ -348,6 +396,10 @@
       "p1": "Checking in doesn't use your phone's location: we never ask for it and never store it.",
       "p2": "For each check-in we store the pub, the time, whether the pub was open, and the details you add: what you had, a rating and a note.",
       "p3": "Check-ins are public: the pub's page shows your username with the time, the details and your note."
+    },
+    "reports": {
+      "title": "Reports of changes",
+      "p1": "When you report a change to a pub, we store the report with your account so we can check it and contact you if needed. Reports are not shown publicly."
     },
     "cookies": {
       "title": "Cookies",

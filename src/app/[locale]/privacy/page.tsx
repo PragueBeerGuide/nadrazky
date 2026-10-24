@@ -68,6 +68,7 @@ export default async function PrivacyPage({ params }: PageProps<"/[locale]/priva
         </>
       ),
     },
+    { id: "reports", title: t("reports.title"), body: <p>{t("reports.p1")}</p> },
     {
       id: "cookies",
       title: t("cookies.title"),
