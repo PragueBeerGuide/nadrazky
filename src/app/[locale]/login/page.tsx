@@ -51,7 +51,8 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[l
               locale={locale}
               next={next}
               username={user.username ?? suggestUsername(user.name ?? user.email)}
-              language={user.language ?? locale}
+              // Not chosen yet (the column defaults to cs): start from the page's language.
+              language={locale}
             />
             <form action={logOut}>
               {hidden}

@@ -1,4 +1,4 @@
-import { signUp, newUser } from "./auth";
+import { newUser, signUp } from "./auth";
 import { expect, test } from "./fixtures";
 
 test("the login page is translated", async ({ page }) => {

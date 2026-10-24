@@ -9,6 +9,7 @@ export const routing = defineRouting({
     "/map": { cs: "/mapa", en: "/map" },
     "/pubs": { cs: "/hospody", en: "/pubs" },
     "/pub/[slug]": { cs: "/hospoda/[slug]", en: "/pub/[slug]" },
+    "/pub/[slug]/check-in": { cs: "/hospoda/[slug]/odbaveni", en: "/pub/[slug]/check-in" },
     "/regions": { cs: "/kraje", en: "/regions" },
     "/region/[slug]": { cs: "/kraj/[slug]", en: "/region/[slug]" },
     "/lines": { cs: "/trate", en: "/lines" },
