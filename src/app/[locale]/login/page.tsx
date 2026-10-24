@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/PageHero";
-import { getPathname } from "@/i18n/navigation";
+import { Link, getPathname } from "@/i18n/navigation";
 import { asLocale } from "@/i18n/routing";
 import { authEnabled, authProviders, safeReturnPath } from "@/lib/auth/config";
 import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
@@ -32,6 +32,13 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[l
   const providers = authProviders();
   const error = typeof query.error === "string" ? query.error : null;
   const errorKey = error ? (errorKeys.find((k) => k === error) ?? "default") : null;
+  const privacy = t.rich("privacyLink", {
+    link: (chunks) => (
+      <Link href="/privacy" className="link">
+        {chunks}
+      </Link>
+    ),
+  });
   const hidden = (
     <>
       <input type="hidden" name="locale" value={locale} />
@@ -53,6 +60,7 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[l
               // Not chosen yet (the column defaults to cs): start from the page's language.
               language={locale}
             />
+            <p className="text-sm text-muted">{privacy}</p>
             <form action={logOut}>
               {hidden}
               <button type="submit" className="link text-[15px]">
@@ -76,7 +84,10 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[l
                 {t("google")}
               </button>
             </form>
-            <p className="border-t border-rule-soft pt-4 text-sm text-muted">{t("adultsOnly")}</p>
+            <div className="flex flex-col gap-1 border-t border-rule-soft pt-4 text-sm text-muted">
+              <p>{t("adultsOnly")}</p>
+              <p>{privacy}</p>
+            </div>
           </section>
         )}
 

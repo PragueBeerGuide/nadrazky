@@ -12,6 +12,7 @@ const routes = [
   { cs: "/cs/trat/210", en: "/en/line/210" },
   { cs: "/cs/o-aplikaci", en: "/en/about" },
   { cs: "/cs/prihlaseni", en: "/en/login" },
+  { cs: "/cs/ochrana-soukromi", en: "/en/privacy" },
 ];
 
 for (const route of routes) {

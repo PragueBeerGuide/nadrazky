@@ -17,7 +17,8 @@
     "languageGroup": "Language",
     "cs": "Čeština",
     "en": "English",
-    "login": "Log in"
+    "login": "Log in",
+    "privacy": "Privacy"
   },
   "ago": {
     "months": "{count, plural, =0 {this month} one {# month ago} other {# months ago}}",
@@ -256,7 +257,8 @@
       "user": "Member",
       "moderator": "Moderator",
       "admin": "Admin"
-    }
+    },
+    "privacyLink": "How we handle your data: <link>Privacy</link>"
   },
   "checkIn": {
     "title": "Check in",
@@ -295,5 +297,79 @@
     "alreadyTitle": "Checked in today",
     "alreadyText": "You've already checked in at {name} today. One check-in per pub per day counts.",
     "back": "Back to the pub"
+  },
+  "privacy": {
+    "title": "Privacy",
+    "subtitle": "How Nádražky handles your personal data. Last updated {date}.",
+    "summaryTitle": "In short",
+    "summary": {
+      "browse": "You can browse Nádražky without an account. There is no analytics, no advertising and no tracking.",
+      "google": "To check in, you sign in with Google. We keep your name, email and profile picture from Google, and the username you choose.",
+      "location": "A check-in asks for your phone's location once. We use it to check you are at the pub and keep only the distance, never the position.",
+      "public": "Your username and check-ins are public on the pub's page. You can have your account and everything in it deleted at any time."
+    },
+    "controller": {
+      "title": "Who is responsible",
+      "p1": "Nádražky is run by {name}, a private individual, who is the controller of your personal data. Write to <email></email> with any question or request about your data."
+    },
+    "browsing": {
+      "title": "Browsing without an account",
+      "p1": "Anyone can look at the pubs, the map and the check-ins without an account. We don't use analytics, advertising or tracking cookies. Some data is still handled to show you the site:",
+      "logs": "<strong>Server logs.</strong> Our hosting provider, Vercel, handles every request and briefly records technical data such as your IP address, browser and the page you asked for, to deliver the site and keep it secure.",
+      "map": "<strong>Map tiles.</strong> Maps are loaded from OpenFreeMap, so your browser sends it your IP address when you open a map.",
+      "language": "<strong>Language.</strong> A <code>NEXT_LOCALE</code> cookie remembers which language you use."
+    },
+    "account": {
+      "title": "Your account",
+      "p1": "You can sign up only with a Google account. When you sign in, Google gives us your name, email address, profile picture and an ID for your Google account, and we store these to recognise you. We never see your Google password, and we don't keep Google's access tokens.",
+      "p2": "When you finish signing up, you choose a username and a language and confirm that you are 18 or over. We store the username, the language and when you confirmed your age.",
+      "p3": "Your username is public. Your name and email address are visible only to you and to us."
+    },
+    "checkins": {
+      "title": "Check-ins and your location",
+      "p1": "Every check-in is confirmed by GPS. When you press “Check in here”, your browser asks for permission and then shares your position once. Our server uses it only to work out how far you are from the pub; if you are more than 300 m away, nothing is saved.",
+      "p2": "<strong>We never store your position.</strong> For each check-in we store the pub, the time, your distance from the pub, how accurate your phone's location was, whether the pub was open, and the details you add: what you had, a rating and a note.",
+      "p3": "Check-ins are public: the pub's page shows your username with the time, the details and your note. The distance and the accuracy are not shown."
+    },
+    "cookies": {
+      "title": "Cookies",
+      "p1": "We only use cookies the site needs to work, so we don't ask for consent:",
+      "session": "<strong>Sign-in cookies</strong> (names starting with <code>authjs</code>, <code>__Secure-authjs</code> or <code>__Host-authjs</code>) keep you signed in and protect the sign-in from forgery. They last until you log out, or 90 days without a visit.",
+      "language": "<code>NEXT_LOCALE</code> remembers your language."
+    },
+    "basis": {
+      "title": "Why we may use your data",
+      "account": "Your account and check-ins: to provide the service you signed up for (Article 6(1)(b) GDPR).",
+      "logs": "Server logs: our legitimate interest in running a reliable and secure site (Article 6(1)(f) GDPR).",
+      "location": "Your location: used only when you check in, with your browser's permission, for that check-in."
+    },
+    "processors": {
+      "title": "Who else handles your data",
+      "p1": "We don't sell your data or share it for advertising. These services handle it for us:",
+      "vercel": "<strong>Vercel</strong> hosts the site; its server functions run in Frankfurt, Germany.",
+      "neon": "<strong>Neon</strong> stores the database, also in Frankfurt.",
+      "google": "<strong>Google</strong> provides sign-in, under its own privacy policy.",
+      "openfreemap": "<strong>OpenFreeMap</strong> serves the map tiles.",
+      "p2": "Vercel and Neon are US companies working for us under data processing agreements. Where data may leave the EU, they rely on safeguards such as the EU standard contractual clauses."
+    },
+    "retention": {
+      "title": "How long we keep it",
+      "account": "Your account, profile and check-ins: until your account is deleted. Deleting it removes your check-ins too.",
+      "session": "Sign-in cookies: until you log out, at most 90 days without a visit.",
+      "logs": "Vercel's server logs: a short time, as set by Vercel."
+    },
+    "rights": {
+      "title": "Your rights",
+      "p1": "You can ask for a copy of your data, to correct it, to delete it or your whole account, to restrict or object to its use, or to get it in a portable format. Write to <email></email>; we will reply within one month.",
+      "p2": "You can also complain to the Czech data protection authority, the <uoou>Office for Personal Data Protection (ÚOOÚ)</uoou>, or to the authority where you live."
+    },
+    "age": {
+      "title": "Adults only",
+      "p1": "Nádražky is about pubs and is for adults: you must be 18 or over to sign up."
+    },
+    "changes": {
+      "title": "Changes",
+      "p1": "If we change how we handle your data, we will update this page and the date at the top."
+    }
   }
 }

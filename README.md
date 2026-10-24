@@ -100,6 +100,7 @@ Every check-in is verified by GPS: the check-in page asks the browser for its po
 | `/cs/trate`, `/cs/trat/[number]` | `/en/lines`, `/en/line/[number]` | Rail lines |
 | `/cs/hospoda/[slug]/odbaveni` | `/en/pub/[slug]/check-in` | Check in at a pub (needs an account and GPS) |
 | `/cs/prihlaseni` | `/en/login` | Log in, sign up, finish sign-up |
+| `/cs/ochrana-soukromi` | `/en/privacy` | Privacy policy (controller and contact in `src/lib/privacy.ts`) |
 
 ## Next
 
