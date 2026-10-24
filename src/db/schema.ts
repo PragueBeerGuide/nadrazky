@@ -170,6 +170,49 @@ export const checkins = pgTable(
   ],
 );
 
+export const pubReportKind = pgEnum("pub_report_kind", [
+  "closed",
+  "reopened",
+  "name",
+  "hours",
+  "address",
+  "beers",
+  "location",
+  "other",
+]);
+export const pubReportStatus = pgEnum("pub_report_status", ["open", "accepted", "rejected"]);
+
+/**
+ * "Report a change" from users: what changed at a pub, waiting for a moderator.
+ * `value` is the proposed new name, hours, address or beers; `message` the user's details.
+ */
+export const pubReports = pgTable(
+  "pub_reports",
+  {
+    id: serial("id").primaryKey(),
+    pubId: integer("pub_id")
+      .notNull()
+      .references(() => pubs.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    kind: pubReportKind("kind").notNull(),
+    value: text("value"),
+    message: text("message"),
+    status: pubReportStatus("status").notNull().default("open"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+    resolvedBy: text("resolved_by").references(() => users.id, { onDelete: "set null" }),
+  },
+  (t) => [
+    index("pub_reports_status_idx").on(t.status, t.createdAt),
+    index("pub_reports_pub_idx").on(t.pubId),
+    index("pub_reports_user_idx").on(t.userId, t.createdAt),
+    check("pub_reports_value_check", sql`char_length(${t.value}) <= 200`),
+    check("pub_reports_message_check", sql`char_length(${t.message}) <= 1000`),
+  ],
+);
+
 export type Pub = typeof pubs.$inferSelect;
 export type User = typeof users.$inferSelect;
 export type Station = typeof stations.$inferSelect;

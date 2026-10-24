@@ -39,6 +39,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
   const directions = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
   const regionName = region ? (isCs ? region.nameCs : region.nameEn) : null;
   const ct = await getTranslations("checkIn");
+  const rt = await getTranslations("report");
   const format = await getFormatter();
   const user = await getCurrentUser();
   const [summary, recent, checkedInToday] = await Promise.all([
@@ -179,6 +180,12 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
                 </div>
               ))}
             </dl>
+            <p className="mt-6 border-t border-rule-soft pt-4 text-[15px] text-muted">
+              {rt("linkText")}{" "}
+              <Link href={{ pathname: "/pub/[slug]/report", params: { slug: pub.slug } }} className="link">
+                {rt("link")}
+              </Link>
+            </p>
           </section>
 
           {route && mainLine && (

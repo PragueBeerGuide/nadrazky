@@ -316,6 +316,54 @@
     "back": "Zpět na hospodu",
     "oncePerDay": "Počítá se jedno odbavení v hospodě za den."
   },
+  "report": {
+    "title": "Nahlásit změnu",
+    "intro": "Nesedí něco u hospody {name} nebo už to neplatí? Dej nám vědět a zkontrolujeme to.",
+    "kindTitle": "Co se změnilo?",
+    "kinds": {
+      "closed": "Natrvalo zavřela",
+      "reopened": "Zase funguje",
+      "name": "Jmenuje se jinak",
+      "hours": "Otevírací doba",
+      "address": "Adresa",
+      "beers": "Pivo na čepu",
+      "location": "Na mapě je jinde",
+      "other": "Něco jiného"
+    },
+    "valueLabels": {
+      "name": "Nový název",
+      "hours": "Otevírací doba",
+      "address": "Adresa",
+      "beers": "Co teď čepují"
+    },
+    "valuePlaceholders": {
+      "name": "např. Nádražní restaurace",
+      "hours": "např. Po–Pá 10–22, So 12–22",
+      "address": "Ulice a číslo, obec",
+      "beers": "např. Pilsner Urquell, Kozel 11°"
+    },
+    "current": "Teď uvádíme: {value}",
+    "messageLabel": "Podrobnosti",
+    "messagePlaceholder": "Co jsi viděl(a) a kdy jsi tam byl(a)?",
+    "optional": "nepovinné",
+    "submit": "Odeslat hlášení",
+    "sending": "Odesílám…",
+    "doneTitle": "Díky!",
+    "doneText": "Hlášení o hospodě {name} jsme dostali a zkontrolujeme ho. Na stránce hospody se změna projeví, až ji schválíme.",
+    "back": "Zpět na hospodu",
+    "another": "Nahlásit ještě něco",
+    "errors": {
+      "kind": "Vyber, co se změnilo.",
+      "value": "Vyplň novou hodnotu.",
+      "message": "Popiš, co se změnilo.",
+      "limit": "Dnes jsi poslal(a) už {max} hlášení. Zkus to zase zítra.",
+      "signIn": "Pro nahlášení změny se přihlas.",
+      "finishSignUp": "Pro nahlášení změny dokonči registraci.",
+      "notFound": "Tuhle hospodu jsme nenašli."
+    },
+    "linkText": "Nesedí tu něco?",
+    "link": "Nahlásit změnu"
+  },
   "privacy": {
     "title": "Ochrana soukromí",
     "subtitle": "Jak Nádražky zacházejí s tvými osobními údaji. Naposledy upraveno {date}.",
@@ -348,6 +396,10 @@
       "p1": "Odbavení nepoužívá polohu tvého telefonu: nikdy se na ni neptáme a nikdy ji neukládáme.",
       "p2": "U každého odbavení uložíme hospodu, čas, jestli bylo otevřeno a podrobnosti, které přidáš: co sis dal(a), hodnocení a poznámku.",
       "p3": "Odbavení jsou veřejná: na stránce hospody je vidět tvoje přezdívka, čas, podrobnosti a poznámka."
+    },
+    "reports": {
+      "title": "Hlášení změn",
+      "p1": "Když nahlásíš změnu u hospody, uložíme hlášení k tvému účtu, abychom ho mohli zkontrolovat a případně se ti ozvat. Hlášení nejsou veřejná."
     },
     "cookies": {
       "title": "Cookies",

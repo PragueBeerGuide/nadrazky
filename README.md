@@ -88,6 +88,16 @@ Preview deployments have changing URLs that Google won't accept as redirect URIs
 
 Checking in needs an account but no location: the app never asks for or stores the visitor's position. Each user gets **one check-in per pub per day** (the day in Prague time), enforced by a unique index on `checkins (user_id, pub_id, day)`. Optional details: beer, a shot, a non-alcoholic drink, a snack (ticks), a rating from 1 to 5, a note (up to 280 characters), and whether the pub was open or closed. The pub page shows the number of check-ins, the last visit and the latest five check-ins.
 
+## Reports of changes
+
+Any signed-in user can report a change to a pub from its page ("Report a change", `/cs/hospoda/[slug]/nahlasit-zmenu`, `/en/pub/[slug]/report`): that it closed or reopened, a new name, opening hours, address or beers on tap (with the new value), a wrong position on the map, or something else (with a description). Reports are stored in `pub_reports` with status `open`; each user can send up to 10 a day (`DAILY_REPORT_LIMIT` in `src/lib/report.ts`). Nothing on the pub page changes until a moderator accepts a report. Until the moderation queue exists, read the open reports in the database:
+
+```sql
+select r.created_at, p.slug, r.kind, r.value, r.message, u.username
+from pub_reports r join pubs p on p.id = r.pub_id join users u on u.id = r.user_id
+where r.status = 'open' order by r.created_at;
+```
+
 ## Routes
 
 | Czech | English | Page |
@@ -99,10 +109,11 @@ Checking in needs an account but no location: the app never asks for or stores t
 | `/cs/kraje`, `/cs/kraj/[slug]` | `/en/regions`, `/en/region/[slug]` | Regions |
 | `/cs/trate`, `/cs/trat/[number]` | `/en/lines`, `/en/line/[number]` | Rail lines |
 | `/cs/hospoda/[slug]/odbaveni` | `/en/pub/[slug]/check-in` | Check in at a pub (needs an account) |
+| `/cs/hospoda/[slug]/nahlasit-zmenu` | `/en/pub/[slug]/report` | Report a change to a pub (signed-in users) |
 | `/cs/prihlaseni` | `/en/login` | Log in, sign up, finish sign-up |
 | `/cs/profil` | `/en/profile` | Your profile: pubs, stations, regions and lines visited (signed-in users) |
 | `/cs/ochrana-soukromi` | `/en/privacy` | Privacy policy (controller and contact in `src/lib/privacy.ts`) |
 
 ## Next
 
-Photos on check-ins, badges, "report a change" and the moderation queue — see the app plan.
+Photos on check-ins, badges and the moderation queue — see the app plan.

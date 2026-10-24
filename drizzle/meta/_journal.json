@@ -36,6 +36,13 @@
       "when": 1792840228674,
       "tag": "0004_checkins_without_location",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792863635831,
+      "tag": "0005_pub_reports",
+      "breakpoints": true
     }
   ]
 }
