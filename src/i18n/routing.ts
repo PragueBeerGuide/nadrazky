@@ -17,6 +17,7 @@ export const routing = defineRouting({
     "/about": { cs: "/o-aplikaci", en: "/about" },
     "/login": { cs: "/prihlaseni", en: "/login" },
     "/privacy": { cs: "/ochrana-soukromi", en: "/privacy" },
+    "/profile": { cs: "/profil", en: "/profile" },
   },
 });
 

@@ -13,10 +13,16 @@ type Props = {
 /** The signed-in user in the header: an initial badge that opens a menu with log out. */
 export function UserMenu({ user, finished }: Props) {
   const t = useTranslations("auth");
+  const pt = useTranslations("profile");
   const locale = useLocale();
   const ref = useRef<HTMLDetailsElement>(null);
   const label = user.username ? `@${user.username}` : (user.name ?? user.email ?? "");
   const initial = (user.username ?? user.name ?? user.email ?? "?").charAt(0).toUpperCase();
+
+  // The header stays mounted across pages, so a link in the menu closes it.
+  const close = () => {
+    if (ref.current) ref.current.open = false;
+  };
 
   // Close on a click outside or Escape, like a menu.
   useEffect(() => {
@@ -51,8 +57,12 @@ export function UserMenu({ user, finished }: Props) {
           {user.email && <span className="truncate text-sm text-muted">{user.email}</span>}
           {user.role !== "user" && <span className="label mt-1">{t(`roles.${user.role}`)}</span>}
         </div>
-        {!finished && (
-          <Link href="/login" className="btn btn-yellow min-h-11">
+        {finished ? (
+          <Link href="/profile" onClick={close} className="btn btn-sign min-h-11">
+            {pt("menuLink")}
+          </Link>
+        ) : (
+          <Link href="/login" onClick={close} className="btn btn-yellow min-h-11">
             {t("finishLink")}
           </Link>
         )}
