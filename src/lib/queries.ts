@@ -32,6 +32,8 @@ const pubListFields = {
   regionCs: regions.nameCs,
   regionEn: regions.nameEn,
   monthsAgo: confirmedMonthsAgo,
+  /** When a check-in or approved report last confirmed the pub; null if never (then monthsAgo is nadrazky.eu's). */
+  lastConfirmedAt: pubs.lastConfirmedAt,
   /** Rail line numbers through the station, ascending. */
   lines: sql<string[]>`(select coalesce(string_agg(${stationLines.lineNumber}, ',' order by ${stationLines.lineNumber}), '') from ${stationLines} where ${stationLines.stationId} = ${stations.id})`.mapWith(
     (v: string) => (v ? v.split(",") : []),

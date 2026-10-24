@@ -97,7 +97,7 @@ const UNKNOWN_PUBS = {
   closed: ["praha-kyje-restaurace-simanda", "praha-modrany-zastavka-modransky-biograf"],
 } as const;
 
-test("a check-in marks the pub open and confirmed this month", async ({ page }, testInfo) => {
+test("a check-in marks the pub open and confirmed today", async ({ page }, testInfo) => {
   const slug = UNKNOWN_PUBS.open[testInfo.project.name === "phone" ? 1 : 0];
   await signUp(page, testInfo, `/en/pub/${slug}/check-in`);
   await page.getByRole("button", { name: "Check in here" }).click();
@@ -105,7 +105,7 @@ test("a check-in marks the pub open and confirmed this month", async ({ page }, 
 
   const hero = page.locator("article > section").first();
   await expect(hero.locator(".chip").first()).toHaveText("Open");
-  await expect(page.locator("dt", { hasText: "Last confirmed" }).locator("+ dd")).toHaveText("this month");
+  await expect(page.locator("dt", { hasText: "Last confirmed" }).locator("+ dd")).toHaveText("today");
 });
 
 test("a check-in that found the pub closed only updates when it was last confirmed", async ({ page }, testInfo) => {
@@ -117,5 +117,5 @@ test("a check-in that found the pub closed only updates when it was last confirm
 
   const hero = page.locator("article > section").first();
   await expect(hero.locator(".chip").first()).toHaveText("Status unknown");
-  await expect(page.locator("dt", { hasText: "Last confirmed" }).locator("+ dd")).toHaveText("this month");
+  await expect(page.locator("dt", { hasText: "Last confirmed" }).locator("+ dd")).toHaveText("today");
 });

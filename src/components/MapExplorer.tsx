@@ -8,6 +8,7 @@ import { fold } from "@/lib/slug";
 import type { PubKind, PubStatus } from "@/lib/queries";
 import { Ago, useAgo } from "./Ago";
 import { PubMap, type MapStation } from "./PubMap";
+import { compareLastConfirmed } from "@/lib/ago";
 
 export type MapPub = {
   slug: string;
@@ -18,6 +19,7 @@ export type MapPub = {
   kind: PubKind;
   lines: string[];
   monthsAgo: number | null;
+  lastConfirmedAt: string | null;
   lat: number;
   lon: number;
 };
@@ -71,7 +73,7 @@ export function MapExplorer({
     () =>
       matching
         .filter((p) => !off.has(p.status))
-        .sort((a, b) => RANK[a.status] - RANK[b.status] || (a.monthsAgo ?? 999) - (b.monthsAgo ?? 999)),
+        .sort((a, b) => RANK[a.status] - RANK[b.status] || compareLastConfirmed(a, b)),
     [matching, off],
   );
   const stations = useMemo(() => {
@@ -190,7 +192,7 @@ export function MapExplorer({
                       </span>
                     </span>
                     <span className="shrink-0 font-mono text-xs text-muted">
-                      <Ago months={p.monthsAgo} short />
+                      <Ago months={p.monthsAgo} date={p.lastConfirmedAt} short />
                     </span>
                   </Link>
                 </li>
@@ -305,7 +307,7 @@ function StationPopup({ station }: { station: MapStation }) {
         <span className="flex flex-wrap items-center gap-1.5">
           <span className={`chip chip-${first.status}`}>{st(first.status)}</span>
           <span className="text-[13px] text-muted">
-            {kt(first.kind)} · {t("confirmed", { when: ago(first.monthsAgo) })}
+            {kt(first.kind)} · {t("confirmed", { when: ago(first.monthsAgo, false, first.lastConfirmedAt) })}
           </span>
         </span>
         {rest.length > 0 && (
@@ -377,7 +379,7 @@ function StationSheet({ station, onClose }: { station: MapStation; onClose: () =
               <span className="flex min-w-0 flex-1 flex-col leading-tight">
                 <span className="truncate font-semibold">{p.name}</span>
                 <span className="text-[13px] text-muted">
-                  {kt(p.kind)} · <Ago months={p.monthsAgo} />
+                  {kt(p.kind)} · <Ago months={p.monthsAgo} date={p.lastConfirmedAt} />
                 </span>
               </span>
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--muted)" strokeWidth="2" strokeLinecap="round" aria-hidden="true">

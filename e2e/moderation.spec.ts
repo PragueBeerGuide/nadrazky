@@ -106,7 +106,7 @@ test("a pub of unknown status can be reported open", async ({ page }, testInfo) 
 
   await page.goto(`/en/pub/${slug}`);
   await expect(page.locator("article > section").first().locator(".chip").first()).toHaveText("Open");
-  await expect(page.locator("dt", { hasText: "Last confirmed" }).locator("+ dd")).toHaveText("this month");
+  await expect(page.locator("dt", { hasText: "Last confirmed" }).locator("+ dd")).toHaveText("today");
 });
 
 test("moderators reach the queue from the account menu, in Czech too", async ({ page }, testInfo) => {

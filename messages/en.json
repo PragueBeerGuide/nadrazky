@@ -25,7 +25,13 @@
     "years": "{count, plural, one {# year ago} other {# years ago}}",
     "monthsShort": "{count, plural, =0 {this mo} other {# mo}}",
     "yearsShort": "{count} yr",
-    "unknown": "unknown"
+    "unknown": "unknown",
+    "today": "today",
+    "yesterday": "yesterday",
+    "thisWeek": "this week",
+    "todayShort": "today",
+    "yesterdayShort": "yesterday",
+    "thisWeekShort": "this wk"
   },
   "home": {
     "eyebrow": "Railway station pubs in Czechia",

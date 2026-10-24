@@ -25,7 +25,13 @@
     "years": "{count, plural, one {před rokem} few {před # lety} other {před # lety}}",
     "monthsShort": "{count, plural, =0 {tento měs.} other {# měs.}}",
     "yearsShort": "{count} r.",
-    "unknown": "neznámo"
+    "unknown": "neznámo",
+    "today": "dnes",
+    "yesterday": "včera",
+    "thisWeek": "tento týden",
+    "todayShort": "dnes",
+    "yesterdayShort": "včera",
+    "thisWeekShort": "tento týd."
   },
   "home": {
     "eyebrow": "Nádražní hospody v Česku",

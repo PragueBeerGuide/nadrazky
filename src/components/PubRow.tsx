@@ -27,7 +27,7 @@ export function PubRow({ pub }: { pub: PubListItem }) {
         <div className="flex shrink-0 flex-col items-end gap-1">
           <StatusChip status={pub.status} />
           <span className="font-mono text-xs text-muted">
-            <Ago months={pub.monthsAgo} />
+            <Ago months={pub.monthsAgo} date={pub.lastConfirmedAt} />
           </span>
         </div>
       </Link>

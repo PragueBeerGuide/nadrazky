@@ -209,7 +209,7 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
                       <StatusChip status={p.status} />
                     </td>
                     <td className="hidden py-3 pr-6 pl-4 text-right font-mono text-[13px] whitespace-nowrap text-muted md:table-cell">
-                      <Ago months={p.monthsAgo} />
+                      <Ago months={p.monthsAgo} date={p.lastConfirmedAt} />
                     </td>
                   </tr>
                 ))}
