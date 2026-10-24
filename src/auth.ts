@@ -40,11 +40,18 @@ if (enabled.dev) {
   );
 }
 
+const adapter = DrizzleAdapter(db, {
+  usersTable: schema.users,
+  accountsTable: schema.accounts,
+});
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: DrizzleAdapter(db, {
-    usersTable: schema.users,
-    accountsTable: schema.accounts,
-  }),
+  adapter: {
+    ...adapter,
+    // Only which Google account it is matters; Google's tokens are never used, so not kept.
+    linkAccount: (account) =>
+      adapter.linkAccount!({ ...account, access_token: undefined, refresh_token: undefined, id_token: undefined }),
+  },
   providers,
   secret: authSecret(),
   // The dev login can't create database sessions, so sessions are JWT cookies everywhere.

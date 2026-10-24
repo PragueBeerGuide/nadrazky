@@ -12,6 +12,7 @@ export function sectionOf(pathname: string) {
     line: "/lines",
     about: "/about",
     login: "/login",
+    privacy: "/privacy",
   };
   return map[first] ?? "";
 }
