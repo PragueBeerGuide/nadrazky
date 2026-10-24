@@ -8,31 +8,37 @@ test("the login page is translated", async ({ page }) => {
 
   await page.goto("/en/login");
   await expect(page.getByRole("heading", { level: 1, name: "Log in" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Email me a sign-in link" })).toBeVisible();
   await expect(page.getByText("you must be 18 or over to sign up")).toBeVisible();
-  // No Google client is set up on the test server, so its button is hidden.
-  await expect(page.getByRole("button", { name: "Continue with Google" })).toHaveCount(0);
+});
+
+test("Google is the only way to sign in", async ({ page }) => {
+  await page.goto("/en/login");
+  const main = page.getByRole("main");
+  // Besides Google, only the dev login, which is on for the test server and never on Vercel.
+  await expect(main.getByRole("button")).toHaveText(["Continue with Google", "Sign in (dev)"]);
+  await expect(main.getByRole("textbox")).toHaveCount(1);
+  await expect(main.getByLabel("Dev login: Email")).toBeVisible();
+});
+
+test("Continue with Google goes to Google's sign-in page", async ({ page }) => {
+  // Stop at Google's door: the test server's client ID is a placeholder.
+  let google: URL | undefined;
+  await page.route("https://accounts.google.com/**", (route) => {
+    google = new URL(route.request().url());
+    return route.fulfill({ contentType: "text/html", body: "<title>Google</title>" });
+  });
+  await page.goto("/en/login");
+  await page.getByRole("button", { name: "Continue with Google" }).click();
+  // The server first fetches Google's OpenID configuration, so allow for the network.
+  await expect(page).toHaveURL(/^https:\/\/accounts\.google\.com\//, { timeout: 15_000 });
+  expect(google?.searchParams.get("client_id")).toBe("e2e-placeholder.apps.googleusercontent.com");
+  expect(google?.searchParams.get("redirect_uri")).toMatch(/\/api\/auth\/callback\/google$/);
 });
 
 test("the header links to the login page", async ({ page }) => {
   await page.goto("/cs");
   await page.getByRole("banner").getByRole("link", { name: "Přihlásit se" }).click();
   await expect(page).toHaveURL(/\/cs\/prihlaseni$/);
-});
-
-test("asks for an email link", async ({ page }) => {
-  await page.goto("/en/login");
-  const email = page.getByLabel("Email", { exact: true });
-  await email.fill("not-an-email");
-  await page.getByRole("button", { name: "Email me a sign-in link" }).click();
-  await expect(page.getByText("Enter a valid email address.")).toBeVisible();
-
-  await email.fill("someone@example.test");
-  await page.getByRole("button", { name: "Email me a sign-in link" }).click();
-  await expect(page.getByRole("heading", { name: "Check your inbox" })).toBeVisible();
-  await expect(page.getByText("We've sent a sign-in link to someone@example.test")).toBeVisible();
-  await page.getByRole("button", { name: "Use another email" }).click();
-  await expect(page.getByLabel("Email", { exact: true })).toBeVisible();
 });
 
 test("sign-up needs a valid username and the 18+ confirmation", async ({ page }, testInfo) => {

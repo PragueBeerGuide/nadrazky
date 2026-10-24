@@ -24,8 +24,6 @@ export function authSecret(env: Env = process.env) {
 export function authProviders(env: Env = process.env) {
   return {
     google: Boolean(env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET),
-    /** Email links are sent with Resend; without a key, dev mode prints them to the server log. */
-    email: Boolean(env.AUTH_RESEND_KEY && env.AUTH_EMAIL_FROM) || devLoginEnabled(env),
     dev: devLoginEnabled(env),
   };
 }

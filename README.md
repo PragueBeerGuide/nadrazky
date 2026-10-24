@@ -7,7 +7,7 @@ The database of railway station pubs in the Czech Republic — find a station pu
 - Next.js 16 (App Router) + Tailwind CSS 4, with the "Departures" design: Czech railway signage tokens (sign blue, timetable yellow, departure board) in `src/app/globals.css`; Barlow Condensed, IBM Plex Sans and IBM Plex Mono via `next/font`
 - next-intl for Czech (`/cs/...`, default) and English (`/en/...`) with translated URLs (`/cs/hospoda/…`, `/en/pub/…`); texts live in `messages/cs.json` and `messages/en.json`
 - PostgreSQL + Drizzle ORM (`src/db/schema.ts`, migrations in `drizzle/`); PGlite (embedded Postgres) for local development
-- Auth.js (`next-auth` v5) for accounts: Google sign-in and email sign-in links, no passwords (`src/auth.ts`)
+- Auth.js (`next-auth` v5) for accounts: sign-in with a Google account only, no passwords (`src/auth.ts`)
 - MapLibre GL with free OpenFreeMap tiles (no API key)
 
 ## Run locally
@@ -22,7 +22,7 @@ npm run dev        # http://localhost:3000
 
 To use a real Postgres server instead (Neon in production), set `DATABASE_URL=postgresql://…` in `.env.local` and run `npm run setup` again.
 
-Accounts work locally without any keys: under `npm run dev` the login page has a **dev login** that signs you in with any email, and email sign-in links are printed to the terminal instead of being sent. To try Google sign-in locally, put `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` in `.env.local` (see [Accounts](#accounts)).
+Accounts work locally without any keys: under `npm run dev` the login page has a **dev login** that signs you in with any email. To try Google sign-in locally, put `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` in `.env.local` (see [Accounts](#accounts)).
 
 ## Tests
 
@@ -55,7 +55,7 @@ Pushing to `main` deploys production, and every pull request gets a preview. On 
 
 ## Accounts
 
-Log in and sign up share one page (`/cs/prihlaseni`, `/en/login`). The first sign-in creates the account; the user then picks a username and confirms they are 18 or over, and only then is sign-up finished. Sessions are signed cookies (JWT); users, linked Google accounts and pending email links are in the `users`, `accounts` and `verification_tokens` tables. Each user has a role: `user` (default), `moderator` or `admin`. There is no admin screen yet; set a role in the database:
+Log in and sign up share one page (`/cs/prihlaseni`, `/en/login`), and the only way in is a Google account. The first sign-in creates the account; the user then picks a username and confirms they are 18 or over, and only then is sign-up finished. Sessions are signed cookies (JWT); users and their linked Google accounts are in the `users` and `accounts` tables. Each user has a role: `user` (default), `moderator` or `admin`. There is no admin screen yet; set a role in the database:
 
 ```sql
 update users set role = 'admin' where email = 'you@example.com';
@@ -70,8 +70,7 @@ Set these in Vercel (Project → Settings → Environment Variables) for Product
 | `DATABASE_URL` | always | Postgres connection (Neon sets it on Vercel). Locally `pglite://./data/pglite`. |
 | `DATABASE_URL_UNPOOLED` | Vercel | Direct Postgres connection for migrations (set by Neon). |
 | `AUTH_SECRET` | production | Signs the session cookies. Generate with `npx auth secret` or `openssl rand -base64 33`. Without it, the site runs with accounts switched off. |
-| `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET` | for Google sign-in | Google OAuth client. The Google button shows only when both are set. |
-| `AUTH_RESEND_KEY`, `AUTH_EMAIL_FROM` | for email links | Resend API key and sender, e.g. `Nádražky <prihlaseni@nadrazky.cz>`. The email form shows only when both are set (or in local development). |
+| `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET` | production | Google OAuth client. Without them the login page says signing in isn't set up. |
 | `AUTH_DEV_LOGIN` | tests only | `1` turns on the dev login in a local production build. It is on by default under `npm run dev` and never works on Vercel. |
 | `AUTH_TRUST_HOST` | self-hosting only | `true` when running `next start` outside Vercel. |
 
@@ -79,19 +78,11 @@ Set these in Vercel (Project → Settings → Environment Variables) for Product
 
 1. In [Google Cloud Console](https://console.cloud.google.com/apis/credentials), create a project (or pick one), then set up the **OAuth consent screen**: app name Nádražky, your support email, scopes `email`, `profile` and `openid`. Publish it, or add testers while it is in testing.
 2. **Create credentials → OAuth client ID → Web application.** Authorised redirect URIs:
-   - `https://<production domain>/api/auth/callback/google`
+   - `https://nadrazky.vercel.app/api/auth/callback/google` (and the same path on a custom domain, if you add one)
    - `http://localhost:3000/api/auth/callback/google` (local development)
 3. Copy the client ID and secret into `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`.
 
-Preview deployments have changing URLs that Google won't accept as redirect URIs, so Google sign-in works on production and locally; on previews use email links. A Google sign-in joins an existing account with the same email address (Google only gives out verified addresses).
-
-### Setting up email sign-in links
-
-1. Create a [Resend](https://resend.com) account and verify the sending domain (Domains → Add domain, then the DNS records it shows).
-2. Create an API key with "Sending access" and put it in `AUTH_RESEND_KEY`.
-3. Set `AUTH_EMAIL_FROM` to a sender on that domain, e.g. `Nádražky <prihlaseni@nadrazky.cz>`.
-
-The email is in Czech and English. Links are valid for 24 hours.
+Preview deployments have changing URLs that Google won't accept as redirect URIs, so Google sign-in works on production and locally, not on previews.
 
 ## Check-ins
 

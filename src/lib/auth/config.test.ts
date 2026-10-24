@@ -31,25 +31,20 @@ describe("authSecret", () => {
 });
 
 describe("authProviders", () => {
-  it("switches Google and email on by their variables", () => {
-    expect(authProviders({ NODE_ENV: "production" })).toEqual({ google: false, email: false, dev: false });
-    expect(
-      authProviders({
-        NODE_ENV: "production",
-        AUTH_GOOGLE_ID: "id",
-        AUTH_GOOGLE_SECRET: "secret",
-        AUTH_RESEND_KEY: "re_key",
-        AUTH_EMAIL_FROM: "Nádražky <a@b.cz>",
-      }),
-    ).toEqual({ google: true, email: true, dev: false });
+  it("offers Google only, once both its variables are set", () => {
+    expect(authProviders({ NODE_ENV: "production" })).toEqual({ google: false, dev: false });
+    expect(authProviders({ NODE_ENV: "production", AUTH_GOOGLE_ID: "id" })).toEqual({ google: false, dev: false });
+    expect(authProviders({ NODE_ENV: "production", AUTH_GOOGLE_ID: "id", AUTH_GOOGLE_SECRET: "secret" })).toEqual({
+      google: true,
+      dev: false,
+    });
   });
 
-  it("needs both the Resend key and the sender for email links in production", () => {
-    expect(authProviders({ NODE_ENV: "production", AUTH_RESEND_KEY: "re_key" }).email).toBe(false);
-  });
-
-  it("prints email links to the log in development", () => {
-    expect(authProviders({ NODE_ENV: "development" }).email).toBe(true);
+  it("ignores the old email-link variables", () => {
+    expect(authProviders({ NODE_ENV: "production", AUTH_RESEND_KEY: "re_key", AUTH_EMAIL_FROM: "a@b.cz" })).toEqual({
+      google: false,
+      dev: false,
+    });
   });
 });
 

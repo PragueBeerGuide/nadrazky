@@ -8,7 +8,6 @@ import { authEnabled, authProviders, safeReturnPath } from "@/lib/auth/config";
 import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
 import { suggestUsername } from "@/lib/auth/signup";
 import { devSignIn, logOut, signInWithGoogle } from "./actions";
-import { EmailSignInForm } from "./EmailSignInForm";
 import { FinishSignUpForm } from "./FinishSignUpForm";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -16,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("title"), robots: { index: false } };
 }
 
-const errorKeys = ["OAuthAccountNotLinked", "Verification", "AccessDenied", "CredentialsSignin"] as const;
+const errorKeys = ["AccessDenied", "CredentialsSignin"] as const;
 
 /** Log in and sign up in one place: the first sign-in creates the account, then the user finishes sign-up here. */
 export default async function LoginPage({ params, searchParams }: PageProps<"/[locale]/login">) {
@@ -61,7 +60,7 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[l
               </button>
             </form>
           </section>
-        ) : !authEnabled() || (!providers.google && !providers.email) ? (
+        ) : !authEnabled() || !providers.google ? (
           <p className="card p-5 md:p-7">{t("notConfigured")}</p>
         ) : (
           <section className="card flex flex-col gap-5 p-5 md:p-7">
@@ -70,23 +69,13 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[l
                 {t(`errors.${errorKey}`)}
               </p>
             )}
-            {providers.google && (
-              <form action={signInWithGoogle}>
-                {hidden}
-                <button type="submit" className="btn btn-outline h-14 w-full rounded-xl text-[17px]">
-                  <GoogleMark />
-                  {t("google")}
-                </button>
-              </form>
-            )}
-            {providers.google && providers.email && (
-              <div className="flex items-center gap-3 font-mono text-xs font-semibold tracking-[0.12em] text-muted uppercase" aria-hidden="true">
-                <span className="h-px flex-1 bg-rule" />
-                {t("or")}
-                <span className="h-px flex-1 bg-rule" />
-              </div>
-            )}
-            {providers.email && <EmailSignInForm locale={locale} next={next} />}
+            <form action={signInWithGoogle}>
+              {hidden}
+              <button type="submit" className="btn btn-outline h-14 w-full rounded-xl text-[17px]">
+                <GoogleMark />
+                {t("google")}
+              </button>
+            </form>
             <p className="border-t border-rule-soft pt-4 text-sm text-muted">{t("adultsOnly")}</p>
           </section>
         )}

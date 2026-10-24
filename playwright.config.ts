@@ -28,7 +28,14 @@ export default defineConfig({
     url: `http://localhost:${PORT}/cs`,
     reuseExistingServer: !process.env.CI,
     timeout: 300_000,
-    // The dev login lets the tests sign in without Google or email (never on Vercel).
-    env: { DATABASE_URL: "pglite://./data/pglite-e2e", AUTH_DEV_LOGIN: "1", AUTH_TRUST_HOST: "true" },
+    // The dev login lets the tests sign in without Google (never on Vercel). The Google
+    // client is a placeholder: it shows the button, and the tests stop at Google's door.
+    env: {
+      DATABASE_URL: "pglite://./data/pglite-e2e",
+      AUTH_DEV_LOGIN: "1",
+      AUTH_TRUST_HOST: "true",
+      AUTH_GOOGLE_ID: "e2e-placeholder.apps.googleusercontent.com",
+      AUTH_GOOGLE_SECRET: "e2e-placeholder",
+    },
   },
 });
