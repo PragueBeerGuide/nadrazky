@@ -10,6 +10,7 @@ const PUBS = {
   approve: ["praha-cakovice-hospudka-na-kolejich", "praha-cakovice-u-fausta"],
   reject: ["praha-branik-nadrazni-restaurace-branik", "praha-dejvice-restaurace-dejvicke-nadrazi"],
   auto: ["praha-hlubocepy-besedni-restaurace-hlubocepy", "praha-horni-pocernice-pivovar-pocernak"],
+  markOpen: ["praha-hostivar-restaurace-u-hostivarskeho-nadrazi", "praha-klanovice-bistro-bazar"],
 } as const;
 const pubFor = (test: keyof typeof PUBS, info: TestInfo) => PUBS[test][info.project.name === "phone" ? 1 : 0];
 /** A value nobody else will have sent, to find this test's report. */
@@ -88,6 +89,24 @@ test("a moderator's own report is approved at once", async ({ page }, testInfo) 
   await page.goto("/en/moderation");
   await expect(page.getByRole("list", { name: "Reports waiting for review" }).getByText(beers)).toHaveCount(0);
   await expect(page.getByRole("region", { name: "Recently resolved" })).toContainText(beers);
+});
+
+test("a pub of unknown status can be reported open", async ({ page }, testInfo) => {
+  const slug = pubFor("markOpen", testInfo);
+  await signUp(page, testInfo, `/en/pub/${slug}/report`, "moderator");
+  const main = page.getByRole("main");
+  // Unknown status: both status reports are offered, "it's open" first.
+  const radios = main.getByRole("radio");
+  await expect(radios.nth(0)).toHaveAccessibleName("It's open");
+  await expect(radios.nth(1)).toHaveAccessibleName("It has closed for good");
+
+  await main.getByRole("radio", { name: "It's open" }).check();
+  await main.getByRole("button", { name: "Send report" }).click();
+  await expect(main.getByRole("status")).toContainText("is approved");
+
+  await page.goto(`/en/pub/${slug}`);
+  await expect(page.locator("article > section").first().locator(".chip").first()).toHaveText("Open");
+  await expect(page.locator("dt", { hasText: "Last confirmed" }).locator("+ dd")).toHaveText("this month");
 });
 
 test("moderators reach the queue from the account menu, in Czech too", async ({ page }, testInfo) => {

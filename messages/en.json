@@ -318,7 +318,7 @@
     "kindTitle": "What has changed?",
     "kinds": {
       "closed": "It has closed for good",
-      "reopened": "It's open again",
+      "reopened": "It's open",
       "name": "It has a different name",
       "hours": "Opening hours",
       "address": "Address",

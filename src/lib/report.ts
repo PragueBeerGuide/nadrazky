@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { canModerate, type Role } from "@/lib/auth/roles";
 
-export const REPORT_KINDS = ["closed", "reopened", "name", "hours", "address", "beers", "location", "other"] as const;
+/** In the order the form lists them. "reopened" is "it's open". */
+export const REPORT_KINDS = ["reopened", "closed", "name", "hours", "address", "beers", "location", "other"] as const;
 export type ReportKind = (typeof REPORT_KINDS)[number];
 
 /** Kinds that propose a new value for one of the pub's fields. */
@@ -17,10 +18,15 @@ export const DAILY_REPORT_LIMIT = 10;
 export const needsValue = (kind: ReportKind) => (VALUE_KINDS as readonly ReportKind[]).includes(kind);
 export const needsMessage = (kind: ReportKind) => (MESSAGE_KINDS as readonly ReportKind[]).includes(kind);
 
-/** For a pub we list as closed the useful report is that it reopened; for any other, that it closed. */
+/**
+ * The status reports worth offering: "it's open" (kind "reopened") unless we already list the
+ * pub as open, "closed for good" unless we already list it as closed. A pub of unknown status
+ * gets both.
+ */
 export function kindsFor(pubStatus: string): ReportKind[] {
-  const skip = pubStatus === "closed" ? "closed" : "reopened";
-  return REPORT_KINDS.filter((k) => k !== skip);
+  return REPORT_KINDS.filter(
+    (k) => !(k === "reopened" && pubStatus === "open") && !(k === "closed" && pubStatus === "closed"),
+  );
 }
 
 export function reportLimitReached(sentToday: number) {

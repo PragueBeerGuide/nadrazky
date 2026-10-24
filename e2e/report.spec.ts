@@ -13,9 +13,9 @@ test("reports new opening hours, checking what each kind needs", async ({ page }
   await signUp(page, testInfo, `/en/pub/${PUB}/report`);
   const main = page.getByRole("main");
   await expect(main.getByRole("heading", { level: 1, name: "Remagen" })).toBeVisible();
-  // A pub we list as open offers "closed", not "open again".
+  // A pub we list as open offers "closed", not "it's open".
   await expect(main.getByRole("radio", { name: "It has closed for good" })).toBeVisible();
-  await expect(main.getByRole("radio", { name: "It's open again" })).toHaveCount(0);
+  await expect(main.getByRole("radio", { name: "It's open" })).toHaveCount(0);
 
   await main.getByRole("button", { name: "Send report" }).click();
   await expect(main.getByText("Choose what has changed.")).toBeVisible();

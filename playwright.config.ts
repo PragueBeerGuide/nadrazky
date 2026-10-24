@@ -24,7 +24,9 @@ export default defineConfig({
     { name: "phone", use: { ...devices["Pixel 7"] } },
   ],
   webServer: {
-    command: `npm run setup && npm run build && npx next start -p ${PORT}`,
+    // A fresh test database every run, as on CI: tests change pubs (status, hours…), and
+    // a database left over from an earlier run would start them from a different state.
+    command: `rm -rf data/pglite-e2e && npm run setup && npm run build && npx next start -p ${PORT}`,
     url: `http://localhost:${PORT}/cs`,
     reuseExistingServer: !process.env.CI,
     timeout: 300_000,
