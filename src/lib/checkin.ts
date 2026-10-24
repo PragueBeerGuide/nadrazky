@@ -15,6 +15,19 @@ export function alreadyCheckedIn(previous: Date[], at: Date) {
   return previous.some((p) => checkInDay(p) === day);
 }
 
+/**
+ * What a check-in changes on its pub: every check-in confirms the pub now ("last confirmed"),
+ * and one that found it open marks it open. Finding it closed once doesn't close it; that
+ * takes a report.
+ */
+export function pubChangeAfterCheckIn(pubWasOpen: boolean, now: Date) {
+  return {
+    lastConfirmedAt: now,
+    updatedAt: now,
+    ...(pubWasOpen ? { status: "open" as const, closedYear: null } : {}),
+  };
+}
+
 const tick = z.preprocess((v) => v === "on" || v === "true", z.boolean());
 /** Empty form fields are missing values, not zero. */
 const blankToUndefined = (v: unknown) => (v === "" || v == null ? undefined : v);

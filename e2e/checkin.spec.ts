@@ -87,3 +87,35 @@ test("checks in in Czech, reporting the pub closed", async ({ page }, testInfo) 
   await expect(mine.getByText("Zavřeno")).toBeVisible();
   await expect(mine.getByText("Panáka")).toBeVisible();
 });
+
+/**
+ * These change a pub's status, so each uses its own pubs (listed as "status unknown"),
+ * a different one for the desktop and the phone run.
+ */
+const UNKNOWN_PUBS = {
+  open: ["praha-kolovraty-hostinec-u-medveda", "praha-krc-cyklovna"],
+  closed: ["praha-kyje-restaurace-simanda", "praha-modrany-zastavka-modransky-biograf"],
+} as const;
+
+test("a check-in marks the pub open and confirmed this month", async ({ page }, testInfo) => {
+  const slug = UNKNOWN_PUBS.open[testInfo.project.name === "phone" ? 1 : 0];
+  await signUp(page, testInfo, `/en/pub/${slug}/check-in`);
+  await page.getByRole("button", { name: "Check in here" }).click();
+  await expect(page).toHaveURL(new RegExp(`/en/pub/${slug}$`));
+
+  const hero = page.locator("article > section").first();
+  await expect(hero.locator(".chip").first()).toHaveText("Open");
+  await expect(page.locator("dt", { hasText: "Last confirmed" }).locator("+ dd")).toHaveText("this month");
+});
+
+test("a check-in that found the pub closed only updates when it was last confirmed", async ({ page }, testInfo) => {
+  const slug = UNKNOWN_PUBS.closed[testInfo.project.name === "phone" ? 1 : 0];
+  await signUp(page, testInfo, `/en/pub/${slug}/check-in`);
+  await page.getByRole("radio", { name: "It was closed" }).check();
+  await page.getByRole("button", { name: "Check in here" }).click();
+  await expect(page).toHaveURL(new RegExp(`/en/pub/${slug}$`));
+
+  const hero = page.locator("article > section").first();
+  await expect(hero.locator(".chip").first()).toHaveText("Status unknown");
+  await expect(page.locator("dt", { hasText: "Last confirmed" }).locator("+ dd")).toHaveText("this month");
+});

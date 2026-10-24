@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { alreadyCheckedIn, checkInDay, checkInSchema } from "./checkin";
+import { alreadyCheckedIn, checkInDay, checkInSchema, pubChangeAfterCheckIn } from "./checkin";
 
 describe("checkInDay", () => {
   it("uses the Prague calendar day, not UTC", () => {
@@ -54,5 +54,19 @@ describe("checkInSchema", () => {
   it("refuses a rating outside 1–5 and a note over 280 characters", () => {
     expect(checkInSchema.safeParse({ ...base, rating: "6" }).success).toBe(false);
     expect(checkInSchema.safeParse({ ...base, note: "x".repeat(281) }).success).toBe(false);
+  });
+});
+
+describe("pubChangeAfterCheckIn", () => {
+  const now = new Date("2026-10-24T18:00:00Z");
+
+  it("marks the pub open and confirmed now when it was open", () => {
+    expect(pubChangeAfterCheckIn(true, now)).toEqual({ lastConfirmedAt: now, updatedAt: now, status: "open", closedYear: null });
+  });
+
+  it("only confirms the pub now when it was closed, without changing its status", () => {
+    const change = pubChangeAfterCheckIn(false, now);
+    expect(change).toEqual({ lastConfirmedAt: now, updatedAt: now });
+    expect(change).not.toHaveProperty("status");
   });
 });

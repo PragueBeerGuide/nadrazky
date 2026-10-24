@@ -84,7 +84,13 @@ export function MapExplorer({
     for (const s of byId.values()) s.best = s.pubs[0].status;
     return [...byId.values()];
   }, [visible]);
-  const selectedStation = stations.find((s) => s.id === selected) ?? null;
+  const selectedStation = useMemo(() => {
+    const station = stations.find((s) => s.id === selected);
+    if (!station) return null;
+    // A pub opened from its own page ("Open on the big map") leads its station's list.
+    const i = station.pubs.findIndex((p) => p.slug === initialPub);
+    return i > 0 ? { ...station, pubs: [station.pubs[i], ...station.pubs.slice(0, i), ...station.pubs.slice(i + 1)] } : station;
+  }, [stations, selected, initialPub]);
   const shownStatuses = STATUSES.filter((s) => s !== "closed" || counts.closed > 0);
 
   const toggle = (s: PubStatus) =>

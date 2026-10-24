@@ -43,6 +43,13 @@
       "when": 1792863635831,
       "tag": "0005_pub_reports",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792869535535,
+      "tag": "0006_pub_last_confirmed",
+      "breakpoints": true
     }
   ]
 }
