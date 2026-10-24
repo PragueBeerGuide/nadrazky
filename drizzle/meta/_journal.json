@@ -64,6 +64,20 @@
       "when": 1792877917252,
       "tag": "0008_profile_details",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792879630692,
+      "tag": "0009_checkin_amounts",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792879631637,
+      "tag": "0010_drop_beer_shot_flags",
+      "breakpoints": true
     }
   ]
 }

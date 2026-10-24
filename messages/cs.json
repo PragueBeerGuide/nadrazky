@@ -276,7 +276,7 @@
     "beers": "{count, plural, one {# pivo} few {# piva} other {# piv}}",
     "shots": "{count, plural, one {# panák} few {# panáky} other {# panáků}}",
     "nonAlcoholic": "{count, plural, other {# nealko}}",
-    "snacks": "{count, plural, one {# jídlo} few {# jídla} other {# jídel}}",
+    "food": "{count}× jídlo",
     "regionsTitle": "Podle krajů",
     "regionProgress": "{visited} / {total}",
     "visitedTitle": "Hospody, kde jsi byl(a)",
@@ -313,7 +313,7 @@
     "beer": "Pivo",
     "shot": "Panáka",
     "nonAlcoholic": "Nealko",
-    "snack": "Něco k jídlu",
+    "food": "Jídlo",
     "ratingTitle": "Hodnocení",
     "ratingNone": "Žádné",
     "ratingValue": "{count} z 5",
@@ -335,7 +335,12 @@
     "alreadyTitle": "Dnes odbaveno",
     "alreadyText": "V hospodě {name} už máš dnes odbaveno. Počítá se jedno odbavení v hospodě za den.",
     "back": "Zpět na hospodu",
-    "oncePerDay": "Počítá se jedno odbavení v hospodě za den."
+    "oncePerDay": "Počítá se jedno odbavení v hospodě za den.",
+    "howManyBeers": "Kolik piv?",
+    "howManyShots": "Kolik panáků?",
+    "amountMissing": "Vyber kolik.",
+    "beerCount": "{count, plural, one {# pivo} few {# piva} other {# piv}}",
+    "shotCount": "{count, plural, one {# panák} few {# panáky} other {# panáků}}"
   },
   "report": {
     "title": "Nahlásit změnu",

@@ -276,7 +276,7 @@
     "beers": "{count, plural, one {# beer} other {# beers}}",
     "shots": "{count, plural, one {# shot} other {# shots}}",
     "nonAlcoholic": "{count, plural, one {# non-alcoholic drink} other {# non-alcoholic drinks}}",
-    "snacks": "{count, plural, one {# snack} other {# snacks}}",
+    "food": "{count}× food",
     "regionsTitle": "By region",
     "regionProgress": "{visited} / {total}",
     "visitedTitle": "Pubs you've visited",
@@ -313,7 +313,7 @@
     "beer": "Beer",
     "shot": "A shot",
     "nonAlcoholic": "Non-alcoholic drink",
-    "snack": "Snack",
+    "food": "Food",
     "ratingTitle": "Rating",
     "ratingNone": "None",
     "ratingValue": "{count} of 5",
@@ -335,7 +335,12 @@
     "alreadyTitle": "Checked in today",
     "alreadyText": "You've already checked in at {name} today. One check-in per pub per day counts.",
     "back": "Back to the pub",
-    "oncePerDay": "One check-in per pub per day counts."
+    "oncePerDay": "One check-in per pub per day counts.",
+    "howManyBeers": "How many beers?",
+    "howManyShots": "How many shots?",
+    "amountMissing": "Choose how many.",
+    "beerCount": "{count, plural, one {# beer} other {# beers}}",
+    "shotCount": "{count, plural, one {# shot} other {# shots}}"
   },
   "report": {
     "title": "Report a change",
