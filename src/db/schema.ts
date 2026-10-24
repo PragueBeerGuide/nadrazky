@@ -180,10 +180,12 @@ export const checkins = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     /** The calendar day in Prague (YYYY-MM-DD) the check-in counts for. */
     day: date("day", { mode: "string" }).notNull(),
-    hadBeer: boolean("had_beer").notNull().default(false),
-    hadShot: boolean("had_shot").notNull().default(false),
+    /** How many beers and shots; 0 for none. */
+    beers: smallint("beers").notNull().default(0),
+    shots: smallint("shots").notNull().default(0),
     hadNonAlcoholic: boolean("had_non_alcoholic").notNull().default(false),
-    hadSnack: boolean("had_snack").notNull().default(false),
+    /** "Food" in the app; the column keeps its first name. */
+    hadFood: boolean("had_snack").notNull().default(false),
     rating: smallint("rating"),
     note: text("note"),
     pubWasOpen: boolean("pub_was_open").notNull(),
@@ -193,6 +195,8 @@ export const checkins = pgTable(
     index("checkins_pub_idx").on(t.pubId, t.createdAt),
     check("checkins_rating_check", sql`${t.rating} between 1 and 5`),
     check("checkins_note_check", sql`char_length(${t.note}) <= 280`),
+    check("checkins_beers_check", sql`${t.beers} between 0 and 10`),
+    check("checkins_shots_check", sql`${t.shots} between 0 and 10`),
   ],
 );
 

@@ -11,7 +11,7 @@ import { alreadyCheckedIn, checkInDay, checkInSchema, pubChangeAfterCheckIn } fr
 import { recentCheckInTimes } from "@/lib/checkins";
 
 export type CheckInError = "signIn" | "finishSignUp" | "invalid" | "notFound" | "alreadyToday";
-export type CheckInState = { error?: CheckInError };
+export type CheckInState = { error?: CheckInError; missingAmount?: { beer?: boolean; shot?: boolean } };
 
 /**
  * Saves a check-in unless the user has already checked in at this pub today, and with it
@@ -24,7 +24,11 @@ export async function checkIn(_: CheckInState, formData: FormData): Promise<Chec
   if (!signUpFinished(user)) return { error: "finishSignUp" };
 
   const input = checkInSchema.safeParse(Object.fromEntries(formData));
-  if (!input.success) return { error: "invalid" };
+  if (!input.success) {
+    const paths = input.error.issues.map((i) => i.path[0]);
+    const missingAmount = { beer: paths.includes("beerCount"), shot: paths.includes("shotCount") };
+    return missingAmount.beer || missingAmount.shot ? { missingAmount } : { error: "invalid" };
+  }
   const { slug, ...details } = input.data;
 
   const [pub] = await db.select({ id: schema.pubs.id }).from(schema.pubs).where(eq(schema.pubs.slug, slug));

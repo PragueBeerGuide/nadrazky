@@ -245,8 +245,12 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
             ) : (
               <ul aria-label={t("recentCheckIns")} className="flex flex-col divide-y divide-rule-soft border-t border-rule-soft">
                 {recent.map((c) => {
-                  const had = (["hadBeer", "hadShot", "hadNonAlcoholic", "hadSnack"] as const).filter((k) => c[k]);
-                  const labels = { hadBeer: "beer", hadShot: "shot", hadNonAlcoholic: "nonAlcoholic", hadSnack: "snack" } as const;
+                  const had = [
+                    c.beers > 0 && ct("beerCount", { count: c.beers }),
+                    c.shots > 0 && ct("shotCount", { count: c.shots }),
+                    c.hadNonAlcoholic && ct("nonAlcoholic"),
+                    c.hadFood && ct("food"),
+                  ].filter((x): x is string => !!x);
                   return (
                     <li key={c.id} className="flex flex-col gap-2 py-4">
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -270,9 +274,9 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
                       </div>
                       {had.length > 0 && (
                         <ul className="flex flex-wrap gap-1.5">
-                          {had.map((k) => (
-                            <li key={k} className="rounded-full bg-sign-tint px-2.5 py-0.5 text-[13px] font-medium text-sign">
-                              {ct(labels[k])}
+                          {had.map((label) => (
+                            <li key={label} className="rounded-full bg-sign-tint px-2.5 py-0.5 text-[13px] font-medium text-sign">
+                              {label}
                             </li>
                           ))}
                         </ul>

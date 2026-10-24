@@ -81,7 +81,7 @@ export function ProfileForm({ username, hometown, avatarUrl }: Props) {
         <div className="flex flex-wrap items-center gap-4">
           <Avatar url={shown} name={username} size={88} className="border-2 border-rule" />
           <div className="flex flex-wrap gap-2">
-            <label className="btn btn-outline min-h-11 cursor-pointer has-focus-visible:outline-3 has-focus-visible:outline-yellow">
+            <label className="btn btn-outline relative min-h-11 cursor-pointer has-focus-visible:outline-3 has-focus-visible:outline-yellow">
               <input type="file" name="pictureFile" accept="image/*" onChange={choose} className="sr-only" />
               {shown ? t("changePicture") : t("choosePicture")}
             </label>

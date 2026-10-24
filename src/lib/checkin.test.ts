@@ -37,14 +37,30 @@ describe("checkInSchema", () => {
     expect(checkInSchema.safeParse({ ...base, pubWasOpen: undefined }).success).toBe(false);
   });
 
-  it("reads ticks, rating and note, all optional", () => {
+  it("reads the details, all optional", () => {
     const plain = checkInSchema.parse(base);
-    expect(plain).toMatchObject({ hadBeer: false, hadSnack: false, pubWasOpen: true });
+    expect(plain).toMatchObject({ beers: 0, shots: 0, hadNonAlcoholic: false, hadFood: false, pubWasOpen: true });
     expect(plain.rating).toBeUndefined();
     expect(plain.note).toBeUndefined();
     expect(
-      checkInSchema.parse({ ...base, hadBeer: "on", hadSnack: "on", rating: "4", note: "  Pivo dobré.  ", pubWasOpen: "closed" }),
-    ).toMatchObject({ hadBeer: true, hadShot: false, hadSnack: true, rating: 4, note: "Pivo dobré.", pubWasOpen: false });
+      checkInSchema.parse({ ...base, hadBeer: "on", beerCount: "3", hadFood: "on", rating: "4", note: "  Pivo dobré.  ", pubWasOpen: "closed" }),
+    ).toMatchObject({ beers: 3, shots: 0, hadFood: true, rating: 4, note: "Pivo dobré.", pubWasOpen: false });
+  });
+
+  it("needs an amount, 1 to 10, for beer and shots", () => {
+    const issues = (input: Record<string, string>) => {
+      const r = checkInSchema.safeParse({ ...base, ...input });
+      return r.success ? [] : r.error.issues.map((i) => i.path.join("."));
+    };
+    expect(issues({ hadBeer: "on" })).toEqual(["beerCount"]);
+    expect(issues({ hadShot: "on", shotCount: "" })).toEqual(["shotCount"]);
+    expect(issues({ hadBeer: "on", beerCount: "11" })).toEqual(["beerCount"]);
+    expect(issues({ hadBeer: "on", beerCount: "0" })).toContain("beerCount");
+    expect(checkInSchema.parse({ ...base, hadBeer: "on", beerCount: "10", hadShot: "on", shotCount: "2" })).toMatchObject({ beers: 10, shots: 2 });
+  });
+
+  it("ignores an amount for a drink that isn't ticked", () => {
+    expect(checkInSchema.parse({ ...base, beerCount: "4" })).toMatchObject({ beers: 0 });
   });
 
   it("ignores a position if one is posted", () => {

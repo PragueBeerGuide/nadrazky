@@ -16,8 +16,11 @@ test("signed out, check-in goes through the login and back", async ({ page }, te
 test("checks in on the spot with details, once a day", async ({ page }, testInfo) => {
   const user = await signUp(page, testInfo, `/en/pub/${PUB}/check-in`);
   await page.getByRole("checkbox", { name: "Beer" }).check();
-  await page.getByRole("checkbox", { name: "Snack" }).check();
-  await page.getByRole("radio", { name: "4 of 5" }).check({ force: true });
+  await page.getByRole("group", { name: "How many beers?" }).getByText("3", { exact: true }).click();
+  await page.getByRole("checkbox", { name: "Food" }).check();
+  // Tap the visible button, as a user would (the radio itself is visually hidden).
+  await page.getByRole("group", { name: /^Rating/ }).getByText("4", { exact: true }).click();
+  await expect(page.getByRole("radio", { name: "4 of 5" })).toBeChecked();
   await page.getByLabel(/^Note/).fill("Smažák a Kozel, moc milá obsluha.");
   await page.getByRole("radio", { name: "It was open" }).check();
   await page.getByRole("button", { name: "Check in here" }).click();
@@ -29,8 +32,8 @@ test("checks in on the spot with details, once a day", async ({ page }, testInfo
   await expect(page.getByTestId("last-visit")).toHaveText(/it was open$/);
   const mine = page.getByRole("list", { name: "Latest check-ins" }).getByRole("listitem").filter({ hasText: `@${user.username}` });
   await expect(mine).toContainText("Smažák a Kozel, moc milá obsluha.");
-  await expect(mine.getByText("Beer", { exact: true })).toBeVisible();
-  await expect(mine.getByText("Snack", { exact: true })).toBeVisible();
+  await expect(mine.getByText("3 beers", { exact: true })).toBeVisible();
+  await expect(mine.getByText("Food", { exact: true })).toBeVisible();
   await expect(mine.getByLabel("Rating 4 of 5")).toBeVisible();
 
   // The check-in page now says it is done for today.
@@ -78,6 +81,7 @@ test("checks in in Czech, reporting the pub closed", async ({ page }, testInfo) 
   await page.getByRole("link", { name: "Odbavit se" }).click();
   await expect(page).toHaveURL(new RegExp(`/cs/hospoda/${PUB}/odbaveni$`));
   await page.getByRole("checkbox", { name: "Panáka" }).check();
+  await page.getByRole("group", { name: "Kolik panáků?" }).getByText("1", { exact: true }).click();
   await page.getByRole("radio", { name: "Bylo zavřeno" }).check();
   await page.getByRole("button", { name: "Odbavit se tady" }).click();
 
@@ -85,7 +89,7 @@ test("checks in in Czech, reporting the pub closed", async ({ page }, testInfo) 
   await expect(page.getByText("Dnes už tu máš odbaveno")).toBeVisible();
   const mine = page.getByRole("list", { name: "Poslední odbavení" }).getByRole("listitem").filter({ hasText: `@${user.username}` });
   await expect(mine.getByText("Zavřeno")).toBeVisible();
-  await expect(mine.getByText("Panáka")).toBeVisible();
+  await expect(mine.getByText("1 panák", { exact: true })).toBeVisible();
 });
 
 /**
@@ -118,4 +122,36 @@ test("a check-in that found the pub closed only updates when it was last confirm
   const hero = page.locator("article > section").first();
   await expect(hero.locator(".chip").first()).toHaveText("Status unknown");
   await expect(page.locator("dt", { hasText: "Last confirmed" }).locator("+ dd")).toHaveText("today");
+});
+
+test("beer and shots need an amount before the check-in is sent", async ({ page }, testInfo) => {
+  const user = await signUp(page, testInfo, `/en/pub/${PUB}/check-in`);
+  const main = page.getByRole("main");
+  await main.getByRole("checkbox", { name: "A shot" }).check();
+  await main.getByLabel(/^Note/).fill("Kept while I pick.");
+  await main.getByRole("button", { name: "Check in here" }).click();
+  await expect(main.getByText("Choose how many.")).toBeVisible();
+  await expect(page).toHaveURL(new RegExp(`/en/pub/${PUB}/check-in$`));
+  await expect(main.getByLabel(/^Note/)).toHaveValue("Kept while I pick.");
+
+  await main.getByRole("group", { name: "How many shots?" }).getByText("2", { exact: true }).click();
+  await expect(main.getByText("Choose how many.")).toHaveCount(0);
+  await main.getByRole("button", { name: "Check in here" }).click();
+  await expect(page).toHaveURL(new RegExp(`/en/pub/${PUB}$`));
+  const mine = page.getByRole("region", { name: "Check-ins" }).getByRole("listitem").filter({ hasText: `@${user.username}` });
+  await expect(mine.getByText("2 shots", { exact: true })).toBeVisible();
+});
+
+test("amounts in Czech", async ({ page }, testInfo) => {
+  const user = await signUp(page, testInfo);
+  await page.goto(`/cs/hospoda/${PUB}/odbaveni`);
+  const main = page.getByRole("main");
+  await main.getByRole("checkbox", { name: "Pivo" }).check();
+  await main.getByRole("group", { name: "Kolik piv?" }).getByText("4", { exact: true }).click();
+  await main.getByRole("checkbox", { name: "Jídlo" }).check();
+  await main.getByRole("button", { name: "Odbavit se tady" }).click();
+  await expect(page).toHaveURL(new RegExp(`/cs/hospoda/${PUB}$`));
+  const mine = page.getByRole("region", { name: "Odbavení" }).getByRole("listitem").filter({ hasText: `@${user.username}` });
+  await expect(mine.getByText("4 piva", { exact: true })).toBeVisible();
+  await expect(mine.getByText("Jídlo", { exact: true })).toBeVisible();
 });

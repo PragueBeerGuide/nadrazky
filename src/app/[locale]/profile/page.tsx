@@ -48,7 +48,7 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
     { key: "regions", n: stats.regions, total: regions.length },
     { key: "lines", n: stats.lines },
   ] as const;
-  const had = (["beers", "shots", "nonAlcoholic", "snacks"] as const).filter((k) => stats[k] > 0);
+  const had = (["beers", "shots", "nonAlcoholic", "food"] as const).filter((k) => stats[k] > 0);
   const picture = avatarUrl(user.id, user.avatarUpdatedAt);
 
   return (

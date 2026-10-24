@@ -8,9 +8,17 @@ function stat(page: Page, key: string) {
   return { value: tile.locator("dd"), label: tile.locator("dt") };
 }
 
+/** Checks in with ticks such as "Food" or, for beer and shots, an amount: "Beer:2". */
 async function checkIn(page: Page, slug: string, ticks: string[] = []) {
   await page.goto(`/en/pub/${slug}/check-in`);
-  for (const name of ticks) await page.getByRole("checkbox", { name, exact: true }).check();
+  for (const tick of ticks) {
+    const [name, amount] = tick.split(":");
+    await page.getByRole("checkbox", { name, exact: true }).check();
+    if (amount) {
+      const group = name === "Beer" ? "How many beers?" : "How many shots?";
+      await page.getByRole("group", { name: group }).getByText(amount, { exact: true }).click();
+    }
+  }
   await page.getByRole("button", { name: "Check in here" }).click();
   await expect(page).toHaveURL(new RegExp(`/en/pub/${slug}$`));
 }
@@ -33,8 +41,8 @@ test("a new user's profile is empty and reachable from the account menu", async 
 test("counts the pubs, stations and regions a user has checked in at", async ({ page }, testInfo) => {
   await signUp(page, testInfo);
   // Two pubs at the same station (Davle, Central Bohemian Region).
-  await checkIn(page, "davle-remagen", ["Beer", "Snack"]);
-  await checkIn(page, "davle-sk-marina-chyse", ["Beer"]);
+  await checkIn(page, "davle-remagen", ["Beer:2", "Food"]);
+  await checkIn(page, "davle-sk-marina-chyse", ["Beer:1", "A shot:3"]);
 
   await page.goto("/en/profile");
   await expect(stat(page, "pubs").value).toHaveText("2");
@@ -44,8 +52,9 @@ test("counts the pubs, stations and regions a user has checked in at", async ({ 
   await expect(stat(page, "stations").label).toHaveText("station");
   await expect(stat(page, "regions").value).toHaveText("1");
   await expect(stat(page, "regions").label).toHaveText("regionout of 14");
-  await expect(page.getByText("2 beers", { exact: true })).toBeVisible();
-  await expect(page.getByText("1 snack", { exact: true })).toBeVisible();
+  await expect(page.getByText("3 beers", { exact: true })).toBeVisible();
+  await expect(page.getByText("3 shots", { exact: true })).toBeVisible();
+  await expect(page.getByText("1× food", { exact: true })).toBeVisible();
 
   const visited = page.getByRole("region", { name: "Pubs you've visited" });
   await expect(visited.getByRole("link")).toHaveCount(2);
@@ -56,7 +65,7 @@ test("counts the pubs, stations and regions a user has checked in at", async ({ 
 
 test("the profile is in Czech too", async ({ page }, testInfo) => {
   await signUp(page, testInfo);
-  await checkIn(page, "davle-remagen", ["Beer"]);
+  await checkIn(page, "davle-remagen", ["Beer:1"]);
   await page.goto("/cs/profil");
   await expect(page.getByRole("main").getByText("Tvůj profil")).toBeVisible();
   await expect(stat(page, "pubs").value).toHaveText("1");
