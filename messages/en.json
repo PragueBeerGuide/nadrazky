@@ -230,6 +230,7 @@
     "devTitle": "Dev login",
     "devText": "Local development only: signs in with any email, no check.",
     "devSubmit": "Sign in (dev)",
+    "devRole": "Role",
     "notConfigured": "Signing in isn't set up on this server yet.",
     "errors": {
       "AccessDenied": "Sign-in was cancelled.",
@@ -350,6 +351,7 @@
     "sending": "Sending…",
     "doneTitle": "Thank you!",
     "doneText": "We've got your report about {name} and will check it. The pub page changes once it's approved.",
+    "doneTextApproved": "Your report about {name} is approved, because you're a moderator. A new status, name, hours, address or beers show on the pub page now.",
     "back": "Back to the pub",
     "another": "Report something else",
     "errors": {
@@ -363,6 +365,28 @@
     },
     "linkText": "Something wrong or out of date?",
     "link": "Report a change"
+  },
+  "moderation": {
+    "title": "Moderation",
+    "subtitle": "{count, plural, =0 {No reports are waiting for review.} one {# report is waiting for review.} other {# reports are waiting for review.}}",
+    "openTitle": "Reports waiting for review",
+    "empty": "Nothing to review. Thank you!",
+    "proposed": "Proposed",
+    "current": "We show now",
+    "byHand": {
+      "location": "Approving doesn't move the pin: fix the position by hand.",
+      "other": "Approving doesn't change the pub: make the change by hand."
+    },
+    "reportedBy": "@{username} · {date}",
+    "approve": "Approve",
+    "reject": "Reject",
+    "resolvedTitle": "Recently resolved",
+    "accepted": "Approved",
+    "rejected": "Rejected",
+    "resolvedBy": "by @{username}",
+    "auto": "@{username}, approved automatically",
+    "menuLink": "Moderation",
+    "menuCount": "{count} waiting"
   },
   "privacy": {
     "title": "Privacy",
@@ -399,7 +423,7 @@
     },
     "reports": {
       "title": "Reports of changes",
-      "p1": "When you report a change to a pub, we store the report with your account so we can check it and contact you if needed. Reports are not shown publicly."
+      "p1": "When you report a change to a pub, we store the report with your account and username. Moderators and admins see it so they can check it and change the pub page. Reports are not shown publicly."
     },
     "cookies": {
       "title": "Cookies",

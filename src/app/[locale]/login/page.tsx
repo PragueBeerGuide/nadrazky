@@ -6,6 +6,7 @@ import { Link, getPathname } from "@/i18n/navigation";
 import { asLocale } from "@/i18n/routing";
 import { authEnabled, authProviders, safeReturnPath } from "@/lib/auth/config";
 import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
+import { ROLES } from "@/lib/auth/roles";
 import { suggestUsername } from "@/lib/auth/signup";
 import { devSignIn, logOut, signInWithGoogle } from "./actions";
 import { FinishSignUpForm } from "./FinishSignUpForm";
@@ -101,6 +102,16 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[l
                 {`${t("devTitle")}: ${t("email")}`}
               </label>
               <input id="dev-email" name="email" type="email" required placeholder={t("emailPlaceholder")} className="field min-w-0 flex-[1_1_200px]" />
+              <label htmlFor="dev-role" className="sr-only">
+                {`${t("devTitle")}: ${t("devRole")}`}
+              </label>
+              <select id="dev-role" name="role" defaultValue="user" className="field w-auto flex-[0_0_auto]">
+                {ROLES.map((r) => (
+                  <option key={r} value={r}>
+                    {t(`roles.${r}`)}
+                  </option>
+                ))}
+              </select>
               <button type="submit" className="btn btn-ink min-h-[46px]">
                 {t("devSubmit")}
               </button>

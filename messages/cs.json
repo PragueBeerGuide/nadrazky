@@ -230,6 +230,7 @@
     "devTitle": "Vývojářské přihlášení",
     "devText": "Jen pro lokální vývoj: přihlásí s jakýmkoli e-mailem bez ověření.",
     "devSubmit": "Přihlásit (dev)",
+    "devRole": "Role",
     "notConfigured": "Přihlašování na tomto serveru zatím není nastavené.",
     "errors": {
       "AccessDenied": "Přihlášení bylo zrušeno.",
@@ -350,6 +351,7 @@
     "sending": "Odesílám…",
     "doneTitle": "Díky!",
     "doneText": "Hlášení o hospodě {name} jsme dostali a zkontrolujeme ho. Na stránce hospody se změna projeví, až ji schválíme.",
+    "doneTextApproved": "Hlášení o hospodě {name} je rovnou schválené, protože jsi moderátor(ka). Nový stav, název, otevírací doba, adresa nebo pivo se na stránce hospody ukážou hned.",
     "back": "Zpět na hospodu",
     "another": "Nahlásit ještě něco",
     "errors": {
@@ -363,6 +365,28 @@
     },
     "linkText": "Nesedí tu něco?",
     "link": "Nahlásit změnu"
+  },
+  "moderation": {
+    "title": "Moderace",
+    "subtitle": "{count, plural, =0 {Na kontrolu nic nečeká.} one {Na kontrolu čeká # hlášení.} few {Na kontrolu čekají # hlášení.} other {Na kontrolu čeká # hlášení.}}",
+    "openTitle": "Hlášení čekající na kontrolu",
+    "empty": "Není co kontrolovat. Díky!",
+    "proposed": "Návrh",
+    "current": "Teď uvádíme",
+    "byHand": {
+      "location": "Schválení špendlík nepřesune: polohu oprav ručně.",
+      "other": "Schválení hospodu nezmění: změnu udělej ručně."
+    },
+    "reportedBy": "@{username} · {date}",
+    "approve": "Schválit",
+    "reject": "Zamítnout",
+    "resolvedTitle": "Nedávno vyřízené",
+    "accepted": "Schváleno",
+    "rejected": "Zamítnuto",
+    "resolvedBy": "vyřídil(a) @{username}",
+    "auto": "@{username}, schváleno automaticky",
+    "menuLink": "Moderace",
+    "menuCount": "čeká {count}"
   },
   "privacy": {
     "title": "Ochrana soukromí",
@@ -399,7 +423,7 @@
     },
     "reports": {
       "title": "Hlášení změn",
-      "p1": "Když nahlásíš změnu u hospody, uložíme hlášení k tvému účtu, abychom ho mohli zkontrolovat a případně se ti ozvat. Hlášení nejsou veřejná."
+      "p1": "Když nahlásíš změnu u hospody, uložíme hlášení k tvému účtu a přezdívce. Vidí ho moderátoři a správci, aby ho mohli zkontrolovat a upravit stránku hospody. Hlášení nejsou veřejná."
     },
     "cookies": {
       "title": "Cookies",

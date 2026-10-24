@@ -12,6 +12,7 @@ import Google from "next-auth/providers/google";
 import { z } from "zod";
 import { db, schema } from "@/db";
 import { authProviders, authSecret } from "@/lib/auth/config";
+import { ROLES } from "@/lib/auth/roles";
 
 const enabled = authProviders();
 const providers: Provider[] = [];
@@ -21,19 +22,21 @@ if (enabled.google) {
 }
 
 if (enabled.dev) {
-  // Local development and end-to-end tests only (see devLoginEnabled): signs in by email, no check.
+  // Local development and end-to-end tests only (see devLoginEnabled): signs in by email, no check,
+  // with the role picked on the form, so moderation can be tried without editing the database.
   providers.push(
     Credentials({
       id: "dev-login",
       name: "Dev login",
-      credentials: { email: { label: "Email", type: "email" } },
+      credentials: { email: { label: "Email", type: "email" }, role: { label: "Role" } },
       async authorize(credentials) {
         const email = z.email().safeParse(String(credentials?.email ?? "").trim().toLowerCase());
         if (!email.success) return null;
+        const role = ROLES.find((r) => r === credentials?.role) ?? "user";
         const [existing] = await db.select().from(schema.users).where(eq(schema.users.email, email.data));
-        const user =
-          existing ??
-          (await db.insert(schema.users).values({ email: email.data, emailVerified: new Date() }).returning())[0];
+        const user = existing
+          ? (await db.update(schema.users).set({ role }).where(eq(schema.users.id, existing.id)).returning())[0]
+          : (await db.insert(schema.users).values({ email: email.data, emailVerified: new Date(), role }).returning())[0];
         return { id: user.id, email: user.email, name: user.name };
       },
     }),

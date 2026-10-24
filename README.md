@@ -55,7 +55,7 @@ Pushing to `main` deploys production, and every pull request gets a preview. On 
 
 ## Accounts
 
-Log in and sign up share one page (`/cs/prihlaseni`, `/en/login`), and the only way in is a Google account. The first sign-in creates the account; the user then picks a username and confirms they are 18 or over, and only then is sign-up finished. Sessions are signed cookies (JWT); users and their linked Google accounts are in the `users` and `accounts` tables. Each user has a role: `user` (default), `moderator` or `admin`. There is no admin screen yet; set a role in the database:
+Log in and sign up share one page (`/cs/prihlaseni`, `/en/login`), and the only way in is a Google account. The first sign-in creates the account; the user then picks a username and confirms they are 18 or over, and only then is sign-up finished. Sessions are signed cookies (JWT); users and their linked Google accounts are in the `users` and `accounts` tables. Each user has a role: `user` (default), `moderator` or `admin` (see [Reports of changes and moderation](#reports-of-changes-and-moderation)). There is no screen for roles yet; set one in the database:
 
 ```sql
 update users set role = 'admin' where email = 'you@example.com';
@@ -88,15 +88,19 @@ Preview deployments have changing URLs that Google won't accept as redirect URIs
 
 Checking in needs an account but no location: the app never asks for or stores the visitor's position. Each user gets **one check-in per pub per day** (the day in Prague time), enforced by a unique index on `checkins (user_id, pub_id, day)`. Optional details: beer, a shot, a non-alcoholic drink, a snack (ticks), a rating from 1 to 5, a note (up to 280 characters), and whether the pub was open or closed. The pub page shows the number of check-ins, the last visit and the latest five check-ins.
 
-## Reports of changes
+## Reports of changes and moderation
 
-Any signed-in user can report a change to a pub from its page ("Report a change", `/cs/hospoda/[slug]/nahlasit-zmenu`, `/en/pub/[slug]/report`): that it closed or reopened, a new name, opening hours, address or beers on tap (with the new value), a wrong position on the map, or something else (with a description). Reports are stored in `pub_reports` with status `open`; each user can send up to 10 a day (`DAILY_REPORT_LIMIT` in `src/lib/report.ts`). Nothing on the pub page changes until a moderator accepts a report. Until the moderation queue exists, read the open reports in the database:
+Every user has one of three roles: `user` (the default), `moderator` or `admin`. Set a role in the database (see [Accounts](#accounts)); moderators and admins have the same powers for now.
 
-```sql
-select r.created_at, p.slug, r.kind, r.value, r.message, u.username
-from pub_reports r join pubs p on p.id = r.pub_id join users u on u.id = r.user_id
-where r.status = 'open' order by r.created_at;
-```
+Any signed-in user can report a change to a pub from its page ("Report a change", `/cs/hospoda/[slug]/nahlasit-zmenu`, `/en/pub/[slug]/report`): that it closed or reopened, a new name, opening hours, address or beers on tap (with the new value), a wrong position on the map, or something else (with a description). Reports are stored in `pub_reports`.
+
+- **From a regular user** the report waits as `open` until a moderator or admin approves or rejects it on the moderation page (`/cs/moderace`, `/en/moderation`, linked from the account menu with the number waiting). Regular users can send up to 10 reports a day (`DAILY_REPORT_LIMIT` in `src/lib/report.ts`).
+- **From a moderator or admin** the report is approved at once (`resolved_by` is the reporter) and has no daily limit.
+- **Approving applies the change** (`changeFor` in `src/lib/report.ts`): "closed" and "open again" set the pub's status (and "last confirmed" to this month); a new name, hours, address or beers replace the field. A wrong position and "something else" are free text: approving only marks them done, and the moderation page says to make the change by hand.
+
+`npm run db:import` re-imports pub names from nadrazky.eu, so running it by hand undoes approved name changes (status, hours, address and beers are kept). Vercel's build only imports into an empty database.
+
+Under `npm run dev` and in the end-to-end tests the dev login has a role picker, so moderation can be tried without editing the database.
 
 ## Routes
 
@@ -110,10 +114,11 @@ where r.status = 'open' order by r.created_at;
 | `/cs/trate`, `/cs/trat/[number]` | `/en/lines`, `/en/line/[number]` | Rail lines |
 | `/cs/hospoda/[slug]/odbaveni` | `/en/pub/[slug]/check-in` | Check in at a pub (needs an account) |
 | `/cs/hospoda/[slug]/nahlasit-zmenu` | `/en/pub/[slug]/report` | Report a change to a pub (signed-in users) |
+| `/cs/moderace` | `/en/moderation` | Moderation queue: approve or reject reports (moderators and admins) |
 | `/cs/prihlaseni` | `/en/login` | Log in, sign up, finish sign-up |
 | `/cs/profil` | `/en/profile` | Your profile: pubs, stations, regions and lines visited (signed-in users) |
 | `/cs/ochrana-soukromi` | `/en/privacy` | Privacy policy (controller and contact in `src/lib/privacy.ts`) |
 
 ## Next
 
-Photos on check-ins, badges and the moderation queue — see the app plan.
+Photos on check-ins and badges — see the app plan.

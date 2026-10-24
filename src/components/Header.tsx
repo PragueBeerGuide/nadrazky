@@ -2,6 +2,8 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { authEnabled } from "@/lib/auth/config";
 import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
+import { canModerate } from "@/lib/auth/roles";
+import { countOpenReports } from "@/lib/reports";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { NavLinks } from "./NavLinks";
 import { UserMenu } from "./UserMenu";
@@ -9,6 +11,8 @@ import { UserMenu } from "./UserMenu";
 export async function Header() {
   const t = await getTranslations("auth");
   const user = await getCurrentUser();
+  // Moderators and admins see how many reports are waiting.
+  const waiting = user && canModerate(user.role) ? await countOpenReports() : null;
   return (
     <header className="bg-sign text-white">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 md:h-[74px] md:gap-7 md:px-6">
@@ -26,6 +30,7 @@ export async function Header() {
             <UserMenu
               user={{ name: user.name, username: user.username, email: user.email, role: user.role }}
               finished={signUpFinished(user)}
+              waiting={waiting}
             />
           ) : (
             authEnabled() && (

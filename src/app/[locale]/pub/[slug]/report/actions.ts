@@ -3,17 +3,19 @@
 import { eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
-import { reportLimitReached, reportSchema } from "@/lib/report";
-import { countReportsToday } from "@/lib/reports";
+import { reportLimitApplies, reportLimitReached, reportSchema } from "@/lib/report";
+import { countReportsToday, createReport } from "@/lib/reports";
 
 export type ReportState = {
   done?: boolean;
+  /** A moderator's or admin's report is approved and applied at once. */
+  autoApproved?: boolean;
   error?: "signIn" | "finishSignUp" | "notFound" | "limit";
   fields?: { kind?: boolean; value?: boolean; message?: boolean };
   values?: { kind: string; value: string; message: string };
 };
 
-/** Stores a "report a change" for a moderator to review. */
+/** Stores a "report a change": for review, or approved at once when a moderator or admin sends it. */
 export async function submitReport(_: ReportState, formData: FormData): Promise<ReportState> {
   const values = {
     kind: String(formData.get("kind") ?? ""),
@@ -33,8 +35,10 @@ export async function submitReport(_: ReportState, formData: FormData): Promise<
 
   const [pub] = await db.select({ id: schema.pubs.id }).from(schema.pubs).where(eq(schema.pubs.slug, slug));
   if (!pub) return { error: "notFound", values };
-  if (reportLimitReached(await countReportsToday(user.id))) return { error: "limit", values };
+  if (reportLimitApplies(user.role) && reportLimitReached(await countReportsToday(user.id))) {
+    return { error: "limit", values };
+  }
 
-  await db.insert(schema.pubReports).values({ pubId: pub.id, userId: user.id, kind, value, message });
-  return { done: true };
+  const { autoApproved } = await createReport({ pubId: pub.id, user, kind, value, message });
+  return { done: true, autoApproved };
 }

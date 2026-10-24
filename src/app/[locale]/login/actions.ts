@@ -26,7 +26,7 @@ export async function signInWithGoogle(formData: FormData) {
 export async function devSignIn(formData: FormData) {
   const back = loginPage(formData);
   try {
-    await signIn("dev-login", { email: formData.get("email"), redirectTo: back });
+    await signIn("dev-login", { email: formData.get("email"), role: formData.get("role"), redirectTo: back });
   } catch (e) {
     // A failed sign-in is an AuthError; the redirect after success is rethrown as is.
     if (e instanceof AuthError) redirect(`${back}${back.includes("?") ? "&" : "?"}error=${e.type}`);
