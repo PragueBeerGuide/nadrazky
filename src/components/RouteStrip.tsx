@@ -3,8 +3,8 @@ import { Link } from "@/i18n/navigation";
 import type { LineRoute } from "@/lib/lineOrder";
 import type { LineStop } from "@/lib/queries";
 
-const dot = { open: "bg-open", maybe_open: "bg-maybe", unknown: "bg-white", closed: "bg-white" } as const;
-const ink = { open: "text-open-ink", maybe_open: "text-maybe-ink", unknown: "text-muted", closed: "text-closed-ink" } as const;
+const dot = { open: "bg-open", unknown: "bg-white", closed: "bg-white" } as const;
+const ink = { open: "text-open-ink", unknown: "text-muted", closed: "text-closed-ink" } as const;
 
 /** Horizontal route strip: the stops either side of this station along the line. */
 export async function RouteStrip({ route, stationId }: { route: LineRoute<LineStop>; stationId: number }) {

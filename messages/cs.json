@@ -136,19 +136,16 @@
   },
   "status": {
     "open": "V provozu",
-    "maybe_open": "Možná v provozu",
     "unknown": "Neznámý stav",
     "closed": "Zavřeno"
   },
   "statusShort": {
     "open": "V provozu",
-    "maybe_open": "Možná",
     "unknown": "Neznámo",
     "closed": "Zavřeno"
   },
   "summary": {
     "open": "{count} v provozu",
-    "maybe_open": "{count} možná v provozu",
     "unknown": "{count} neznámý stav",
     "closed": "{count} zavřeno"
   },
@@ -174,7 +171,6 @@
     "statPubs": "Hospody",
     "statStations": "Stanice s hospodou",
     "statOpen": "V provozu",
-    "statMaybe": "Možná v provozu",
     "statWaiting": "Čeká na ověření",
     "stopByStop": "Zastávka po zastávce",
     "direction": "{from} → {to}",
@@ -187,7 +183,6 @@
     "badgesSoon": "Odznaky spustíme brzy",
     "legendTitle": "Tečky stanic",
     "legendOpen": "Hospoda v provozu",
-    "legendMaybe": "Možná v provozu",
     "legendNone": "Nedávno nikdo neověřil",
     "onMap": "Trať {number} na mapě →"
   },

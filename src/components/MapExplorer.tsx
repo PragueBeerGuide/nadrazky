@@ -22,8 +22,8 @@ export type MapPub = {
   lon: number;
 };
 
-const RANK: Record<PubStatus, number> = { open: 0, maybe_open: 1, unknown: 2, closed: 3 };
-const STATUSES: PubStatus[] = ["open", "maybe_open", "unknown", "closed"];
+const RANK: Record<PubStatus, number> = { open: 0, unknown: 1, closed: 2 };
+const STATUSES: PubStatus[] = ["open", "unknown", "closed"];
 
 /** The map page: filters and results beside the map on a computer, floating over it on a phone. */
 export function MapExplorer({
@@ -63,7 +63,7 @@ export function MapExplorer({
     );
   }, [pubs, line, query]);
   const counts = useMemo(() => {
-    const c: Record<PubStatus, number> = { open: 0, maybe_open: 0, unknown: 0, closed: 0 };
+    const c: Record<PubStatus, number> = { open: 0, unknown: 0, closed: 0 };
     for (const p of matching) c[p.status]++;
     return c;
   }, [matching]);

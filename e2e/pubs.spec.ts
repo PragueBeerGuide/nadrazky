@@ -16,6 +16,15 @@ test("the status filter shows only pubs with that status", async ({ page }) => {
   await expect(chips).toHaveText(Array((await chips.count())).fill("Open"));
 });
 
+test("a pub is open, closed or of unknown status, never 'maybe open'", async ({ page }) => {
+  await page.goto("/en/pubs");
+  await expect(page.getByRole("link", { name: /^Open · \d+$/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /^Status unknown · \d+$/ })).toBeVisible();
+  await expect(page.getByText(/maybe/i)).toHaveCount(0);
+  await page.goto("/cs/hospody");
+  await expect(page.getByText(/možná/i)).toHaveCount(0);
+});
+
 test("the letter bar follows the Czech alphabet", async ({ page }) => {
   await page.goto("/cs/hospody");
   const letters = await page.getByRole("navigation", { name: "Přejít na písmeno" }).getByRole("link").allTextContents();

@@ -9,7 +9,7 @@ import { listLines, listPubs, listRegions, type PubListItem, type PubStatus } fr
 import { czechInitial } from "@/lib/czech";
 import { PIN } from "@/lib/map";
 
-const STATUSES: PubStatus[] = ["open", "maybe_open", "unknown", "closed"];
+const STATUSES: PubStatus[] = ["open", "unknown", "closed"];
 const collator = new Intl.Collator("cs");
 
 export async function generateMetadata(): Promise<Metadata> {

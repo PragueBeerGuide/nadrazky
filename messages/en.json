@@ -136,19 +136,16 @@
   },
   "status": {
     "open": "Open",
-    "maybe_open": "Maybe open",
     "unknown": "Status unknown",
     "closed": "Closed"
   },
   "statusShort": {
     "open": "Open",
-    "maybe_open": "Maybe",
     "unknown": "Unknown",
     "closed": "Closed"
   },
   "summary": {
     "open": "{count} open",
-    "maybe_open": "{count} maybe open",
     "unknown": "{count} status unknown",
     "closed": "{count} closed"
   },
@@ -174,7 +171,6 @@
     "statPubs": "Pubs",
     "statStations": "Stations with a pub",
     "statOpen": "Open",
-    "statMaybe": "Maybe open",
     "statWaiting": "Waiting for a check",
     "stopByStop": "Stop by stop",
     "direction": "{from} → {to}",
@@ -187,7 +183,6 @@
     "badgesSoon": "Badges are coming soon",
     "legendTitle": "Station dots",
     "legendOpen": "An open pub",
-    "legendMaybe": "Maybe open",
     "legendNone": "Nobody has checked lately",
     "onMap": "See line {number} on the map →"
   },
