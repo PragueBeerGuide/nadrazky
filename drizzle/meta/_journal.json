@@ -29,6 +29,13 @@
       "when": 1792831088189,
       "tag": "0003_google_only",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792840228674,
+      "tag": "0004_checkins_without_location",
+      "breakpoints": true
     }
   ]
 }

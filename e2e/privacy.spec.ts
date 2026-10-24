@@ -6,7 +6,7 @@ test("the footer links to the privacy page, which names who to contact", async (
   await expect(page).toHaveURL(/\/en\/privacy$/);
   await expect(page.getByRole("heading", { level: 1, name: "Privacy" })).toBeVisible();
   await expect(page.getByRole("link", { name: "lukas@nadrazky.com" }).first()).toHaveAttribute("href", "mailto:lukas@nadrazky.com");
-  await expect(page.getByText("We never store your position.")).toBeVisible();
+  await expect(page.getByText(/we never ask for it and never store it/)).toBeVisible();
 });
 
 test("the privacy page is in Czech too", async ({ page }) => {

@@ -55,10 +55,10 @@
     "allRegions": "Všechny kraje →",
     "allLines": "Všechny tratě →",
     "helpTitle": "Pomoz nám s daty",
-    "helpText": "U většiny hospod nevíme, jestli ještě fungují. Každé odbavení na místě potvrdí, že je otevřeno.",
+    "helpText": "U většiny hospod nevíme, jestli ještě fungují. Každé odbavení potvrdí, že je otevřeno.",
     "helpWaiting": "{count, plural, one {Na ověření čeká ještě # hospoda.} few {Na ověření čekají ještě # hospody.} other {Na ověření čeká ještě # hospod.}}",
     "step1": "Vystup na stanici a najdi hospodu.",
-    "step2": "Odbav se na místě — poloha telefonu potvrdí, že tam opravdu jsi.",
+    "step2": "Odbav se a dej ostatním vědět, jestli je otevřeno.",
     "step3": "Sbírej odznaky za kraje a tratě.",
     "soon": "Odznaky spustíme brzy.",
     "helpCta": "Najdi hospodu k ověření",
@@ -112,7 +112,7 @@
     "alongLine": "Podél trati {number}",
     "youAreHere": "jsi tady",
     "checkInTitle": "Sedíš tu právě teď?",
-    "checkInText": "Odbav se přímo na místě. Poloha telefonu potvrdí, že hospoda pořád funguje.",
+    "checkInText": "Odbav se a dej ostatním vědět, že hospoda pořád funguje.",
     "checkIn": "Odbavit se",
     "checkIns": "Odbavení",
     "source": "Zdroj dat",
@@ -262,8 +262,6 @@
   },
   "checkIn": {
     "title": "Odbavení",
-    "howTitle": "Musíš být přímo v hospodě",
-    "howText": "Při odbavení se telefonu jednou zeptáme na polohu. Musíš být do 300 m od hospody. Polohu neukládáme, jen jak daleko jsi byl(a).",
     "hadTitle": "Co sis dal(a)?",
     "optional": "nepovinné",
     "beer": "Pivo",
@@ -280,14 +278,8 @@
     "open": "Bylo otevřeno",
     "closed": "Bylo zavřeno",
     "submit": "Odbavit se tady",
-    "locating": "Zjišťuji polohu…",
     "saving": "Odbavuji…",
     "errors": {
-      "geoDenied": "Povol tomuto webu přístup k poloze a zkus to znovu. Odbavení potřebuje polohu telefonu.",
-      "geoUnavailable": "Poloha teď není k dispozici. Zapni polohové služby nebo jdi ven a zkus to znovu.",
-      "geoTimeout": "Zjištění polohy trvalo moc dlouho. Zkus to znovu.",
-      "geoUnsupported": "Tenhle prohlížeč neumí sdílet polohu, takže se v něm odbavit nejde.",
-      "tooFar": "Jsi {distance} od hospody. Odbavit se jde do 300 m od ní.",
       "alreadyToday": "Dnes už tu máš odbaveno. Přijď zase zítra.",
       "invalid": "Ve formuláři něco nesedí. Zkus to znovu.",
       "signIn": "Pro odbavení se přihlas.",
@@ -296,7 +288,8 @@
     },
     "alreadyTitle": "Dnes odbaveno",
     "alreadyText": "V hospodě {name} už máš dnes odbaveno. Počítá se jedno odbavení v hospodě za den.",
-    "back": "Zpět na hospodu"
+    "back": "Zpět na hospodu",
+    "oncePerDay": "Počítá se jedno odbavení v hospodě za den."
   },
   "privacy": {
     "title": "Ochrana soukromí",
@@ -305,7 +298,7 @@
     "summary": {
       "browse": "Nádražky můžeš procházet bez účtu. Nepoužíváme žádnou analytiku, reklamu ani sledování.",
       "google": "Pro odbavení se přihlásíš přes Google. Uchováváme tvé jméno, e-mail a profilovou fotku z Googlu a přezdívku, kterou si vybereš.",
-      "location": "Při odbavení se telefonu jednou zeptáme na polohu. Ověříme podle ní, že jsi v hospodě, a uložíme jen vzdálenost, nikdy samotnou polohu.",
+      "checkins": "Odbavení nepoužívá tvou polohu. Uložíme hospodu, čas a podrobnosti, které přidáš.",
       "public": "Tvoje přezdívka a odbavení jsou veřejně vidět na stránce hospody. Účet i se vším, co v něm je, si můžeš kdykoli nechat smazat."
     },
     "controller": {
@@ -326,10 +319,10 @@
       "p3": "Tvoje přezdívka je veřejná. Jméno a e-mailovou adresu vidíš jen ty a my."
     },
     "checkins": {
-      "title": "Odbavení a tvoje poloha",
-      "p1": "Každé odbavení se ověřuje polohou GPS. Když stiskneš „Odbavit se tady“, prohlížeč se zeptá na povolení a pak jednou sdílí tvou polohu. Náš server z ní jen spočítá, jak daleko jsi od hospody. Pokud jsi dál než 300 m, nic se neuloží.",
-      "p2": "<strong>Tvou polohu nikdy neukládáme.</strong> U každého odbavení uložíme hospodu, čas, tvou vzdálenost od hospody, jak přesná byla poloha telefonu, jestli bylo otevřeno a podrobnosti, které přidáš: co sis dal(a), hodnocení a poznámku.",
-      "p3": "Odbavení jsou veřejná: na stránce hospody je vidět tvoje přezdívka, čas, podrobnosti a poznámka. Vzdálenost a přesnost se nezobrazují."
+      "title": "Odbavení",
+      "p1": "Odbavení nepoužívá polohu tvého telefonu: nikdy se na ni neptáme a nikdy ji neukládáme.",
+      "p2": "U každého odbavení uložíme hospodu, čas, jestli bylo otevřeno a podrobnosti, které přidáš: co sis dal(a), hodnocení a poznámku.",
+      "p3": "Odbavení jsou veřejná: na stránce hospody je vidět tvoje přezdívka, čas, podrobnosti a poznámka."
     },
     "cookies": {
       "title": "Cookies",
@@ -340,8 +333,7 @@
     "basis": {
       "title": "Proč můžeme tvé údaje používat",
       "account": "Účet a odbavení: abychom ti mohli poskytovat službu, ke které ses zaregistroval(a) (čl. 6 odst. 1 písm. b) GDPR).",
-      "logs": "Serverové logy: náš oprávněný zájem na spolehlivém a bezpečném provozu webu (čl. 6 odst. 1 písm. f) GDPR).",
-      "location": "Tvoje poloha: jen při odbavení, s povolením tvého prohlížeče a jen pro toto odbavení."
+      "logs": "Serverové logy: náš oprávněný zájem na spolehlivém a bezpečném provozu webu (čl. 6 odst. 1 písm. f) GDPR)."
     },
     "processors": {
       "title": "Kdo další s údaji pracuje",

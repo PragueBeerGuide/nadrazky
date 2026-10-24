@@ -1,69 +1,25 @@
 "use client";
 
-import { startTransition, useActionState, useState } from "react";
+import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { formatDistance, NOTE_MAX } from "@/lib/checkin";
+import { NOTE_MAX } from "@/lib/checkin";
 import { checkIn, type CheckInState } from "./actions";
-
-type GeoError = "geoDenied" | "geoUnavailable" | "geoTimeout" | "geoUnsupported";
 
 const drinks = ["hadBeer", "hadShot", "hadNonAlcoholic", "hadSnack"] as const;
 const drinkLabels = { hadBeer: "beer", hadShot: "shot", hadNonAlcoholic: "nonAlcoholic", hadSnack: "snack" } as const;
 
-/**
- * The check-in details, then one button: it asks the browser for its position and
- * sends it with the form. The server decides whether the position is close enough.
- */
+/** The check-in details; every field is optional and the server applies the once-a-day rule. */
 export function CheckInForm({ slug, locale }: { slug: string; locale: string }) {
   const t = useTranslations("checkIn");
   const [state, action, saving] = useActionState<CheckInState, FormData>(checkIn, {});
-  const [locating, setLocating] = useState(false);
-  const [geoError, setGeoError] = useState<GeoError | null>(null);
   const [noteLength, setNoteLength] = useState(0);
-
-  function submit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    setGeoError(null);
-    if (!("geolocation" in navigator)) return setGeoError("geoUnsupported");
-    setLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLocating(false);
-        formData.set("lat", String(position.coords.latitude));
-        formData.set("lon", String(position.coords.longitude));
-        formData.set("accuracy", String(position.coords.accuracy));
-        startTransition(() => action(formData));
-      },
-      (error) => {
-        setLocating(false);
-        setGeoError(
-          error.code === error.PERMISSION_DENIED ? "geoDenied" : error.code === error.TIMEOUT ? "geoTimeout" : "geoUnavailable",
-        );
-      },
-      { enableHighAccuracy: true, timeout: 20_000, maximumAge: 60_000 },
-    );
-  }
-
-  const errorKey = geoError ?? state.error;
-  const busy = locating || saving;
+  const errorKey = state.error;
 
   return (
-    <form onSubmit={submit} className="card flex flex-col gap-6 p-5 md:p-7">
+    <form action={action} onReset={() => setNoteLength(0)} className="card flex flex-col gap-6 p-5 md:p-7">
       <input type="hidden" name="slug" value={slug} />
       <input type="hidden" name="locale" value={locale} />
-
-      <div className="flex gap-3 rounded-xl bg-sign-tint p-4 text-sign">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="mt-0.5 shrink-0">
-          <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" />
-          <circle cx="12" cy="9.5" r="2.5" />
-        </svg>
-        <div className="flex flex-col gap-1">
-          <h2 className="text-[22px]">{t("howTitle")}</h2>
-          <p className="text-[15px] text-ink">{t("howText")}</p>
-        </div>
-      </div>
 
       <fieldset className="flex flex-col gap-3">
         <legend className="mb-3 flex items-baseline gap-2 font-display text-[22px] font-bold">
@@ -147,18 +103,19 @@ export function CheckInForm({ slug, locale }: { slug: string; locale: string }) 
               {t(`errors.${errorKey}`)}
             </Link>
           ) : (
-            <p>{t(`errors.${errorKey}`, { distance: formatDistance(state.distance ?? 0, locale) })}</p>
+            <p>{t(`errors.${errorKey}`)}</p>
           )}
         </div>
       )}
 
-      <button type="submit" disabled={busy} className="btn btn-yellow h-14 rounded-xl text-lg">
+      <button type="submit" disabled={saving} className="btn btn-yellow h-14 rounded-xl text-lg">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" />
           <path d="m9 10 2 2 4-4" />
         </svg>
-        {locating ? t("locating") : saving ? t("saving") : t("submit")}
+        {saving ? t("saving") : t("submit")}
       </button>
+      <p className="-mt-3 text-center text-sm text-muted">{t("oncePerDay")}</p>
     </form>
   );
 }
