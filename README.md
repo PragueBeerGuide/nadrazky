@@ -33,7 +33,7 @@ npm run test:e2e     # end-to-end tests (Playwright) on a computer-sized and a p
 
 Unit tests sit next to the code (`src/**/*.test.ts`). Pages are async Server Components, which Vitest can't render, so they are covered by the Playwright tests in `e2e/` instead: every route in Czech and English, filters, the map, and no errors in the browser console.
 
-`npm run test:e2e` builds the app and starts it on port 3200 with its own database in `data/pglite-e2e`, so it can run next to `npm run dev`. The test server turns on the dev login (`AUTH_DEV_LOGIN=1`), so the tests sign up without Google or email; every test signs up a new user. The first time, install the browser with `npx playwright install chromium`. If a server is already running on port 3200, the tests reuse it.
+`npm run test:e2e` builds the app and starts it on port 3200 with its own database in `data/pglite-e2e`, created fresh for every run, so it can run next to `npm run dev` and every run starts from the same data. The test server turns on the dev login (`AUTH_DEV_LOGIN=1`), so the tests sign up without Google or email; every test signs up a new user. The first time, install the browser with `npx playwright install chromium`. If a server is already running on port 3200, the tests reuse it.
 
 GitHub Actions runs lint, the unit tests and the end-to-end tests on every push and pull request (`.github/workflows/test.yml`). If the end-to-end tests fail, the run uploads the Playwright report and traces as an artifact. To run the tests the way CI does (fresh server, retries, GitHub reporter), set `CI`:
 

@@ -46,12 +46,24 @@ describe("reportSchema", () => {
 });
 
 describe("kindsFor", () => {
-  it("offers 'closed' for a pub we list as open or unknown, 'reopened' for a closed one", () => {
+  it("offers both 'it's open' and 'closed' for a pub of unknown status", () => {
+    expect(kindsFor("unknown")).toEqual(expect.arrayContaining(["reopened", "closed"]));
+  });
+
+  it("offers only 'closed' for a pub we list as open", () => {
     expect(kindsFor("open")).toContain("closed");
     expect(kindsFor("open")).not.toContain("reopened");
-    expect(kindsFor("unknown")).toContain("closed");
+  });
+
+  it("offers only 'it's open' for a pub we list as closed", () => {
     expect(kindsFor("closed")).toContain("reopened");
     expect(kindsFor("closed")).not.toContain("closed");
+  });
+
+  it("always offers the other kinds", () => {
+    for (const status of ["open", "unknown", "closed"]) {
+      expect(kindsFor(status)).toEqual(expect.arrayContaining(["name", "hours", "address", "beers", "location", "other"]));
+    }
   });
 });
 
