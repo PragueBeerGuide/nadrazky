@@ -37,7 +37,7 @@ function Form({ slug, name, kinds, current, onAnother }: Props & { onAnother: ()
     return (
       <section role="status" className="card flex flex-col items-start gap-3 p-5 md:p-7">
         <h2 className="text-[28px]">{t("doneTitle")}</h2>
-        <p>{t("doneText", { name })}</p>
+        <p>{state.autoApproved ? t("doneTextApproved", { name }) : t("doneText", { name })}</p>
         <div className="flex flex-wrap gap-2">
           <Link href={{ pathname: "/pub/[slug]", params: { slug } }} className="btn btn-sign">
             {t("back")}

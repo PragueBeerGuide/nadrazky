@@ -8,8 +8,11 @@ export function newUser(testInfo: TestInfo) {
 }
 
 /** On the English login page: signs in with the dev login (AUTH_DEV_LOGIN=1 on the e2e server) and finishes sign-up. */
-export async function devSignUp(page: Page, user: { username: string; email: string }) {
+export type Role = "user" | "moderator" | "admin";
+
+export async function devSignUp(page: Page, user: { username: string; email: string }, role: Role = "user") {
   await page.getByLabel("Dev login: Email").fill(user.email);
+  await page.getByLabel("Dev login: Role").selectOption(role);
   await page.getByRole("button", { name: "Sign in (dev)" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Finish signing up" })).toBeVisible();
   await page.getByLabel("Username").fill(user.username);
@@ -18,10 +21,10 @@ export async function devSignUp(page: Page, user: { username: string; email: str
   await expect(page.getByLabel(`Account: @${user.username}`)).toBeVisible();
 }
 
-/** Signs up a new user, then goes on to `next` (a same-site path) or home. */
-export async function signUp(page: Page, testInfo: TestInfo, next = "") {
+/** Signs up a new user with a role (default: a regular user), then goes on to `next` (a same-site path) or home. */
+export async function signUp(page: Page, testInfo: TestInfo, next = "", role: Role = "user") {
   const user = newUser(testInfo);
   await page.goto(`/en/login${next ? `?next=${encodeURIComponent(next)}` : ""}`);
-  await devSignUp(page, user);
+  await devSignUp(page, user, role);
   return user;
 }

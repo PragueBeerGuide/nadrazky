@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DAILY_REPORT_LIMIT, kindsFor, reportLimitReached, reportSchema } from "./report";
+import { changeFor, DAILY_REPORT_LIMIT, isAutoApproved, kindsFor, reportLimitApplies, reportLimitReached, reportSchema } from "./report";
 
 const base = { slug: "davle-remagen" };
 const errorsOf = (input: Record<string, unknown>) => {
@@ -60,5 +60,49 @@ describe("reportLimitReached", () => {
     expect(reportLimitReached(0)).toBe(false);
     expect(reportLimitReached(DAILY_REPORT_LIMIT - 1)).toBe(false);
     expect(reportLimitReached(DAILY_REPORT_LIMIT)).toBe(true);
+  });
+});
+
+describe("isAutoApproved", () => {
+  it("approves reports from moderators and admins at once", () => {
+    expect(isAutoApproved("moderator")).toBe(true);
+    expect(isAutoApproved("admin")).toBe(true);
+  });
+
+  it("sends a regular user's report for review", () => {
+    expect(isAutoApproved("user")).toBe(false);
+  });
+});
+
+describe("reportLimitApplies", () => {
+  it("limits regular users only", () => {
+    expect(reportLimitApplies("user")).toBe(true);
+    expect(reportLimitApplies("moderator")).toBe(false);
+    expect(reportLimitApplies("admin")).toBe(false);
+  });
+});
+
+describe("changeFor", () => {
+  const now = new Date("2026-10-24T12:00:00Z");
+
+  it("closes and reopens a pub, confirming it this month", () => {
+    expect(changeFor("closed", null, now)).toEqual({ status: "closed", closedYear: 2026, sourceLastUpdateMonthsAgo: 0 });
+    expect(changeFor("reopened", null, now)).toEqual({ status: "open", closedYear: null, sourceLastUpdateMonthsAgo: 0 });
+  });
+
+  it("puts the proposed value into the right field", () => {
+    expect(changeFor("name", "Bufet U Vlaku")).toEqual({ name: "Bufet U Vlaku" });
+    expect(changeFor("hours", "Mon–Sun 10–22")).toEqual({ openingHours: "Mon–Sun 10–22" });
+    expect(changeFor("address", "Nádražní 1, Davle")).toEqual({ address: "Nádražní 1, Davle" });
+    expect(changeFor("beers", "Kozel 11°")).toEqual({ beers: "Kozel 11°" });
+  });
+
+  it("changes nothing for a position or anything else, which are fixed by hand", () => {
+    expect(changeFor("location", null)).toBeNull();
+    expect(changeFor("other", null)).toBeNull();
+  });
+
+  it("changes nothing when a value is missing", () => {
+    expect(changeFor("name", "")).toBeNull();
   });
 });

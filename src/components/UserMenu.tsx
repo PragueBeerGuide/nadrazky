@@ -8,12 +8,15 @@ import { logOut } from "@/app/[locale]/login/actions";
 type Props = {
   user: { name: string | null; username: string | null; email: string | null; role: "user" | "moderator" | "admin" };
   finished: boolean;
+  /** Reports waiting for review; set only for moderators and admins. */
+  waiting: number | null;
 };
 
 /** The signed-in user in the header: an initial badge that opens a menu with log out. */
-export function UserMenu({ user, finished }: Props) {
+export function UserMenu({ user, finished, waiting }: Props) {
   const t = useTranslations("auth");
   const pt = useTranslations("profile");
+  const mt = useTranslations("moderation");
   const locale = useLocale();
   const ref = useRef<HTMLDetailsElement>(null);
   const label = user.username ? `@${user.username}` : (user.name ?? user.email ?? "");
@@ -64,6 +67,12 @@ export function UserMenu({ user, finished }: Props) {
         ) : (
           <Link href="/login" onClick={close} className="btn btn-yellow min-h-11">
             {t("finishLink")}
+          </Link>
+        )}
+        {waiting !== null && (
+          <Link href="/moderation" onClick={close} className="btn btn-outline min-h-11 justify-between">
+            {mt("menuLink")}
+            {waiting > 0 && <span className="rounded-full bg-yellow px-2 font-mono text-xs font-semibold text-ink">{mt("menuCount", { count: waiting })}</span>}
           </Link>
         )}
         <form action={logOut}>
