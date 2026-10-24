@@ -64,8 +64,8 @@ export type PubChange = {
   openingHours?: string;
   address?: string;
   beers?: string;
-  /** "Last confirmed" on the pub page: a status report confirms it this month. */
-  sourceLastUpdateMonthsAgo?: number;
+  /** "Last confirmed" on the pub page: an approved open/closed report confirms it now. */
+  lastConfirmedAt?: Date;
 };
 
 /**
@@ -75,9 +75,9 @@ export type PubChange = {
 export function changeFor(kind: ReportKind, value: string | null | undefined, now = new Date()): PubChange | null {
   switch (kind) {
     case "closed":
-      return { status: "closed", closedYear: now.getFullYear(), sourceLastUpdateMonthsAgo: 0 };
+      return { status: "closed", closedYear: now.getFullYear(), lastConfirmedAt: now };
     case "reopened":
-      return { status: "open", closedYear: null, sourceLastUpdateMonthsAgo: 0 };
+      return { status: "open", closedYear: null, lastConfirmedAt: now };
     case "name":
       return value ? { name: value } : null;
     case "hours":

@@ -86,7 +86,7 @@ Preview deployments have changing URLs that Google won't accept as redirect URIs
 
 ## Check-ins
 
-Checking in needs an account but no location: the app never asks for or stores the visitor's position. Each user gets **one check-in per pub per day** (the day in Prague time), enforced by a unique index on `checkins (user_id, pub_id, day)`. Optional details: beer, a shot, a non-alcoholic drink, a snack (ticks), a rating from 1 to 5, a note (up to 280 characters), and whether the pub was open or closed. The pub page shows the number of check-ins, the last visit and the latest five check-ins.
+Checking in needs an account but no location: the app never asks for or stores the visitor's position. Every check-in updates the pub's "last confirmed" date (`pubs.last_confirmed_at`), and one that found the pub open also marks it **open**; one that found it closed leaves the status alone (closing a pub goes through "Report a change"). "Last confirmed" across the site counts from that date, or from nadrazky.eu's months when a pub has none yet. Each user gets **one check-in per pub per day** (the day in Prague time), enforced by a unique index on `checkins (user_id, pub_id, day)`. Optional details: beer, a shot, a non-alcoholic drink, a snack (ticks), a rating from 1 to 5, a note (up to 280 characters), and whether the pub was open or closed. The pub page shows the number of check-ins, the last visit and the latest five check-ins.
 
 ## Reports of changes and moderation
 

@@ -85,6 +85,8 @@ export const pubs = pgTable(
     sourceId: integer("source_id").unique(),
     sourceUrl: text("source_url"),
     sourceLastUpdateMonthsAgo: integer("source_last_update_months_ago"),
+    /** The latest check-in or approved open/closed report; "last confirmed" falls back to the source's months. */
+    lastConfirmedAt: timestamp("last_confirmed_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },

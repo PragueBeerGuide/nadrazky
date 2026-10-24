@@ -86,8 +86,8 @@ describe("changeFor", () => {
   const now = new Date("2026-10-24T12:00:00Z");
 
   it("closes and reopens a pub, confirming it this month", () => {
-    expect(changeFor("closed", null, now)).toEqual({ status: "closed", closedYear: 2026, sourceLastUpdateMonthsAgo: 0 });
-    expect(changeFor("reopened", null, now)).toEqual({ status: "open", closedYear: null, sourceLastUpdateMonthsAgo: 0 });
+    expect(changeFor("closed", null, now)).toEqual({ status: "closed", closedYear: 2026, lastConfirmedAt: now });
+    expect(changeFor("reopened", null, now)).toEqual({ status: "open", closedYear: null, lastConfirmedAt: now });
   });
 
   it("puts the proposed value into the right field", () => {

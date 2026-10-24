@@ -9,6 +9,15 @@ const { pubs, stations, regions, railLines, stationLines } = s;
 export type PubStatus = (typeof s.pubStatus.enumValues)[number];
 export type PubKind = (typeof s.pubKind.enumValues)[number];
 
+/**
+ * "Last confirmed" in whole months: since the latest check-in or approved open/closed report
+ * when there is one, otherwise as nadrazky.eu last reported it.
+ */
+export const confirmedMonthsAgo = sql<number | null>`coalesce(
+  (extract(year from age(now(), ${pubs.lastConfirmedAt})) * 12 + extract(month from age(now(), ${pubs.lastConfirmedAt})))::int,
+  ${pubs.sourceLastUpdateMonthsAgo}
+)`.mapWith((v: unknown) => (v == null ? null : Number(v)));
+
 /** Columns shared by every pub listing. */
 const pubListFields = {
   slug: pubs.slug,
@@ -21,7 +30,7 @@ const pubListFields = {
   regionSlug: stations.regionSlug,
   regionCs: regions.nameCs,
   regionEn: regions.nameEn,
-  monthsAgo: pubs.sourceLastUpdateMonthsAgo,
+  monthsAgo: confirmedMonthsAgo,
   /** Rail line numbers through the station, ascending. */
   lines: sql<string[]>`(select coalesce(string_agg(${stationLines.lineNumber}, ',' order by ${stationLines.lineNumber}), '') from ${stationLines} where ${stationLines.stationId} = ${stations.id})`.mapWith(
     (v: string) => (v ? v.split(",") : []),
@@ -80,6 +89,7 @@ export async function getPub(slug: string) {
       pub: pubs,
       station: stations,
       region: regions,
+      confirmedMonthsAgo,
     })
     .from(pubs)
     .innerJoin(stations, eq(stations.id, pubs.stationId))

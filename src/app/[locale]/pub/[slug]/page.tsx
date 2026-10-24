@@ -26,7 +26,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
   setRequestLocale(locale);
   const data = await getPub(slug);
   if (!data) notFound();
-  const { pub, station, region, lines, neighbours } = data;
+  const { pub, station, region, lines, neighbours, confirmedMonthsAgo } = data;
   const t = await getTranslations("pub");
   const nav = await getTranslations("nav");
   const kt = await getTranslations("kind");
@@ -80,7 +80,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
           ] as [string, React.ReactNode],
         ]
       : []),
-    [t("lastConfirmed"), <Ago key="a" months={pub.sourceLastUpdateMonthsAgo} />],
+    [t("lastConfirmed"), <Ago key="a" months={confirmedMonthsAgo} />],
     [
       t("openingHours"),
       pub.openingHours ?? (
