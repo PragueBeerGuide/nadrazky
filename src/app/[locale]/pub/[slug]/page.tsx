@@ -1,3 +1,4 @@
+import { CheckIcon, MapPinCheckInsideIcon } from "lucide-react";
 import { asLocale } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -170,13 +171,13 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
               <p className="text-[15px] text-muted-foreground">{t("checkInText")}</p>
               {checkedInToday ? (
                 <p className="flex h-14 items-center justify-center gap-2.5 rounded-xl bg-open-bg text-lg font-semibold text-open-ink">
-                  <CheckIcon />
+                  <CheckIcon strokeWidth={2.4} className="size-5.5" />
                   {t("checkedInToday")}
                 </p>
               ) : (
                 // Signed out, the check-in page sends the user to log in and back.
                 <Link href={checkInHref} className={cn(buttonVariants({ variant: "yellow", size: "xl" }), "h-14 rounded-xl text-lg")}>
-                  <PinIcon />
+                  <MapPinCheckInsideIcon strokeWidth={2.2} className="size-5.5" />
                   {!user ? t("checkInLogin") : signUpFinished(user) ? t("checkIn") : t("checkInFinish")}
                 </Link>
               )}
@@ -332,22 +333,5 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
         </aside>
       </div>
     </article>
-  );
-}
-
-function PinIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" />
-      <path d="m9 10 2 2 4-4" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="m5 12.5 4.5 4.5L19 7.5" />
-    </svg>
   );
 }

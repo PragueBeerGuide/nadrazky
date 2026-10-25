@@ -1,3 +1,4 @@
+import { LocateFixedIcon, MapIcon, SearchIcon } from "lucide-react";
 import { asLocale } from "@/i18n/routing";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getPathname, Link } from "@/i18n/navigation";
@@ -12,8 +13,6 @@ import { cn } from "@/lib/utils";
 import { getTotals, listLines, listPubs, listRegions } from "@/lib/queries";
 import { compareLastConfirmed } from "@/lib/ago";
 import { Progress } from "@/components/ui/progress";
-
-const mapIcon = "M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zm0 0v14m6-12v14";
 
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const { locale: raw } = await params;
@@ -69,26 +68,18 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
                   className="h-11 px-2.5 text-ink md:h-12 md:px-3 md:text-[17px]"
                 />
                 <Button type="submit" variant="ink" size="xl" className="h-11 px-3 md:h-12 md:px-5" aria-label={pt("search")}>
-                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true" className="md:hidden">
-                    <circle cx="11" cy="11" r="6" />
-                    <path d="m20 20-4.5-4.5" />
-                  </svg>
+                  <SearchIcon className="size-5 md:hidden" />
                   <span className="hidden md:inline">{pt("search")}</span>
                 </Button>
               </InputGroup>
             </form>
             <div className="flex flex-wrap gap-3">
               <Link href={{ pathname: "/map", query: { near: "1" } }} className={cn(buttonVariants({ variant: "yellow", size: "xl" }), "w-full md:hidden")}>
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
-                </svg>
+                <LocateFixedIcon className="size-5" />
                 {t("nearMe")}
               </Link>
               <Link href="/map" className={cn(buttonVariants({ variant: "yellow", size: "xl" }), "hidden h-13 font-semibold md:inline-flex")}>
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d={mapIcon} />
-                </svg>
+                <MapIcon className="size-5" />
                 {t("openMap")}
               </Link>
               <Link href="/pubs" className={cn(buttonVariants({ variant: "ghost-dark", size: "xl" }), "hidden h-13 md:inline-flex")}>

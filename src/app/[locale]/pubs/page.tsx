@@ -1,3 +1,4 @@
+import { MapIcon, TextAlignStartIcon } from "lucide-react";
 import { asLocale } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -75,18 +76,14 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
         </div>
         <nav aria-label={t("viewLabel")} className="flex gap-1 rounded-[10px] border border-rule bg-white p-1">
           <span aria-current="page" className={cn(buttonVariants({ size: "md" }), "rounded-[7px] text-[15px] hover:bg-primary")}>
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-              <path d="M4 6h16M4 12h16M4 18h10" />
-            </svg>
+            <TextAlignStartIcon className="size-4.5" />
             {t("viewList")}
           </span>
           <Link
             href={line ? { pathname: "/map", query: { line } } : "/map"}
             className={cn(buttonVariants({ variant: "ghost", size: "md" }), "rounded-[7px] text-[15px] hover:bg-platform")}
           >
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zm0 0v14m6-12v14" />
-            </svg>
+            <MapIcon className="size-4.5" />
             {t("viewMap")}
           </Link>
         </nav>

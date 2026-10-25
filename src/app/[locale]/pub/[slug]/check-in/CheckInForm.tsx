@@ -1,5 +1,6 @@
 "use client";
 
+import { MapPinCheckInsideIcon } from "lucide-react";
 import { startTransition, useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -197,10 +198,7 @@ export function CheckInForm({ slug, locale }: { slug: string; locale: string }) 
       )}
 
       <Button variant="yellow" size="xl" type="submit" disabled={saving} className="h-14 rounded-xl text-lg">
-        <svg viewBox="0 0 24 24" width="22" height="22" className="size-5.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" />
-          <path d="m9 10 2 2 4-4" />
-        </svg>
+        <MapPinCheckInsideIcon strokeWidth={2.2} className="size-5.5" />
         {saving ? t("saving") : t("submit")}
       </Button>
       <p className="-mt-3 text-center text-sm text-muted-foreground">{t("oncePerDay")}</p>

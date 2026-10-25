@@ -1,14 +1,15 @@
 "use client";
 
+import { HouseIcon, MapIcon, TextAlignStartIcon, TrainTrackIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { sectionOf } from "./section";
 
 const items = [
-  { href: "/", key: "home", icon: "M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" },
-  { href: "/map", key: "map", icon: "M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zm0 0v14m6-12v14" },
-  { href: "/pubs", key: "pubs", icon: "M4 6h16M4 12h16M4 18h10" },
-  { href: "/lines", key: "lines", icon: "M7 3v18M17 3v18M7 7h10M7 12h10M7 17h10" },
+  { href: "/", key: "home", Icon: HouseIcon },
+  { href: "/map", key: "map", Icon: MapIcon },
+  { href: "/pubs", key: "pubs", Icon: TextAlignStartIcon },
+  { href: "/lines", key: "lines", Icon: TrainTrackIcon },
 ] as const;
 
 /** Phone tab bar; the current tab gets a tinted pill. */
@@ -31,19 +32,7 @@ export function BottomNav() {
                 className={`flex flex-col items-center gap-0.5 py-1 text-xs ${current ? "font-semibold text-sign" : "font-medium text-muted-foreground"}`}
               >
                 <span className={`flex rounded-[14px] px-4 py-1 ${current ? "bg-sign-tint" : ""}`}>
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="22"
-                    height="22"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.9"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d={i.icon} />
-                  </svg>
+                  <i.Icon strokeWidth={1.9} className="size-5.5" />
                 </span>
                 {t(i.key)}
               </Link>

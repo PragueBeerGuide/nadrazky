@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRightIcon, SearchIcon, XIcon } from "lucide-react";
 import { useDeferredValue, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -248,10 +249,7 @@ export function MapExplorer({
               className="h-11 px-1.5"
             />
             <InputGroupAddon>
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true" className="size-5">
-                <circle cx="11" cy="11" r="6" />
-                <path d="m20 20-4.5-4.5" />
-              </svg>
+              <SearchIcon className="size-5" />
             </InputGroupAddon>
           </InputGroup>
           <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1">
@@ -372,9 +370,7 @@ function StationSheet({ station, onClose }: { station: MapStation; onClose: () =
           ))}
         </div>
         <Button variant="secondary" size="icon-lg" onClick={onClose} aria-label={t("close")} className="size-10 bg-platform text-ink">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
-            <path d="M6 6l12 12M18 6 6 18" />
-          </svg>
+          <XIcon strokeWidth={2.2} className="size-4" />
         </Button>
       </div>
       <span className="text-[13px] text-muted-foreground">{t("pubsHere", { count: station.pubs.length })}</span>
@@ -389,9 +385,7 @@ function StationSheet({ station, onClose }: { station: MapStation; onClose: () =
                   {kt(p.kind)} · <Ago months={p.monthsAgo} date={p.lastConfirmedAt} />
                 </span>
               </span>
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--muted-foreground)" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                <path d="m9 6 6 6-6 6" />
-              </svg>
+              <ChevronRightIcon className="size-4.5 shrink-0 text-muted-foreground" />
             </Link>
           </li>
         ))}
