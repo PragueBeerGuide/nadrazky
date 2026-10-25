@@ -11,6 +11,8 @@ import { getTotals } from "@/lib/queries";
 import { Avatar } from "@/components/Avatar";
 import { avatarUrl } from "@/lib/profile";
 import { ProfileForm } from "./ProfileForm";
+import { buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("profile");
@@ -74,7 +76,7 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
           {numbers.map(({ key, n, ...rest }) => (
             // column-reverse keeps <dt> first for screen readers; justify-end lines the numbers up at the top.
             <div key={key} className="flex flex-col-reverse justify-end gap-1" data-testid={`stat-${key}`}>
-              <dt className="text-sm text-muted md:text-base">
+              <dt className="text-sm text-muted-foreground md:text-base">
                 {t(key, { count: n })}
                 {"total" in rest && <span className="block font-mono text-xs">{t("outOf", { total: rest.total })}</span>}
               </dt>
@@ -86,13 +88,13 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
 
       <div className="mx-auto flex max-w-7xl flex-col gap-10 px-4 py-8 md:px-6 md:py-12">
         {stats.checkIns === 0 ? (
-          <section className="card flex flex-col items-start gap-3 p-5 md:p-7">
+          <Card render={<section />} className="flex flex-col items-start gap-3 p-5 md:p-7">
             <h2 className="text-[28px]">{t("emptyTitle")}</h2>
-            <p className="text-muted">{t("emptyText")}</p>
-            <Link href="/pubs" className="btn btn-yellow">
+            <p className="text-muted-foreground">{t("emptyText")}</p>
+            <Link href="/pubs" className={buttonVariants({ variant: "yellow", size: "xl" })}>
               {t("emptyCta")}
             </Link>
-          </section>
+          </Card>
         ) : (
           <>
             {had.length > 0 && (
@@ -113,7 +115,7 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
                 <h2 id="visited-title" className="text-[28px] md:text-[32px]">
                   {t("visitedTitle")}
                 </h2>
-                <ul className="card divide-y divide-rule-soft">
+                <Card render={<ul />} className="gap-0 divide-y divide-rule-soft py-0">
                   {visited.map((p) => (
                     <li key={p.slug}>
                       <Link
@@ -122,35 +124,35 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
                       >
                         <span className="flex min-w-0 flex-col">
                           <span className="font-semibold">{p.name}</span>
-                          <span className="text-sm text-muted">{p.station}</span>
+                          <span className="text-sm text-muted-foreground">{p.station}</span>
                         </span>
-                        <span className="font-mono text-xs text-muted">
+                        <span className="font-mono text-xs text-muted-foreground">
                           {t("visits", { count: p.visits })}
                           {p.last && <> · {t("lastVisit", { date: date(new Date(p.last)) })}</>}
                         </span>
                       </Link>
                     </li>
                   ))}
-                </ul>
+                </Card>
               </section>
 
               <section className="flex min-w-0 flex-[1_1_300px] flex-col gap-4" aria-labelledby="regions-title">
                 <h2 id="regions-title" className="text-[28px] md:text-[32px]">
                   {t("regionsTitle")}
                 </h2>
-                <ul className="card flex flex-col gap-3.5 p-4 md:p-5">
+                <Card render={<ul />} className="flex flex-col gap-3.5 p-4 md:p-5">
                   {sortedRegions.map((r) => (
                     <li key={r.slug} className="flex flex-col gap-1.5">
                       <span className="flex items-baseline justify-between gap-3 text-[15px]">
-                        <span className={r.visited ? "font-semibold" : "text-muted"}>{regionName(r)}</span>
-                        <span className="font-mono text-xs text-muted">{t("regionProgress", { visited: r.visited, total: r.total })}</span>
+                        <span className={r.visited ? "font-semibold" : "text-muted-foreground"}>{regionName(r)}</span>
+                        <span className="font-mono text-xs text-muted-foreground">{t("regionProgress", { visited: r.visited, total: r.total })}</span>
                       </span>
                       <span className="h-2 overflow-hidden rounded-full bg-rule-soft" aria-hidden="true">
                         <span className="block h-full rounded-full bg-yellow" style={{ width: `${r.total ? (r.visited / r.total) * 100 : 0}%` }} />
                       </span>
                     </li>
                   ))}
-                </ul>
+                </Card>
               </section>
             </div>
           </>

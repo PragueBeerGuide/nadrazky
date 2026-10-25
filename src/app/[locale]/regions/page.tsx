@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { PageHero } from "@/components/PageHero";
+import { Card } from "@/components/ui/card";
 import { listRegions } from "@/lib/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -24,9 +25,9 @@ export default async function RegionsPage({ params }: PageProps<"/[locale]/regio
       <ul className="mx-auto grid max-w-7xl grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3 px-4 py-8 md:px-6 md:py-12">
         {regions.map((r) => (
           <li key={r.slug}>
-            <Link
-              href={{ pathname: "/region/[slug]", params: { slug: r.slug } }}
-              className="card flex flex-col gap-3 rounded-xl p-4 hover:border-sign md:p-5"
+            <Card
+              render={<Link href={{ pathname: "/region/[slug]", params: { slug: r.slug } }} />}
+              className="gap-3 p-4 hover:border-sign md:p-5"
             >
               <span className="flex items-baseline justify-between gap-3">
                 <span className="font-display text-[26px] leading-none font-bold">{isCs ? r.nameCs : r.nameEn}</span>
@@ -35,11 +36,11 @@ export default async function RegionsPage({ params }: PageProps<"/[locale]/regio
               <span className="block h-1.5 overflow-hidden rounded-full bg-rule-soft">
                 <span className="block h-full rounded-full bg-sign" style={{ width: `${Math.round((r.pubCount / max) * 100)}%` }} />
               </span>
-              <span className="flex justify-between text-sm text-muted">
+              <span className="flex justify-between text-sm text-muted-foreground">
                 <span>{t("pubCount", { count: r.pubCount })}</span>
                 <span className="font-semibold text-open-ink">{t("openCount", { count: r.openCount })}</span>
               </span>
-            </Link>
+            </Card>
           </li>
         ))}
       </ul>

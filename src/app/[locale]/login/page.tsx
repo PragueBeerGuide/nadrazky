@@ -10,6 +10,10 @@ import { ROLES } from "@/lib/auth/roles";
 import { suggestUsername } from "@/lib/auth/signup";
 import { devSignIn, logOut, signInWithGoogle } from "./actions";
 import { FinishSignUpForm } from "./FinishSignUpForm";
+import { Button } from "@/components/ui/button";
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("auth");
@@ -52,8 +56,8 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[l
       <PageHero title={user ? t("finishTitle") : t("title")} subtitle={user ? t("finishText") : t("subtitle")} />
       <div className="mx-auto flex max-w-lg flex-col gap-4 px-4 py-8 md:py-12">
         {user ? (
-          <section className="card flex flex-col gap-5 p-5 md:p-7">
-            <p className="text-[15px] text-muted">{t("signedInAs", { email: user.email ?? user.name ?? "" })}</p>
+          <Card render={<section />} className="flex flex-col gap-5 p-5 md:p-7">
+            <p className="text-[15px] text-muted-foreground">{t("signedInAs", { email: user.email ?? user.name ?? "" })}</p>
             <FinishSignUpForm
               locale={locale}
               next={next}
@@ -61,18 +65,18 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[l
               // Not chosen yet (the column defaults to cs): start from the page's language.
               language={locale}
             />
-            <p className="text-sm text-muted">{privacy}</p>
+            <p className="text-sm text-muted-foreground">{privacy}</p>
             <form action={logOut}>
               {hidden}
-              <button type="submit" className="link text-[15px]">
+              <Button type="submit" variant="link" className="h-auto p-0 text-[15px]">
                 {t("notYou")}
-              </button>
+              </Button>
             </form>
-          </section>
+          </Card>
         ) : !authEnabled() || !providers.google ? (
-          <p className="card p-5 md:p-7">{t("notConfigured")}</p>
+          <Card render={<p />} className="p-5 md:p-7">{t("notConfigured")}</Card>
         ) : (
-          <section className="card flex flex-col gap-5 p-5 md:p-7">
+          <Card render={<section />} className="flex flex-col gap-5 p-5 md:p-7">
             {errorKey && (
               <p role="alert" className="rounded-lg bg-closed-bg px-4 py-3 text-[15px] font-medium text-closed-ink">
                 {t(`errors.${errorKey}`)}
@@ -80,41 +84,41 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[l
             )}
             <form action={signInWithGoogle}>
               {hidden}
-              <button type="submit" className="btn btn-outline h-14 w-full rounded-xl text-[17px]">
+              <Button variant="outline" size="xl" type="submit" className="h-14 w-full rounded-xl text-[17px]">
                 <GoogleMark />
                 {t("google")}
-              </button>
+              </Button>
             </form>
-            <div className="flex flex-col gap-1 border-t border-rule-soft pt-4 text-sm text-muted">
+            <div className="flex flex-col gap-1 border-t border-rule-soft pt-4 text-sm text-muted-foreground">
               <p>{t("adultsOnly")}</p>
               <p>{privacy}</p>
             </div>
-          </section>
+          </Card>
         )}
 
         {!user && providers.dev && (
           <section className="flex flex-col gap-3 rounded-[14px] border border-dashed border-field bg-white p-5">
             <h2 className="text-2xl">{t("devTitle")}</h2>
-            <p className="text-sm text-muted">{t("devText")}</p>
+            <p className="text-sm text-muted-foreground">{t("devText")}</p>
             <form action={devSignIn} className="flex flex-wrap gap-2">
               {hidden}
               <label htmlFor="dev-email" className="sr-only">
                 {`${t("devTitle")}: ${t("email")}`}
               </label>
-              <input id="dev-email" name="email" type="email" required placeholder={t("emailPlaceholder")} className="field min-w-0 flex-[1_1_200px]" />
+              <Input id="dev-email" name="email" type="email" required placeholder={t("emailPlaceholder")} className="min-w-0 flex-[1_1_200px]" />
               <label htmlFor="dev-role" className="sr-only">
                 {`${t("devTitle")}: ${t("devRole")}`}
               </label>
-              <select id="dev-role" name="role" defaultValue="user" className="field w-auto flex-[0_0_auto]">
+              <NativeSelect id="dev-role" name="role" defaultValue="user" className="w-auto flex-[0_0_auto]">
                 {ROLES.map((r) => (
-                  <option key={r} value={r}>
+                  <NativeSelectOption key={r} value={r}>
                     {t(`roles.${r}`)}
-                  </option>
+                  </NativeSelectOption>
                 ))}
-              </select>
-              <button type="submit" className="btn btn-ink min-h-[46px]">
+              </NativeSelect>
+              <Button variant="ink" size="xl" type="submit" className="h-11.5">
                 {t("devSubmit")}
-              </button>
+              </Button>
             </form>
           </section>
         )}

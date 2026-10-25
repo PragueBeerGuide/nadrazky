@@ -4,6 +4,11 @@ import { getPathname, Link } from "@/i18n/navigation";
 import { DepartureBoard } from "@/components/DepartureBoard";
 import { LineChip } from "@/components/LineChip";
 import { RailTrack } from "@/components/RailTrack";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import { getTotals, listLines, listPubs, listRegions } from "@/lib/queries";
 import { compareLastConfirmed } from "@/lib/ago";
 
@@ -53,41 +58,39 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
               action={getPathname({ href: "/pubs", locale })}
               className="flex max-w-[520px] flex-col gap-1.5 md:gap-2"
             >
-              <label htmlFor="home-search" className="text-sm font-medium">
-                {pt("searchLabel")}
-              </label>
-              <div className="flex gap-1 rounded-[10px] bg-white p-1 md:gap-1.5 md:p-1.5">
-                <input
+              <Label htmlFor="home-search">{pt("searchLabel")}</Label>
+              <InputGroup className="h-auto gap-1 rounded-lg border-0 bg-white p-1 has-[[data-slot=input-group-control]:focus-visible]:ring-yellow md:gap-1.5 md:p-1.5">
+                <InputGroupInput
                   id="home-search"
                   name="q"
                   type="search"
                   placeholder={pt("searchPlaceholder")}
-                  className="h-11 min-w-0 flex-1 bg-transparent px-2.5 text-base text-ink outline-none md:h-12 md:px-3 md:text-[17px]"
+                  className="h-11 px-2.5 text-ink md:h-12 md:px-3 md:text-[17px]"
                 />
-                <button type="submit" className="btn btn-ink h-11 min-h-0 px-3 md:h-12 md:px-5" aria-label={pt("search")}>
+                <Button type="submit" variant="ink" size="xl" className="h-11 px-3 md:h-12 md:px-5" aria-label={pt("search")}>
                   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true" className="md:hidden">
                     <circle cx="11" cy="11" r="6" />
                     <path d="m20 20-4.5-4.5" />
                   </svg>
                   <span className="hidden md:inline">{pt("search")}</span>
-                </button>
-              </div>
+                </Button>
+              </InputGroup>
             </form>
             <div className="flex flex-wrap gap-3">
-              <Link href={{ pathname: "/map", query: { near: "1" } }} className="btn btn-yellow w-full md:hidden">
+              <Link href={{ pathname: "/map", query: { near: "1" } }} className={cn(buttonVariants({ variant: "yellow", size: "xl" }), "w-full md:hidden")}>
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
                   <circle cx="12" cy="12" r="4" />
                   <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
                 </svg>
                 {t("nearMe")}
               </Link>
-              <Link href="/map" className="btn btn-yellow hidden h-[52px] font-semibold md:inline-flex">
+              <Link href="/map" className={cn(buttonVariants({ variant: "yellow", size: "xl" }), "hidden h-13 font-semibold md:inline-flex")}>
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d={mapIcon} />
                 </svg>
                 {t("openMap")}
               </Link>
-              <Link href="/pubs" className="btn btn-ghost-dark hidden h-[52px] md:inline-flex">
+              <Link href="/pubs" className={cn(buttonVariants({ variant: "ghost-dark", size: "xl" }), "hidden h-13 md:inline-flex")}>
                 {t("browseAll", { count: totals.pubs })}
               </Link>
             </div>
@@ -124,7 +127,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         <dl className="mx-auto grid max-w-7xl grid-cols-2 gap-6 md:grid-cols-4">
           {stats.map(([key, n, color]) => (
             <div key={key} className="flex flex-col-reverse gap-1">
-              <dt className="text-sm text-muted md:text-base">{t(`stats.${key}`, { count: n })}</dt>
+              <dt className="text-sm text-muted-foreground md:text-base">{t(`stats.${key}`, { count: n })}</dt>
               <dd className={`font-display text-5xl leading-none font-bold md:text-[64px] ${color}`}>{n}</dd>
             </div>
           ))}
@@ -142,16 +145,16 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
           <ul className="-mx-4 flex snap-x gap-2.5 overflow-x-auto px-4 pb-1 md:mx-0 md:grid md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] md:gap-4 md:overflow-visible md:px-0">
             {topLines.map((l) => (
               <li key={l.number} className="w-[200px] shrink-0 snap-start md:w-auto">
-                <Link
-                  href={{ pathname: "/line/[number]", params: { number: l.number } }}
-                  className="card flex h-full flex-col gap-2.5 p-3.5 hover:border-sign md:gap-3.5 md:p-5"
+                <Card
+                  render={<Link href={{ pathname: "/line/[number]", params: { number: l.number } }} />}
+                  className="h-full gap-2.5 p-3.5 hover:border-sign md:gap-3.5 md:p-5"
                 >
                   <span className="flex items-center justify-between">
                     <LineChip number={l.number} size="lg" className="max-md:px-2.5 max-md:text-lg" />
-                    <span className="font-mono text-xs text-muted md:text-[13px]">{lt("pubCount", { count: l.pubCount })}</span>
+                    <span className="font-mono text-xs text-muted-foreground md:text-[13px]">{lt("pubCount", { count: l.pubCount })}</span>
                   </span>
                   <span className="text-[15px] leading-snug font-semibold md:text-[17px]">{l.name}</span>
-                </Link>
+                </Card>
               </li>
             ))}
           </ul>
@@ -169,9 +172,9 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
           <ul className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3">
             {byCount.map((r) => (
               <li key={r.slug}>
-                <Link
-                  href={{ pathname: "/region/[slug]", params: { slug: r.slug } }}
-                  className="card flex flex-col gap-2.5 rounded-[10px] px-[18px] py-4 hover:border-sign"
+                <Card
+                  render={<Link href={{ pathname: "/region/[slug]", params: { slug: r.slug } }} />}
+                  className="gap-2.5 rounded-lg px-4.5 py-4 hover:border-sign"
                 >
                   <span className="flex items-baseline justify-between gap-3">
                     <span className="font-semibold">{isCs ? r.nameCs : r.nameEn}</span>
@@ -180,7 +183,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
                   <span className="block h-1.5 overflow-hidden rounded-full bg-rule-soft">
                     <span className="block h-full rounded-full bg-sign" style={{ width: `${Math.round((r.pubCount / maxRegion) * 100)}%` }} />
                   </span>
-                </Link>
+                </Card>
               </li>
             ))}
           </ul>
@@ -228,7 +231,7 @@ async function HelpBand({
           </ol>
           <p className="text-[15px] font-semibold">{t("soon")}</p>
           <div>
-            <Link href={{ pathname: "/pubs", query: { status: "unknown" } }} className="btn btn-ink h-[52px]">
+            <Link href={{ pathname: "/pubs", query: { status: "unknown" } }} className={cn(buttonVariants({ variant: "ink", size: "xl" }), "h-13")}>
               {t("helpCta")}
             </Link>
           </div>
@@ -251,7 +254,7 @@ function Badge(props: { ring: string; border: string; label: string; title: stri
   return (
     <div className={`flex h-[150px] w-[150px] items-center justify-center rounded-full shadow-[0_10px_24px_rgb(14_26_43/0.25)] md:h-[168px] md:w-[168px] ${props.ring}`}>
       <div className={`flex h-[122px] w-[122px] flex-col items-center justify-center gap-0.5 rounded-full border-[3px] bg-white px-2 text-center md:h-[136px] md:w-[136px] ${props.border}`}>
-        <span className="font-mono text-[11px] font-semibold tracking-[0.12em] text-muted uppercase">{props.label}</span>
+        <span className="font-mono text-[11px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">{props.label}</span>
         <span className={`font-display leading-none font-bold ${props.titleClass}`}>{props.title}</span>
         <span className={`text-xs font-semibold ${props.subClass}`}>{props.sub}</span>
       </div>

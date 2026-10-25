@@ -10,11 +10,31 @@ import { RailTrack } from "@/components/RailTrack";
 import { RouteStrip } from "@/components/RouteStrip";
 import { StationSign } from "@/components/StationSign";
 import { StatusChip } from "@/components/StatusChip";
+import { Badge } from "@/components/ui/badge";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
 import { getCheckInSummary, hasCheckedInToday, listRecentCheckIns } from "@/lib/checkins";
 import { avatarUrl } from "@/lib/profile";
 import { Avatar } from "@/components/Avatar";
 import { getLineStops, getPub } from "@/lib/queries";
+
+// Breadcrumbs on the sign-blue band
+const crumbs = {
+  list: "gap-x-1.5 gap-y-0 text-[#b9c6e2]",
+  link: "text-sign-mist underline underline-offset-2 hover:text-white",
+  page: "text-[inherit]",
+};
+const outlineBtn = "h-11.5 px-3 text-[15px]";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/pub/[slug]">): Promise<Metadata> {
   const { slug } = await params;
@@ -86,7 +106,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
     [
       t("openingHours"),
       pub.openingHours ?? (
-        <span key="o" className="text-muted">
+        <span key="o" className="text-muted-foreground">
           {t("notKnownYet")}
         </span>
       ),
@@ -99,50 +119,55 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
     <article>
       <section className="bg-sign px-4 pt-4 pb-7 text-white md:px-6 md:pt-6 md:pb-14">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 md:gap-8">
-          <nav aria-label={nav("breadcrumb")} className="text-sm text-[#b9c6e2]">
-            <ol className="flex flex-wrap gap-x-1.5">
-              <li>
-                <Link href="/pubs" className="text-sign-mist underline underline-offset-2">
+          <Breadcrumb aria-label={nav("breadcrumb")}>
+            <BreadcrumbList className={crumbs.list}>
+              <BreadcrumbItem>
+                <BreadcrumbLink render={<Link href="/pubs" />} className={crumbs.link}>
                   {nav("pubs")}
-                </Link>
-              </li>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
               {region && (
-                <li>
-                  <span aria-hidden="true">/ </span>
-                  <Link href={{ pathname: "/region/[slug]", params: { slug: region.slug } }} className="text-sign-mist underline underline-offset-2">
-                    {regionName}
-                  </Link>
-                </li>
+                <>
+                  <BreadcrumbSeparator>/</BreadcrumbSeparator>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink render={<Link href={{ pathname: "/region/[slug]", params: { slug: region.slug } }} />} className={crumbs.link}>
+                      {regionName}
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                </>
               )}
-              <li aria-current="page">
-                <span aria-hidden="true">/ </span>
-                {station.name}
-              </li>
-            </ol>
-          </nav>
+              <BreadcrumbSeparator>/</BreadcrumbSeparator>
+              <BreadcrumbItem>
+                <BreadcrumbPage className={crumbs.page}>{station.name}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
           <div className="flex flex-wrap items-end justify-between gap-8 md:gap-10">
             <div className="flex min-w-0 flex-[1_1_520px] flex-col gap-4 md:gap-5">
               <StationSign name={station.name} size="lg" className="self-start" />
               <h1 className="text-[40px] md:text-[60px]">{pub.name}</h1>
               <div className="flex flex-wrap items-center gap-2">
                 <StatusChip status={pub.status} className="md:px-3.5 md:py-1 md:text-[15px]" />
-                <span className="rounded-full border border-sign-line px-3 py-0.5 text-sm md:px-3.5 md:text-[15px]">{kt(pub.kind)}</span>
+                <Badge variant="outline" className="h-auto border-sign-line px-3 py-0.5 text-sm font-normal text-white md:px-3.5 md:text-[15px]">
+                  {kt(pub.kind)}
+                </Badge>
                 {lines.slice(0, 2).map((l) => (
-                  <Link
+                  <Badge
                     key={l.number}
-                    href={{ pathname: "/line/[number]", params: { number: l.number } }}
-                    className="inline-flex max-w-full items-center gap-2 rounded-full border border-sign-line py-0.5 pr-3.5 pl-1 text-sm hover:bg-sign-deep md:text-[15px]"
+                    variant="outline"
+                    render={<Link href={{ pathname: "/line/[number]", params: { number: l.number } }} />}
+                    className="h-auto max-w-full gap-2 border-sign-line py-0.5 pr-3.5 pl-1 text-sm font-normal text-white [a]:hover:bg-sign-deep [a]:hover:text-white md:text-[15px]"
                   >
-                    <span className="line-chip rounded-full">{l.number}</span>
+                    <LineChip number={l.number} className="rounded-full" />
                     <span className="hidden truncate sm:inline">{l.name}</span>
-                  </Link>
+                  </Badge>
                 ))}
               </div>
             </div>
 
-            <div className="flex w-full flex-col gap-3.5 rounded-2xl bg-white p-5 text-ink shadow-[0_16px_40px_rgb(5_12_28/0.3)] md:w-auto md:flex-[0_1_400px] md:p-6">
+            <Card className="w-full gap-3.5 rounded-2xl border-0 p-5 shadow-[0_16px_40px_rgb(5_12_28/0.3)] md:w-auto md:flex-[0_1_400px] md:p-6">
               <h2 className="text-[30px]">{t("checkInTitle")}</h2>
-              <p className="text-[15px] text-muted">{t("checkInText")}</p>
+              <p className="text-[15px] text-muted-foreground">{t("checkInText")}</p>
               {checkedInToday ? (
                 <p className="flex h-14 items-center justify-center gap-2.5 rounded-xl bg-open-bg text-lg font-semibold text-open-ink">
                   <CheckIcon />
@@ -150,20 +175,20 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
                 </p>
               ) : (
                 // Signed out, the check-in page sends the user to log in and back.
-                <Link href={checkInHref} className="btn btn-yellow h-14 rounded-xl text-lg">
+                <Link href={checkInHref} className={cn(buttonVariants({ variant: "yellow", size: "xl" }), "h-14 rounded-xl text-lg")}>
                   <PinIcon />
                   {!user ? t("checkInLogin") : signUpFinished(user) ? t("checkIn") : t("checkInFinish")}
                 </Link>
               )}
               <div className="grid grid-cols-2 gap-2">
-                <a href={directions} className="btn btn-outline h-[46px] min-h-0 px-3 text-[15px]">
+                <a href={directions} className={cn(buttonVariants({ variant: "outline", size: "xl" }), outlineBtn)}>
                   {t("navigate")}
                 </a>
-                <Link href={{ pathname: "/map", query: { pub: pub.slug } }} className="btn btn-outline h-[46px] min-h-0 px-3 text-[15px]">
+                <Link href={{ pathname: "/map", query: { pub: pub.slug } }} className={cn(buttonVariants({ variant: "outline", size: "xl" }), outlineBtn)}>
                   {nav("map")}
                 </Link>
               </div>
-            </div>
+            </Card>
           </div>
         </div>
       </section>
@@ -171,7 +196,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
 
       <div className="mx-auto flex max-w-7xl flex-wrap items-start gap-6 px-4 pt-6 pb-12 md:gap-8 md:px-6 md:pt-12 md:pb-16">
         <div className="flex min-w-0 flex-[999_1_560px] flex-col gap-6 md:gap-8">
-          <section className="card p-5 md:p-7">
+          <Card render={<section />} className="block p-5 md:p-7">
             <h2 className="mb-5 text-[28px] md:text-[32px]">{t("about")}</h2>
             {description && <p className="mb-6 max-w-[65ch] text-[17px]">{description}</p>}
             <dl className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-x-8 gap-y-5">
@@ -182,13 +207,13 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
                 </div>
               ))}
             </dl>
-            <p className="mt-6 border-t border-rule-soft pt-4 text-[15px] text-muted">
+            <p className="mt-6 border-t border-rule-soft pt-4 text-[15px] text-muted-foreground">
               {rt("linkText")}{" "}
               <Link href={{ pathname: "/pub/[slug]/report", params: { slug: pub.slug } }} className="link">
                 {rt("link")}
               </Link>
             </p>
-          </section>
+          </Card>
 
           {route && mainLine && (
             <section className="flex flex-col gap-4">
@@ -203,23 +228,23 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
               <ul className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
                 {neighbours.map((n) => (
                   <li key={n.slug}>
-                    <Link
-                      href={{ pathname: "/pub/[slug]", params: { slug: n.slug } }}
-                      className="card flex h-full flex-col gap-2.5 rounded-xl p-5 hover:border-sign"
+                    <Card
+                      render={<Link href={{ pathname: "/pub/[slug]", params: { slug: n.slug } }} />}
+                      className="h-full gap-2.5 p-5 hover:border-sign"
                     >
                       <span className="text-lg font-semibold">{n.name}</span>
                       <span className="flex flex-wrap items-center gap-2">
                         <StatusChip status={n.status} />
-                        <span className="text-sm text-muted">{kt(n.kind)}</span>
+                        <span className="text-sm text-muted-foreground">{kt(n.kind)}</span>
                       </span>
-                    </Link>
+                    </Card>
                   </li>
                 ))}
               </ul>
             </section>
           )}
 
-          <section className="card flex flex-col gap-5 p-5 md:p-7" aria-labelledby="checkins-title">
+          <Card render={<section />} className="gap-5 p-5 md:p-7" aria-labelledby="checkins-title">
             <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
               <div className="flex flex-col gap-1">
                 <h2 id="checkins-title" className="text-[28px] md:text-[32px]">
@@ -241,7 +266,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
               )}
             </div>
             {recent.length === 0 ? (
-              <p className="text-muted">{t("noCheckIns", { name: pub.name })}</p>
+              <p className="text-muted-foreground">{t("noCheckIns", { name: pub.name })}</p>
             ) : (
               <ul aria-label={t("recentCheckIns")} className="flex flex-col divide-y divide-rule-soft border-t border-rule-soft">
                 {recent.map((c) => {
@@ -257,10 +282,10 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
                         <span className="flex items-center gap-2 font-semibold">
                           <Avatar url={avatarUrl(c.userId, c.avatarUpdatedAt)} name={c.username ?? "?"} size={24} />@{c.username}
                         </span>
-                        <time dateTime={c.createdAt.toISOString()} className="font-mono text-xs text-muted">
+                        <time dateTime={c.createdAt.toISOString()} className="font-mono text-xs text-muted-foreground">
                           {format.dateTime(c.createdAt, { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Prague" })}
                         </time>
-                        <span className={`chip ${c.pubWasOpen ? "chip-open" : "chip-closed"}`}>{t(c.pubWasOpen ? "reportedOpen" : "reportedClosed")}</span>
+                        <Badge variant={c.pubWasOpen ? "open" : "closed"}>{t(c.pubWasOpen ? "reportedOpen" : "reportedClosed")}</Badge>
                         {c.rating && (
                           <span className="font-mono text-sm font-semibold" aria-label={t("rating", { count: c.rating })}>
                             <span aria-hidden="true" className="text-star">
@@ -275,9 +300,9 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
                       {had.length > 0 && (
                         <ul className="flex flex-wrap gap-1.5">
                           {had.map((label) => (
-                            <li key={label} className="rounded-full bg-sign-tint px-2.5 py-0.5 text-[13px] font-medium text-sign">
+                            <Badge key={label} variant="secondary" render={<li />} className="h-auto px-2.5 text-[13px]">
                               {label}
-                            </li>
+                            </Badge>
                           ))}
                         </ul>
                       )}
@@ -287,23 +312,23 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
                 })}
               </ul>
             )}
-          </section>
+          </Card>
         </div>
 
         <aside className="flex min-w-0 flex-[1_1_320px] flex-col gap-4">
-          <div className="card overflow-hidden">
+          <Card className="gap-0 py-0">
             <PubMiniMap lat={lat} lon={lon} label={pub.name} status={pub.status} />
             <div className="flex flex-col gap-2 px-5 py-4">
-              <p className="text-sm text-muted">{pub.locationMatch === "review" ? t("reviewNote") : t("positionNote")}</p>
+              <p className="text-sm text-muted-foreground">{pub.locationMatch === "review" ? t("reviewNote") : t("positionNote")}</p>
               <Link href={{ pathname: "/map", query: { pub: pub.slug } }} className="link text-[15px]">
                 {t("openOnMap")}
               </Link>
             </div>
-          </div>
-          <div className="card flex flex-col gap-2 p-5">
+          </Card>
+          <Card className="gap-2 p-5">
             <span className="label">{t("source")}</span>
             <p className="text-[15px]">{t("sourceText")}</p>
-          </div>
+          </Card>
         </aside>
       </div>
     </article>

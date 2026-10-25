@@ -5,6 +5,10 @@ import { useTranslations } from "next-intl";
 import { Avatar } from "@/components/Avatar";
 import { AVATAR_UPLOAD_SIDE, HOMETOWN_MAX } from "@/lib/profile";
 import { saveProfile, type ProfileState } from "./actions";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 type Props = { username: string; hometown: string | null; avatarUrl: string | null };
 
@@ -71,7 +75,7 @@ export function ProfileForm({ username, hometown, avatarUrl }: Props) {
   const error = pictureError ? "pictureFormat" : state.error;
 
   return (
-    <form onSubmit={submit} className="card flex flex-col gap-6 p-5 md:p-7" aria-labelledby="details-title">
+    <Card render={<form onSubmit={submit} aria-labelledby="details-title" />} className="flex flex-col gap-6 p-5 md:p-7">
       <h2 id="details-title" className="text-[28px] md:text-[32px]">
         {t("detailsTitle")}
       </h2>
@@ -81,40 +85,41 @@ export function ProfileForm({ username, hometown, avatarUrl }: Props) {
         <div className="flex flex-wrap items-center gap-4">
           <Avatar url={shown} name={username} size={88} className="border-2 border-rule" />
           <div className="flex flex-wrap gap-2">
-            <label className="btn btn-outline relative min-h-11 cursor-pointer has-focus-visible:outline-3 has-focus-visible:outline-yellow">
+            <label className={cn(buttonVariants({ variant: "outline", size: "xl" }), "relative h-11 cursor-pointer has-focus-visible:outline-3 has-focus-visible:outline-yellow")}>
               <input type="file" name="pictureFile" accept="image/*" onChange={choose} className="sr-only" />
               {shown ? t("changePicture") : t("choosePicture")}
             </label>
             {shown && (
-              <button
-                type="button"
+              <Button
+                variant="outline"
+                size="xl"
                 onClick={() => {
                   setRemove(true);
                   setPicture(null);
                   setPreview(null);
                 }}
-                className="btn btn-outline min-h-11"
+                className="h-11"
               >
                 {t("removePicture")}
-              </button>
+              </Button>
             )}
           </div>
         </div>
-        <p className="text-sm text-muted">{t("pictureHint")}</p>
+        <p className="text-sm text-muted-foreground">{t("pictureHint")}</p>
       </div>
 
       <div className="flex flex-col gap-2">
         <label htmlFor="hometown" className="flex items-baseline gap-2 font-display text-[22px] font-bold">
           {t("hometown")} <span className="label">{t("optional")}</span>
         </label>
-        <input
+        <Input
           id="hometown"
           name="hometown"
           maxLength={HOMETOWN_MAX}
           defaultValue={hometown ?? ""}
           placeholder={t("hometownPlaceholder")}
           autoComplete="address-level2"
-          className="field h-12"
+          className="h-12"
         />
       </div>
 
@@ -129,9 +134,9 @@ export function ProfileForm({ username, hometown, avatarUrl }: Props) {
         </p>
       )}
 
-      <button type="submit" disabled={saving} className="btn btn-yellow h-14 self-start rounded-xl px-8 text-lg">
+      <Button variant="yellow" size="xl" type="submit" disabled={saving} className="h-14 self-start rounded-xl px-8 text-lg">
         {saving ? t("saving") : t("save")}
-      </button>
-    </form>
+      </Button>
+    </Card>
   );
 }

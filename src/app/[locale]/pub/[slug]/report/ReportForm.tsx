@@ -5,6 +5,10 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { DAILY_REPORT_LIMIT, MESSAGE_MAX, needsMessage, needsValue, VALUE_MAX, type ReportKind } from "@/lib/report";
 import { submitReport, type ReportState } from "./actions";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 type Props = {
   slug: string;
@@ -35,18 +39,18 @@ function Form({ slug, name, kinds, current, onAnother }: Props & { onAnother: ()
 
   if (state.done) {
     return (
-      <section role="status" className="card flex flex-col items-start gap-3 p-5 md:p-7">
+      <Card render={<section />} role="status" className="flex flex-col items-start gap-3 p-5 md:p-7">
         <h2 className="text-[28px]">{t("doneTitle")}</h2>
         <p>{state.autoApproved ? t("doneTextApproved", { name }) : t("doneText", { name })}</p>
         <div className="flex flex-wrap gap-2">
-          <Link href={{ pathname: "/pub/[slug]", params: { slug } }} className="btn btn-sign">
+          <Link href={{ pathname: "/pub/[slug]", params: { slug } }} className={buttonVariants({ size: "xl" })}>
             {t("back")}
           </Link>
-          <button type="button" onClick={onAnother} className="btn btn-outline">
+          <Button variant="outline" size="xl" onClick={onAnother}>
             {t("another")}
-          </button>
+          </Button>
         </div>
-      </section>
+      </Card>
     );
   }
 
@@ -54,11 +58,7 @@ function Form({ slug, name, kinds, current, onAnother }: Props & { onAnother: ()
   const currentValue = valueKind ? current[valueKind] : null;
 
   return (
-    <form
-      action={action}
-      className="card flex flex-col gap-6 p-5 md:p-7"
-      noValidate
-    >
+    <Card render={<form action={action} noValidate />} className="flex flex-col gap-6 p-5 md:p-7">
       <input type="hidden" name="slug" value={slug} />
 
       <fieldset className="flex flex-col" aria-describedby={state.fields?.kind ? "kind-error" : undefined}>
@@ -93,8 +93,8 @@ function Form({ slug, name, kinds, current, onAnother }: Props & { onAnother: ()
           <label htmlFor="value" className="font-display text-[22px] font-bold">
             {t(`valueLabels.${valueKind}`)}
           </label>
-          {currentValue && <p className="text-sm text-muted">{t("current", { value: currentValue })}</p>}
-          <input
+          {currentValue && <p className="text-sm text-muted-foreground">{t("current", { value: currentValue })}</p>}
+          <Input
             id="value"
             name="value"
             required
@@ -103,7 +103,7 @@ function Form({ slug, name, kinds, current, onAnother }: Props & { onAnother: ()
             placeholder={t(`valuePlaceholders.${valueKind}`)}
             aria-invalid={state.fields?.value ? true : undefined}
             aria-describedby={state.fields?.value ? "value-error" : undefined}
-            className="field h-12"
+            className="h-12"
           />
           {state.fields?.value && (
             <p id="value-error" className="text-sm font-medium text-closed-ink">
@@ -119,11 +119,11 @@ function Form({ slug, name, kinds, current, onAnother }: Props & { onAnother: ()
             {t("messageLabel")}
             {!(kind && needsMessage(kind)) && <span className="label">{t("optional")}</span>}
           </label>
-          <span className="font-mono text-xs text-muted" aria-hidden="true">
+          <span className="font-mono text-xs text-muted-foreground" aria-hidden="true">
             {messageLength}/{MESSAGE_MAX}
           </span>
         </div>
-        <textarea
+        <Textarea
           id="message"
           name="message"
           rows={4}
@@ -133,7 +133,7 @@ function Form({ slug, name, kinds, current, onAnother }: Props & { onAnother: ()
           onChange={(e) => setMessageLength(e.target.value.length)}
           aria-invalid={state.fields?.message ? true : undefined}
           aria-describedby={state.fields?.message ? "message-error" : undefined}
-          className="field h-auto resize-y py-2.5"
+          className="min-h-24 resize-y"
         />
         {state.fields?.message && (
           <p id="message-error" className="text-sm font-medium text-closed-ink">
@@ -154,12 +154,12 @@ function Form({ slug, name, kinds, current, onAnother }: Props & { onAnother: ()
         </div>
       )}
 
-      <button type="submit" disabled={pending} className="btn btn-yellow h-14 rounded-xl text-lg">
+      <Button variant="yellow" size="xl" type="submit" disabled={pending} className="h-14 rounded-xl text-lg">
         {pending ? t("sending") : t("submit")}
-      </button>
+      </Button>
       <Link href={{ pathname: "/pub/[slug]", params: { slug } }} className="link -mt-2 self-center text-[15px]">
         {t("back")}
       </Link>
-    </form>
+    </Card>
   );
 }

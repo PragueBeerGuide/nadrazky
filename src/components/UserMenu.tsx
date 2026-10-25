@@ -5,6 +5,9 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { logOut } from "@/app/[locale]/login/actions";
 import { Avatar } from "./Avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type Props = {
   user: { name: string | null; username: string | null; email: string | null; role: "user" | "moderator" | "admin"; avatarUrl: string | null };
@@ -56,29 +59,29 @@ export function UserMenu({ user, finished, waiting }: Props) {
       <div className="absolute right-0 z-[1100] mt-2 flex w-64 flex-col gap-3 rounded-xl border border-rule bg-white p-4 text-ink shadow-[0_16px_40px_rgb(14_26_43/0.28)]">
         <div className="flex min-w-0 flex-col">
           <span className="truncate font-semibold">{label}</span>
-          {user.email && <span className="truncate text-sm text-muted">{user.email}</span>}
+          {user.email && <span className="truncate text-sm text-muted-foreground">{user.email}</span>}
           {user.role !== "user" && <span className="label mt-1">{t(`roles.${user.role}`)}</span>}
         </div>
         {finished ? (
-          <Link href="/profile" onClick={close} className="btn btn-sign min-h-11">
+          <Link href="/profile" onClick={close} className={cn(buttonVariants({ size: "xl" }), "h-11")}>
             {pt("menuLink")}
           </Link>
         ) : (
-          <Link href="/login" onClick={close} className="btn btn-yellow min-h-11">
+          <Link href="/login" onClick={close} className={cn(buttonVariants({ variant: "yellow", size: "xl" }), "h-11")}>
             {t("finishLink")}
           </Link>
         )}
         {waiting !== null && (
-          <Link href="/moderation" onClick={close} className="btn btn-outline min-h-11 justify-between">
+          <Link href="/moderation" onClick={close} className={cn(buttonVariants({ variant: "outline", size: "xl" }), "h-11 justify-between")}>
             {mt("menuLink")}
-            {waiting > 0 && <span className="rounded-full bg-yellow px-2 font-mono text-xs font-semibold text-ink">{mt("menuCount", { count: waiting })}</span>}
+            {waiting > 0 && <Badge className="bg-yellow font-mono font-semibold text-ink">{mt("menuCount", { count: waiting })}</Badge>}
           </Link>
         )}
         <form action={logOut}>
           <input type="hidden" name="locale" value={locale} />
-          <button type="submit" className="btn btn-outline min-h-11 w-full">
+          <Button variant="outline" size="xl" type="submit" className="h-11 w-full">
             {t("logOut")}
-          </button>
+          </Button>
         </form>
       </div>
     </details>

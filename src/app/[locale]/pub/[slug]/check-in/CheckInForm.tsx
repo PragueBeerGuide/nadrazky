@@ -5,6 +5,9 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { AMOUNT_MAX, NOTE_MAX } from "@/lib/checkin";
 import { checkIn, type CheckInState } from "./actions";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 
 const AMOUNTS = Array.from({ length: AMOUNT_MAX }, (_, i) => i + 1);
 
@@ -90,7 +93,7 @@ export function CheckInForm({ slug, locale }: { slug: string; locale: string }) 
   }
 
   return (
-    <form onSubmit={submit} className="card flex flex-col gap-6 p-5 md:p-7" noValidate>
+    <Card render={<form onSubmit={submit} noValidate />} className="flex flex-col gap-6 p-5 md:p-7">
       <input type="hidden" name="slug" value={slug} />
       <input type="hidden" name="locale" value={locale} />
 
@@ -134,7 +137,7 @@ export function CheckInForm({ slug, locale }: { slug: string; locale: string }) 
               <span aria-hidden="true">{n}</span>
             </label>
           ))}
-          <label className="relative flex h-12 cursor-pointer items-center rounded-xl border border-field bg-white px-4 text-[15px] font-medium text-muted has-checked:border-ink has-checked:text-ink has-focus-visible:outline-3 has-focus-visible:outline-sign">
+          <label className="relative flex h-12 cursor-pointer items-center rounded-xl border border-field bg-white px-4 text-[15px] font-medium text-muted-foreground has-checked:border-ink has-checked:text-ink has-focus-visible:outline-3 has-focus-visible:outline-sign">
             <input type="radio" name="rating" value="" defaultChecked className="sr-only" />
             {t("ratingNone")}
           </label>
@@ -146,18 +149,18 @@ export function CheckInForm({ slug, locale }: { slug: string; locale: string }) 
           <label htmlFor="note" className="flex items-baseline gap-2 font-display text-[22px] font-bold">
             {t("noteLabel")} <span className="label">{t("optional")}</span>
           </label>
-          <span className="font-mono text-xs text-muted" aria-hidden="true">
+          <span className="font-mono text-xs text-muted-foreground" aria-hidden="true">
             {t("noteCount", { count: noteLength, max: NOTE_MAX })}
           </span>
         </div>
-        <textarea
+        <Textarea
           id="note"
           name="note"
           rows={3}
           maxLength={NOTE_MAX}
           placeholder={t("notePlaceholder")}
           onChange={(e) => setNoteLength(e.target.value.length)}
-          className="field h-auto resize-y py-2.5"
+          className="min-h-24 resize-y"
         />
       </div>
 
@@ -190,14 +193,14 @@ export function CheckInForm({ slug, locale }: { slug: string; locale: string }) 
         </div>
       )}
 
-      <button type="submit" disabled={saving} className="btn btn-yellow h-14 rounded-xl text-lg">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <Button variant="yellow" size="xl" type="submit" disabled={saving} className="h-14 rounded-xl text-lg">
+        <svg viewBox="0 0 24 24" width="22" height="22" className="size-5.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" />
           <path d="m9 10 2 2 4-4" />
         </svg>
         {saving ? t("saving") : t("submit")}
-      </button>
-      <p className="-mt-3 text-center text-sm text-muted">{t("oncePerDay")}</p>
-    </form>
+      </Button>
+      <p className="-mt-3 text-center text-sm text-muted-foreground">{t("oncePerDay")}</p>
+    </Card>
   );
 }

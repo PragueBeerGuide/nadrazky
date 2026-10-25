@@ -8,6 +8,9 @@ import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
 import { hasCheckedInToday } from "@/lib/checkins";
 import { getPub } from "@/lib/queries";
 import { CheckInForm } from "./CheckInForm";
+import { buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/pub/[slug]/check-in">): Promise<Metadata> {
   const { slug } = await params;
@@ -39,13 +42,13 @@ export default async function CheckInPage({ params }: PageProps<"/[locale]/pub/[
       <PageHero eyebrow={`${t("title")} · ${station.name}`} title={pub.name} />
       <div className="mx-auto flex max-w-xl flex-col gap-4 px-4 py-8 md:py-12">
         {done ? (
-          <section className="card flex flex-col gap-4 p-5 md:p-7">
+          <Card render={<section />} className="flex flex-col gap-4 p-5 md:p-7">
             <h2 className="text-[28px]">{t("alreadyTitle")}</h2>
             <p>{t("alreadyText", { name: pub.name })}</p>
-            <Link href={pubHref} className="btn btn-sign self-start">
+            <Link href={pubHref} className={cn(buttonVariants({ size: "xl" }), "self-start")}>
               {t("back")}
             </Link>
-          </section>
+          </Card>
         ) : (
           <CheckInForm slug={pub.slug} locale={locale} />
         )}

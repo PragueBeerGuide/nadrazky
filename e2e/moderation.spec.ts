@@ -105,7 +105,7 @@ test("a pub of unknown status can be reported open", async ({ page }, testInfo) 
   await expect(main.getByRole("status")).toContainText("is approved");
 
   await page.goto(`/en/pub/${slug}`);
-  await expect(page.locator("article > section").first().locator(".chip").first()).toHaveText("Open");
+  await expect(page.locator("article > section").first().locator("[data-status]").first()).toHaveText("Open");
   await expect(page.locator("dt", { hasText: "Last confirmed" }).locator("+ dd")).toHaveText("today");
 });
 

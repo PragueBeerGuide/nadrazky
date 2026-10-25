@@ -3,6 +3,7 @@ import { getFormatter, getTranslations, setRequestLocale } from "next-intl/serve
 import { PageHero } from "@/components/PageHero";
 import { asLocale } from "@/i18n/routing";
 import { DATA_CONTROLLER, PRIVACY_UPDATED } from "@/lib/privacy";
+import { Card } from "@/components/ui/card";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("privacy");
@@ -125,12 +126,12 @@ export default async function PrivacyPage({ params }: PageProps<"/[locale]/priva
     <>
       <PageHero title={t("title")} subtitle={t("subtitle", { date })} />
       <div className="mx-auto flex max-w-2xl flex-col gap-10 px-4 py-10 md:py-14">
-        <section aria-labelledby="summary" className="card flex flex-col gap-4 p-5 md:p-7">
+        <Card render={<section />} aria-labelledby="summary" className="flex flex-col gap-4 p-5 md:p-7">
           <h2 id="summary" className="text-[28px]">
             {t("summaryTitle")}
           </h2>
           <List items={[t("summary.browse"), t("summary.google"), t("summary.checkins"), t("summary.public")]} />
-        </section>
+        </Card>
         {sections.map((s) => (
           <section key={s.id} id={s.id} aria-labelledby={`${s.id}-title`} className="flex scroll-mt-6 flex-col gap-3 text-[17px] leading-relaxed">
             <h2 id={`${s.id}-title`} className="text-[28px] md:text-[32px]">

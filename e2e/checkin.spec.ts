@@ -108,7 +108,7 @@ test("a check-in marks the pub open and confirmed today", async ({ page }, testI
   await expect(page).toHaveURL(new RegExp(`/en/pub/${slug}$`));
 
   const hero = page.locator("article > section").first();
-  await expect(hero.locator(".chip").first()).toHaveText("Open");
+  await expect(hero.locator("[data-status]").first()).toHaveText("Open");
   await expect(page.locator("dt", { hasText: "Last confirmed" }).locator("+ dd")).toHaveText("today");
 });
 
@@ -120,7 +120,7 @@ test("a check-in that found the pub closed only updates when it was last confirm
   await expect(page).toHaveURL(new RegExp(`/en/pub/${slug}$`));
 
   const hero = page.locator("article > section").first();
-  await expect(hero.locator(".chip").first()).toHaveText("Status unknown");
+  await expect(hero.locator("[data-status]").first()).toHaveText("Status unknown");
   await expect(page.locator("dt", { hasText: "Last confirmed" }).locator("+ dd")).toHaveText("today");
 });
 

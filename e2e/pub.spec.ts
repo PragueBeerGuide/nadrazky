@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 test("shows the station sign, status and line", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Posezení U Kotvy" })).toBeVisible();
   await expect(page.getByText("Davle", { exact: true }).first()).toBeVisible();
-  await expect(page.locator(".chip-open").first()).toHaveText("Open");
+  await expect(page.locator("[data-status=open]").first()).toHaveText("Open");
 });
 
 test("signed out, check-in asks to log in and the check-ins are listed", async ({ page }) => {

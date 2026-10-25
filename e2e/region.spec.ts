@@ -2,12 +2,12 @@ import { expect, test } from "./fixtures";
 
 test("a region lists its pubs in Czech alphabetical order within each status", async ({ page }) => {
   await page.goto("/cs/kraj/pardubicky");
-  const rows = page.locator("main ul.card > li");
+  const rows = page.locator("main ul[data-slot=card] > li");
   await expect(rows.first()).toBeVisible();
   const items = await rows.evaluateAll((lis) =>
     lis.map((li) => ({
       station: li.querySelector("p.text-sm span")?.textContent?.split(" · ")[0] ?? "",
-      status: li.querySelector(".chip")?.className ?? "",
+      status: li.querySelector("[data-status]")?.getAttribute("data-status") ?? "",
     })),
   );
   const collator = new Intl.Collator("cs");

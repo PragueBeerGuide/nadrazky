@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { USERNAME_MAX } from "@/lib/auth/signup";
 import { finishSignUp, type FinishState } from "./actions";
+import { Button } from "@/components/ui/button";
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 
 type Props = { locale: string; next: string; username: string; language: string };
 
@@ -24,7 +26,7 @@ export function FinishSignUpForm({ locale, next, username, language }: Props) {
           {t("username")}
         </label>
         <div className="flex items-center rounded-lg border border-field bg-white focus-within:outline-3 focus-within:outline-sign">
-          <span className="pl-3.5 font-mono text-muted" aria-hidden="true">
+          <span className="pl-3.5 font-mono text-muted-foreground" aria-hidden="true">
             @
           </span>
           <input
@@ -41,7 +43,7 @@ export function FinishSignUpForm({ locale, next, username, language }: Props) {
             className="h-12 min-w-0 flex-1 rounded-lg bg-transparent pr-3.5 pl-1 font-mono focus:outline-none"
           />
         </div>
-        <p id="username-hint" className={`text-sm ${usernameError ? "font-medium text-closed-ink" : "text-muted"}`}>
+        <p id="username-hint" className={`text-sm ${usernameError ? "font-medium text-closed-ink" : "text-muted-foreground"}`}>
           {usernameError ?? t("usernameHint")}
         </p>
       </div>
@@ -50,13 +52,13 @@ export function FinishSignUpForm({ locale, next, username, language }: Props) {
         <label htmlFor="language" className="label">
           {t("language")}
         </label>
-        <select id="language" name="language" defaultValue={state.values?.language ?? language} className="field h-12">
+        <NativeSelect id="language" name="language" defaultValue={state.values?.language ?? language} className="h-12">
           {routing.locales.map((l) => (
-            <option key={l} value={l}>
+            <NativeSelectOption key={l} value={l}>
               {nav(l)}
-            </option>
+            </NativeSelectOption>
           ))}
-        </select>
+        </NativeSelect>
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -78,9 +80,9 @@ export function FinishSignUpForm({ locale, next, username, language }: Props) {
         )}
       </div>
 
-      <button type="submit" disabled={pending} className="btn btn-yellow h-14 rounded-xl text-[17px]">
+      <Button variant="yellow" size="xl" type="submit" disabled={pending} className="h-14 rounded-xl text-[17px]">
         {pending ? t("saving") : t("finish")}
-      </button>
+      </Button>
     </form>
   );
 }
