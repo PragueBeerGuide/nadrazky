@@ -11,6 +11,7 @@ import { LineChip } from "./LineChip";
 import { PubMap, type MapStation } from "./PubMap";
 import { StatusChip } from "./StatusChip";
 import { Button, buttonVariants } from "./ui/button";
+import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
 import { Label } from "./ui/label";
@@ -271,7 +272,7 @@ export function MapExplorer({
         </div>
 
         {/* Computer: legend */}
-        <div className="absolute bottom-4 left-4 hidden flex-wrap gap-x-4 gap-y-2 rounded-[10px] bg-white px-3.5 py-2.5 text-[13px] font-medium shadow-[0_2px_8px_rgb(14_26_43/0.18)] md:flex">
+        <Card className="absolute bottom-4 left-4 hidden flex-row flex-wrap gap-x-4 gap-y-2 rounded-lg border-0 px-3.5 py-2.5 text-[13px] font-medium shadow-[0_2px_8px_rgb(14_26_43/0.18)] md:flex">
           {shownStatuses.map((s) => (
             <span key={s} className="inline-flex items-center gap-1.5">
               <span className="h-3 w-3 rounded-full" style={{ background: PIN[s] }} />
@@ -284,14 +285,14 @@ export function MapExplorer({
               {lt("line", { number: line })}
             </span>
           )}
-        </div>
+        </Card>
 
         {/* Phone: the selected station as a bottom sheet */}
         {selectedStation && (
-          <div className="absolute inset-x-0 bottom-0 z-10 flex max-h-[55%] flex-col gap-3 overflow-auto rounded-t-[20px] bg-white px-4 pt-2 pb-4 shadow-[0_-8px_24px_rgb(14_26_43/0.18)] md:hidden">
-            <span aria-hidden="true" className="h-[5px] w-10 self-center rounded-full bg-rule" />
+          <Card className="absolute inset-x-0 bottom-0 z-10 max-h-[55%] gap-3 overflow-auto rounded-none rounded-t-[20px] border-0 px-4 pt-2 pb-4 shadow-[0_-8px_24px_rgb(14_26_43/0.18)] md:hidden">
+            <span aria-hidden="true" className="h-[5px] w-10 shrink-0 self-center rounded-full bg-rule" />
             <StationSheet station={selectedStation} onClose={() => setSelected(null)} />
-          </div>
+          </Card>
         )}
       </section>
     </div>

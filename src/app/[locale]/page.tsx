@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { getTotals, listLines, listPubs, listRegions } from "@/lib/queries";
 import { compareLastConfirmed } from "@/lib/ago";
+import { Progress } from "@/components/ui/progress";
 
 const mapIcon = "M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zm0 0v14m6-12v14";
 
@@ -180,9 +181,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
                     <span className="font-semibold">{isCs ? r.nameCs : r.nameEn}</span>
                     <span className="font-mono text-[15px] font-semibold text-sign">{r.pubCount}</span>
                   </span>
-                  <span className="block h-1.5 overflow-hidden rounded-full bg-rule-soft">
-                    <span className="block h-full rounded-full bg-sign" style={{ width: `${Math.round((r.pubCount / maxRegion) * 100)}%` }} />
-                  </span>
+                  <Progress value={Math.round((r.pubCount / maxRegion) * 100)} aria-hidden="true" className="[&_[data-slot=progress-track]]:h-1.5" />
                 </Card>
               </li>
             ))}

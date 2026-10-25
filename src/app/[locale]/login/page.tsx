@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Alert } from "@/components/ui/alert";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("auth");
@@ -78,9 +79,7 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[l
         ) : (
           <Card render={<section />} className="flex flex-col gap-5 p-5 md:p-7">
             {errorKey && (
-              <p role="alert" className="rounded-lg bg-closed-bg px-4 py-3 text-[15px] font-medium text-closed-ink">
-                {t(`errors.${errorKey}`)}
-              </p>
+              <Alert variant="error">{t(`errors.${errorKey}`)}</Alert>
             )}
             <form action={signInWithGoogle}>
               {hidden}

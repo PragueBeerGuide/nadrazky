@@ -9,6 +9,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { Alert } from "@/components/ui/alert";
 
 type Props = { username: string; hometown: string | null; avatarUrl: string | null };
 
@@ -124,14 +125,14 @@ export function ProfileForm({ username, hometown, avatarUrl }: Props) {
       </div>
 
       {error && (
-        <p role="alert" className="rounded-xl bg-closed-bg px-4 py-3 text-[15px] font-medium text-closed-ink">
+        <Alert variant="error" className="rounded-xl">
           {t(`errors.${error}`)}
-        </p>
+        </Alert>
       )}
       {state.saved && !error && (
-        <p role="status" className="rounded-xl bg-open-bg px-4 py-3 text-[15px] font-medium text-open-ink">
+        <Alert variant="success" role="status" className="rounded-xl">
           {t("saved")}
-        </p>
+        </Alert>
       )}
 
       <Button variant="yellow" size="xl" type="submit" disabled={saving} className="h-14 self-start rounded-xl px-8 text-lg">

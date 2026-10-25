@@ -8,8 +8,18 @@ import { checkIn, type CheckInState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { Alert } from "@/components/ui/alert";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { cn } from "@/lib/utils";
 
 const AMOUNTS = Array.from({ length: AMOUNT_MAX }, (_, i) => i + 1);
+// The radio's own size and position would otherwise win over sr-only and take up room
+const hidden = "sr-only absolute size-px";
+// A tappable choice whose radio is hidden; it turns yellow when chosen
+const tile =
+  "relative flex cursor-pointer items-center border border-field bg-white text-ink has-focus-visible:outline-3 has-focus-visible:outline-sign has-data-checked:border-ink has-data-checked:bg-yellow";
 
 /** One of the four "what did you have" ticks; beer and shots open a "how many?" row when ticked. */
 function Had({
@@ -28,29 +38,22 @@ function Had({
   missing?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-2 rounded-xl border border-field bg-white px-3.5 py-2 has-[input[type=checkbox]:checked]:border-sign has-[input[type=checkbox]:checked]:bg-sign-tint">
-      <label className="flex min-h-10 cursor-pointer items-center gap-2.5 font-medium has-checked:text-sign">
-        <input type="checkbox" name={name} checked={checked} onChange={(e) => onChange(e.target.checked)} className="size-5 shrink-0 accent-sign" />
+    <div className="flex flex-col gap-2 rounded-xl border border-field bg-white px-3.5 py-2 has-[[data-slot=checkbox][data-checked]]:border-sign has-[[data-slot=checkbox][data-checked]]:bg-sign-tint">
+      <Label className="min-h-10 cursor-pointer gap-2.5 text-base leading-normal has-data-checked:text-sign">
+        <Checkbox name={name} checked={checked} onCheckedChange={onChange} className="size-5" />
         {label}
-      </label>
+      </Label>
       {amount && checked && (
-        <fieldset
-          onChange={amount.onChoose}
-          className="flex flex-col gap-2 pb-1.5"
-          aria-describedby={missing ? `${amount.name}-error` : undefined}
-        >
+        <fieldset className="flex flex-col gap-2 pb-1.5" aria-describedby={missing ? `${amount.name}-error` : undefined}>
           <legend className="mb-2 text-sm font-semibold text-ink">{amount.legend}</legend>
-          <div className="grid grid-cols-5 gap-1.5">
+          <RadioGroup name={amount.name} onValueChange={amount.onChoose} className="grid-cols-5 gap-1.5">
             {AMOUNTS.map((n) => (
-              <label
-                key={n}
-                className="relative flex h-11 cursor-pointer items-center justify-center rounded-lg border border-field bg-white font-mono text-base font-semibold text-ink has-checked:border-ink has-checked:bg-yellow has-focus-visible:outline-3 has-focus-visible:outline-sign"
-              >
-                <input type="radio" name={amount.name} value={n} className="sr-only" />
+              <Label key={n} className={cn(tile, "h-11 justify-center rounded-lg font-mono text-base font-semibold")}>
+                <RadioGroupItem value={String(n)} className={hidden} />
                 {n}
-              </label>
+              </Label>
             ))}
-          </div>
+          </RadioGroup>
           {missing && (
             <p id={`${amount.name}-error`} className="text-sm font-medium text-closed-ink">
               {amount.error}
@@ -127,21 +130,18 @@ export function CheckInForm({ slug, locale }: { slug: string; locale: string }) 
         <legend className="mb-3 flex items-baseline gap-2 font-display text-[22px] font-bold">
           {t("ratingTitle")} <span className="label">{t("optional")}</span>
         </legend>
-        <div className="flex flex-wrap gap-2">
+        <RadioGroup name="rating" defaultValue="" className="flex flex-wrap gap-2">
           {[1, 2, 3, 4, 5].map((n) => (
-            <label
-              key={n}
-              className="relative flex size-12 cursor-pointer items-center justify-center rounded-xl border border-field bg-white font-mono text-lg font-semibold has-checked:border-ink has-checked:bg-yellow has-focus-visible:outline-3 has-focus-visible:outline-sign"
-            >
-              <input type="radio" name="rating" value={n} className="sr-only" aria-label={t("ratingValue", { count: n })} />
+            <Label key={n} className={cn(tile, "size-12 justify-center rounded-xl font-mono text-lg font-semibold")}>
+              <RadioGroupItem value={String(n)} className={hidden} aria-label={t("ratingValue", { count: n })} />
               <span aria-hidden="true">{n}</span>
-            </label>
+            </Label>
           ))}
-          <label className="relative flex h-12 cursor-pointer items-center rounded-xl border border-field bg-white px-4 text-[15px] font-medium text-muted-foreground has-checked:border-ink has-checked:text-ink has-focus-visible:outline-3 has-focus-visible:outline-sign">
-            <input type="radio" name="rating" value="" defaultChecked className="sr-only" />
+          <Label className={cn(tile, "h-12 rounded-xl px-4 text-[15px] text-muted-foreground has-data-checked:bg-white has-data-checked:text-ink")}>
+            <RadioGroupItem value="" className={hidden} />
             {t("ratingNone")}
-          </label>
-        </div>
+          </Label>
+        </RadioGroup>
       </fieldset>
 
       <div className="flex flex-col gap-2">
@@ -166,23 +166,26 @@ export function CheckInForm({ slug, locale }: { slug: string; locale: string }) 
 
       <fieldset className="flex flex-col">
         <legend className="mb-3 font-display text-[22px] font-bold">{t("openTitle")}</legend>
-        <div className="grid grid-cols-2 gap-2">
+        <RadioGroup name="pubWasOpen" defaultValue="open" className="grid-cols-2 gap-2">
           {(["open", "closed"] as const).map((v) => (
-            <label
+            <Label
               key={v}
-              className={`flex min-h-12 cursor-pointer items-center gap-2.5 rounded-xl border border-field bg-white px-3.5 font-medium has-focus-visible:outline-3 has-focus-visible:outline-sign ${
-                v === "open" ? "has-checked:border-open has-checked:bg-open-bg has-checked:text-open-ink" : "has-checked:border-closed has-checked:bg-closed-bg has-checked:text-closed-ink"
-              }`}
+              className={cn(
+                "flex min-h-12 cursor-pointer items-center gap-2.5 rounded-xl border border-field bg-white px-3.5 text-base leading-normal has-focus-visible:outline-3 has-focus-visible:outline-sign",
+                v === "open"
+                  ? "has-data-checked:border-open has-data-checked:bg-open-bg has-data-checked:text-open-ink"
+                  : "has-data-checked:border-closed has-data-checked:bg-closed-bg has-data-checked:text-closed-ink",
+              )}
             >
-              <input type="radio" name="pubWasOpen" value={v} defaultChecked={v === "open"} className="size-5 shrink-0 accent-ink" />
+              <RadioGroupItem value={v} className="size-5 data-checked:border-ink data-checked:bg-ink" />
               {t(v)}
-            </label>
+            </Label>
           ))}
-        </div>
+        </RadioGroup>
       </fieldset>
 
       {errorKey && (
-        <div role="alert" className="rounded-xl bg-closed-bg px-4 py-3 text-[15px] font-medium text-closed-ink">
+        <Alert variant="error" className="rounded-xl">
           {errorKey === "signIn" || errorKey === "finishSignUp" ? (
             <Link href="/login" className="underline underline-offset-2">
               {t(`errors.${errorKey}`)}
@@ -190,7 +193,7 @@ export function CheckInForm({ slug, locale }: { slug: string; locale: string }) 
           ) : (
             <p>{t(`errors.${errorKey}`)}</p>
           )}
-        </div>
+        </Alert>
       )}
 
       <Button variant="yellow" size="xl" type="submit" disabled={saving} className="h-14 rounded-xl text-lg">

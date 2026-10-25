@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { PageHero } from "@/components/PageHero";
 import { Card } from "@/components/ui/card";
 import { listRegions } from "@/lib/queries";
+import { Progress } from "@/components/ui/progress";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("regions");
@@ -33,9 +34,7 @@ export default async function RegionsPage({ params }: PageProps<"/[locale]/regio
                 <span className="font-display text-[26px] leading-none font-bold">{isCs ? r.nameCs : r.nameEn}</span>
                 <span className="font-mono text-[15px] font-semibold text-sign">{r.pubCount}</span>
               </span>
-              <span className="block h-1.5 overflow-hidden rounded-full bg-rule-soft">
-                <span className="block h-full rounded-full bg-sign" style={{ width: `${Math.round((r.pubCount / max) * 100)}%` }} />
-              </span>
+              <Progress value={Math.round((r.pubCount / max) * 100)} aria-hidden="true" className="[&_[data-slot=progress-track]]:h-1.5" />
               <span className="flex justify-between text-sm text-muted-foreground">
                 <span>{t("pubCount", { count: r.pubCount })}</span>
                 <span className="font-semibold text-open-ink">{t("openCount", { count: r.openCount })}</span>

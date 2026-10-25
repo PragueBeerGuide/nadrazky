@@ -18,6 +18,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { routeStops } from "@/lib/lineOrder";
 import { getLine, getLineStops, type LineStop } from "@/lib/queries";
+import { Progress } from "@/components/ui/progress";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/line/[number]">): Promise<Metadata> {
   const { number } = await params;
@@ -117,7 +118,7 @@ export default async function LinePage({ params }: PageProps<"/[locale]/line/[nu
               <p className="text-[15px] text-muted-foreground">{t("badgeText", { count: stops.length })}</p>
             </div>
             <div className="flex w-full flex-col gap-1.5">
-              <span className="block h-2.5 rounded-full bg-rule-soft" />
+              <Progress value={0} aria-hidden="true" className="[&_[data-slot=progress-track]]:h-2.5" />
               <span className="font-mono text-[13px] text-muted-foreground">{t("badgeProgress", { count: stops.length })}</span>
             </div>
             <Badge variant="secondary" className="h-auto w-full rounded-lg px-4 py-3 font-mono font-semibold tracking-[0.08em] whitespace-normal uppercase">
