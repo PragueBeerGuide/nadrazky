@@ -13,7 +13,8 @@ test("the privacy page is in Czech too", async ({ page }) => {
   await page.goto("/cs/ochrana-soukromi");
   await expect(page.getByRole("heading", { level: 1, name: "Ochrana soukromí" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Ve zkratce" })).toBeVisible();
-  await page.getByRole("button", { name: "English" }).click();
+  await page.getByRole("button", { name: "Jazyk: Čeština" }).click();
+  await page.getByRole("menuitemradio", { name: "English" }).click();
   await expect(page).toHaveURL(/\/en\/privacy$/);
 });
 
