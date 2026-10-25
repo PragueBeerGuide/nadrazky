@@ -16,14 +16,22 @@
     "breadcrumb": "Drobečková navigace",
     "languageGroup": "Jazyk",
     "cs": "Čeština",
-    "en": "English"
+    "en": "English",
+    "login": "Přihlášení",
+    "privacy": "Ochrana soukromí"
   },
   "ago": {
     "months": "{count, plural, =0 {tento měsíc} one {před # měsícem} few {před # měsíci} other {před # měsíci}}",
     "years": "{count, plural, one {před rokem} few {před # lety} other {před # lety}}",
     "monthsShort": "{count, plural, =0 {tento měs.} other {# měs.}}",
     "yearsShort": "{count} r.",
-    "unknown": "neznámo"
+    "unknown": "neznámo",
+    "today": "dnes",
+    "yesterday": "včera",
+    "thisWeek": "tento týden",
+    "todayShort": "dnes",
+    "yesterdayShort": "včera",
+    "thisWeekShort": "tento týd."
   },
   "home": {
     "eyebrow": "Nádražní hospody v Česku",
@@ -53,12 +61,12 @@
     "allRegions": "Všechny kraje →",
     "allLines": "Všechny tratě →",
     "helpTitle": "Pomoz nám s daty",
-    "helpText": "U většiny hospod nevíme, jestli ještě fungují. Každé odbavení na místě potvrdí, že je otevřeno.",
+    "helpText": "U většiny hospod nevíme, jestli ještě fungují. Každé odbavení potvrdí, že je otevřeno.",
     "helpWaiting": "{count, plural, one {Na ověření čeká ještě # hospoda.} few {Na ověření čekají ještě # hospody.} other {Na ověření čeká ještě # hospod.}}",
     "step1": "Vystup na stanici a najdi hospodu.",
-    "step2": "Odbav se na místě — poloha telefonu potvrdí, že tam opravdu jsi.",
+    "step2": "Odbav se a dej ostatním vědět, jestli je otevřeno.",
     "step3": "Sbírej odznaky za kraje a tratě.",
-    "soon": "Odbavení a odznaky spustíme brzy.",
+    "soon": "Odznaky spustíme brzy.",
     "helpCta": "Najdi hospodu k ověření",
     "badgesAlt": "Ukázka odznaků, které chystáme",
     "badgeLine": "Trať",
@@ -110,33 +118,40 @@
     "alongLine": "Podél trati {number}",
     "youAreHere": "jsi tady",
     "checkInTitle": "Sedíš tu právě teď?",
-    "checkInText": "Odbav se přímo na místě. Poloha telefonu potvrdí, že hospoda pořád funguje.",
+    "checkInText": "Odbav se a dej ostatním vědět, že hospoda pořád funguje.",
     "checkIn": "Odbavit se",
-    "checkInSoon": "Odbavení spustíme brzy",
     "checkIns": "Odbavení",
-    "checkInsSoonText": "Brzy tu půjde odbavením přímo na místě potvrdit, že {name} funguje.",
     "source": "Zdroj dat",
     "sourceText": "Stanice, její poloha a tratě jsou z Wikidat.",
     "openOnMap": "Otevřít na velké mapě →",
     "positionNote": "Poloha je zatím poloha stanice, ne přímo hospody.",
     "reviewNote": "Přiřazení ke stanici čeká na kontrolu.",
-    "navigate": "Navigovat"
+    "navigate": "Navigovat",
+    "checkInLogin": "Přihlas se a odbav se",
+    "checkInFinish": "Dokonči registraci a odbav se",
+    "checkedInToday": "Dnes už tu máš odbaveno",
+    "checkInCount": "{count, plural, =0 {Zatím žádné odbavení} other {# odbavení}}",
+    "lastVisit": "Poslední návštěva",
+    "lastVisitOpen": "{when}, bylo otevřeno",
+    "lastVisitClosed": "{when}, bylo zavřeno",
+    "noCheckIns": "Zatím se tu nikdo neodbavil. Buď první, kdo potvrdí, že {name} funguje.",
+    "recentCheckIns": "Poslední odbavení",
+    "reportedOpen": "Otevřeno",
+    "reportedClosed": "Zavřeno",
+    "rating": "Hodnocení {count} z 5"
   },
   "status": {
     "open": "V provozu",
-    "maybe_open": "Možná v provozu",
     "unknown": "Neznámý stav",
     "closed": "Zavřeno"
   },
   "statusShort": {
     "open": "V provozu",
-    "maybe_open": "Možná",
     "unknown": "Neznámo",
     "closed": "Zavřeno"
   },
   "summary": {
     "open": "{count} v provozu",
-    "maybe_open": "{count} možná v provozu",
     "unknown": "{count} neznámý stav",
     "closed": "{count} zavřeno"
   },
@@ -162,7 +177,6 @@
     "statPubs": "Hospody",
     "statStations": "Stanice s hospodou",
     "statOpen": "V provozu",
-    "statMaybe": "Možná v provozu",
     "statWaiting": "Čeká na ověření",
     "stopByStop": "Zastávka po zastávce",
     "direction": "{from} → {to}",
@@ -175,7 +189,6 @@
     "badgesSoon": "Odznaky spustíme brzy",
     "legendTitle": "Tečky stanic",
     "legendOpen": "Hospoda v provozu",
-    "legendMaybe": "Možná v provozu",
     "legendNone": "Nedávno nikdo neověřil",
     "onMap": "Trať {number} na mapě →"
   },
@@ -207,5 +220,274 @@
   "footer": {
     "data": "Data: Wikidata, © přispěvatelé OpenStreetMap",
     "by": "Vytvořilo Prague Beer Guides"
+  },
+  "auth": {
+    "title": "Přihlášení",
+    "subtitle": "Přihlas se nebo se zaregistruj účtem Google a odbavuj se v nádražkách.",
+    "adultsOnly": "Nádražky jsou pro dospělé: registrovat se můžeš až od 18 let.",
+    "google": "Pokračovat přes Google",
+    "email": "E-mail",
+    "emailPlaceholder": "ty@example.com",
+    "devTitle": "Vývojářské přihlášení",
+    "devText": "Jen pro lokální vývoj: přihlásí s jakýmkoli e-mailem bez ověření.",
+    "devSubmit": "Přihlásit (dev)",
+    "devRole": "Role",
+    "notConfigured": "Přihlašování na tomto serveru zatím není nastavené.",
+    "errors": {
+      "AccessDenied": "Přihlášení bylo zrušeno.",
+      "CredentialsSignin": "Přihlášení se nepovedlo.",
+      "default": "Přihlášení se nepovedlo. Zkus to znovu."
+    },
+    "finishTitle": "Dokonči registraci",
+    "finishText": "Vyber si přezdívku. Uvidí ji ostatní u tvých odbavení.",
+    "username": "Přezdívka",
+    "usernameHint": "3–20 znaků: písmena a–z, číslice a _",
+    "usernameInvalid": "Použij 3–20 znaků: písmena a–z, číslice a _.",
+    "usernameTaken": "Tahle přezdívka je obsazená. Zkus jinou.",
+    "language": "Jazyk",
+    "adultConfirm": "Potvrzuji, že je mi 18 let nebo víc.",
+    "adultRequired": "Nádražky můžeš používat až od 18 let.",
+    "finish": "Dokončit registraci",
+    "saving": "Ukládám…",
+    "signedInAs": "Přihlášen(a) jako {email}",
+    "notYou": "Nejsi to ty? Odhlásit se",
+    "logIn": "Přihlásit",
+    "logOut": "Odhlásit se",
+    "account": "Účet",
+    "finishLink": "Dokončit registraci",
+    "roles": {
+      "user": "Člen",
+      "moderator": "Moderátor",
+      "admin": "Správce"
+    },
+    "privacyLink": "Jak zacházíme s tvými údaji: <link>Ochrana soukromí</link>"
+  },
+  "profile": {
+    "title": "Tvůj profil",
+    "memberSince": "Členem od {date}",
+    "statsTitle": "Tvoje čísla",
+    "pubs": "{count, plural, one {navštívená hospoda} few {navštívené hospody} other {navštívených hospod}}",
+    "outOf": "z celkem {total}",
+    "checkIns": "{count, plural, other {odbavení}}",
+    "stations": "{count, plural, one {stanice} few {stanice} other {stanic}}",
+    "regions": "{count, plural, one {kraj} few {kraje} other {krajů}}",
+    "lines": "{count, plural, one {trať} few {tratě} other {tratí}}",
+    "hadTitle": "Co sis dal(a)",
+    "beers": "{count, plural, one {# pivo} few {# piva} other {# piv}}",
+    "shots": "{count, plural, one {# panák} few {# panáky} other {# panáků}}",
+    "nonAlcoholic": "{count, plural, other {# nealko}}",
+    "food": "{count}× jídlo",
+    "regionsTitle": "Podle krajů",
+    "regionProgress": "{visited} / {total}",
+    "visitedTitle": "Hospody, kde jsi byl(a)",
+    "visits": "{count, plural, one {# návštěva} few {# návštěvy} other {# návštěv}}",
+    "lastVisit": "naposledy {date}",
+    "emptyTitle": "Zatím žádné odbavení",
+    "emptyText": "Odbav se v nějaké nádražce a objeví se tady.",
+    "emptyCta": "Najdi hospodu",
+    "menuLink": "Tvůj profil",
+    "detailsTitle": "Tvoje údaje",
+    "picture": "Profilová fotka",
+    "choosePicture": "Vybrat fotku",
+    "changePicture": "Změnit fotku",
+    "removePicture": "Odebrat fotku",
+    "pictureHint": "Tvoje fotka, oříznutá do čtverce. Ukáže se u tvých odbavení.",
+    "hometown": "Odkud jsi",
+    "optional": "nepovinné",
+    "hometownPlaceholder": "např. Česká Třebová",
+    "from": "Odkud: {hometown}",
+    "save": "Uložit",
+    "saving": "Ukládám…",
+    "saved": "Uloženo.",
+    "errors": {
+      "signIn": "Pro uložení údajů se znovu přihlas.",
+      "hometown": "Odkud jsi může mít nejvýš 60 znaků.",
+      "pictureTooBig": "Fotka je moc velká. Zkus jinou.",
+      "pictureFormat": "Tuhle fotku neumíme načíst. Použij fotku ve formátu JPEG nebo PNG."
+    }
+  },
+  "checkIn": {
+    "title": "Odbavení",
+    "hadTitle": "Co sis dal(a)?",
+    "optional": "nepovinné",
+    "beer": "Pivo",
+    "shot": "Panáka",
+    "nonAlcoholic": "Nealko",
+    "food": "Jídlo",
+    "ratingTitle": "Hodnocení",
+    "ratingNone": "Žádné",
+    "ratingValue": "{count} z 5",
+    "noteLabel": "Poznámka",
+    "notePlaceholder": "Jaké to bylo?",
+    "noteCount": "{count}/{max}",
+    "openTitle": "Bylo otevřeno?",
+    "open": "Bylo otevřeno",
+    "closed": "Bylo zavřeno",
+    "submit": "Odbavit se tady",
+    "saving": "Odbavuji…",
+    "errors": {
+      "alreadyToday": "Dnes už tu máš odbaveno. Přijď zase zítra.",
+      "invalid": "Ve formuláři něco nesedí. Zkus to znovu.",
+      "signIn": "Pro odbavení se přihlas.",
+      "finishSignUp": "Pro odbavení dokonči registraci.",
+      "notFound": "Tuhle hospodu jsme nenašli."
+    },
+    "alreadyTitle": "Dnes odbaveno",
+    "alreadyText": "V hospodě {name} už máš dnes odbaveno. Počítá se jedno odbavení v hospodě za den.",
+    "back": "Zpět na hospodu",
+    "oncePerDay": "Počítá se jedno odbavení v hospodě za den.",
+    "howManyBeers": "Kolik piv?",
+    "howManyShots": "Kolik panáků?",
+    "amountMissing": "Vyber kolik.",
+    "beerCount": "{count, plural, one {# pivo} few {# piva} other {# piv}}",
+    "shotCount": "{count, plural, one {# panák} few {# panáky} other {# panáků}}"
+  },
+  "report": {
+    "title": "Nahlásit změnu",
+    "intro": "Nesedí něco u hospody {name} nebo už to neplatí? Dej nám vědět a zkontrolujeme to.",
+    "kindTitle": "Co se změnilo?",
+    "kinds": {
+      "closed": "Natrvalo zavřela",
+      "reopened": "Je otevřeno",
+      "name": "Jmenuje se jinak",
+      "hours": "Otevírací doba",
+      "address": "Adresa",
+      "beers": "Pivo na čepu",
+      "location": "Na mapě je jinde",
+      "other": "Něco jiného"
+    },
+    "valueLabels": {
+      "name": "Nový název",
+      "hours": "Otevírací doba",
+      "address": "Adresa",
+      "beers": "Co teď čepují"
+    },
+    "valuePlaceholders": {
+      "name": "např. Nádražní restaurace",
+      "hours": "např. Po–Pá 10–22, So 12–22",
+      "address": "Ulice a číslo, obec",
+      "beers": "např. Pilsner Urquell, Kozel 11°"
+    },
+    "current": "Teď uvádíme: {value}",
+    "messageLabel": "Podrobnosti",
+    "messagePlaceholder": "Co jsi viděl(a) a kdy jsi tam byl(a)?",
+    "optional": "nepovinné",
+    "submit": "Odeslat hlášení",
+    "sending": "Odesílám…",
+    "doneTitle": "Díky!",
+    "doneText": "Hlášení o hospodě {name} jsme dostali a zkontrolujeme ho. Na stránce hospody se změna projeví, až ji schválíme.",
+    "doneTextApproved": "Hlášení o hospodě {name} je rovnou schválené, protože jsi moderátor(ka). Nový stav, název, otevírací doba, adresa nebo pivo se na stránce hospody ukážou hned.",
+    "back": "Zpět na hospodu",
+    "another": "Nahlásit ještě něco",
+    "errors": {
+      "kind": "Vyber, co se změnilo.",
+      "value": "Vyplň novou hodnotu.",
+      "message": "Popiš, co se změnilo.",
+      "limit": "Dnes jsi poslal(a) už {max} hlášení. Zkus to zase zítra.",
+      "signIn": "Pro nahlášení změny se přihlas.",
+      "finishSignUp": "Pro nahlášení změny dokonči registraci.",
+      "notFound": "Tuhle hospodu jsme nenašli."
+    },
+    "linkText": "Nesedí tu něco?",
+    "link": "Nahlásit změnu"
+  },
+  "moderation": {
+    "title": "Moderace",
+    "subtitle": "{count, plural, =0 {Na kontrolu nic nečeká.} one {Na kontrolu čeká # hlášení.} few {Na kontrolu čekají # hlášení.} other {Na kontrolu čeká # hlášení.}}",
+    "openTitle": "Hlášení čekající na kontrolu",
+    "empty": "Není co kontrolovat. Díky!",
+    "proposed": "Návrh",
+    "current": "Teď uvádíme",
+    "byHand": {
+      "location": "Schválení špendlík nepřesune: polohu oprav ručně.",
+      "other": "Schválení hospodu nezmění: změnu udělej ručně."
+    },
+    "reportedBy": "@{username} · {date}",
+    "approve": "Schválit",
+    "reject": "Zamítnout",
+    "resolvedTitle": "Nedávno vyřízené",
+    "accepted": "Schváleno",
+    "rejected": "Zamítnuto",
+    "resolvedBy": "vyřídil(a) @{username}",
+    "auto": "@{username}, schváleno automaticky",
+    "menuLink": "Moderace",
+    "menuCount": "čeká {count}"
+  },
+  "privacy": {
+    "title": "Ochrana soukromí",
+    "subtitle": "Jak Nádražky zacházejí s tvými osobními údaji. Naposledy upraveno {date}.",
+    "summaryTitle": "Ve zkratce",
+    "summary": {
+      "browse": "Nádražky můžeš procházet bez účtu. Nepoužíváme žádnou analytiku, reklamu ani sledování.",
+      "google": "Pro odbavení se přihlásíš přes Google. Uchováváme tvé jméno, e-mail a profilovou fotku z Googlu a přezdívku, kterou si vybereš.",
+      "checkins": "Odbavení nepoužívá tvou polohu. Uložíme hospodu, čas a podrobnosti, které přidáš.",
+      "public": "Tvoje přezdívka a odbavení jsou veřejně vidět na stránce hospody. Účet i se vším, co v něm je, si můžeš kdykoli nechat smazat."
+    },
+    "controller": {
+      "title": "Kdo za tím stojí",
+      "p1": "Nádražky provozuje {name} jako soukromá osoba a je správcem tvých osobních údajů. S jakýmkoli dotazem nebo žádostí ohledně tvých údajů piš na <email></email>."
+    },
+    "browsing": {
+      "title": "Procházení bez účtu",
+      "p1": "Hospody, mapu i odbavení si může prohlédnout kdokoli bez účtu. Nepoužíváme analytiku, reklamu ani sledovací cookies. Abychom ti web mohli zobrazit, zpracovávají se přesto některé údaje:",
+      "logs": "<strong>Serverové logy.</strong> Náš hosting Vercel vyřizuje každý požadavek a krátce si zaznamenává technické údaje, jako je IP adresa, prohlížeč a stránka, kterou sis vyžádal(a), aby mohl web doručit a chránit.",
+      "map": "<strong>Mapové podklady.</strong> Mapy se načítají z OpenFreeMap, takže když otevřeš mapu, tvůj prohlížeč mu pošle tvou IP adresu.",
+      "language": "<strong>Jazyk.</strong> Cookie <code>NEXT_LOCALE</code> si pamatuje, jaký jazyk používáš."
+    },
+    "account": {
+      "title": "Tvůj účet",
+      "p1": "Zaregistrovat se jde jen přes účet Google. Když se přihlásíš, Google nám předá tvé jméno, e-mailovou adresu, profilovou fotku a identifikátor tvého účtu Google. Ukládáme je, abychom tě poznali. Tvoje heslo ke Googlu nikdy nevidíme a přístupové tokeny Googlu neuchováváme.",
+      "p2": "Při dokončení registrace si vybereš přezdívku a jazyk a potvrdíš, že ti je 18 let nebo víc. Ukládáme přezdívku, jazyk a kdy jsi věk potvrdil(a). Na profilu si můžeš přidat i to, odkud jsi, a profilovou fotku; fotku ukládáme jako malý čtvercový obrázek, převedený tak, aby nenesla žádné údaje z fotoaparátu, jako je poloha.",
+      "p3": "Tvoje přezdívka a profilová fotka jsou veřejné: ukazují se u tvých odbavení. Jméno, e-mailovou adresu a to, odkud jsi, vidíš jen ty a my."
+    },
+    "checkins": {
+      "title": "Odbavení",
+      "p1": "Odbavení nepoužívá polohu tvého telefonu: nikdy se na ni neptáme a nikdy ji neukládáme.",
+      "p2": "U každého odbavení uložíme hospodu, čas, jestli bylo otevřeno a podrobnosti, které přidáš: co sis dal(a), hodnocení a poznámku.",
+      "p3": "Odbavení jsou veřejná: na stránce hospody je vidět tvoje přezdívka, čas, podrobnosti a poznámka."
+    },
+    "reports": {
+      "title": "Hlášení změn",
+      "p1": "Když nahlásíš změnu u hospody, uložíme hlášení k tvému účtu a přezdívce. Vidí ho moderátoři a správci, aby ho mohli zkontrolovat a upravit stránku hospody. Hlášení nejsou veřejná."
+    },
+    "cookies": {
+      "title": "Cookies",
+      "p1": "Používáme jen cookies, bez kterých web nefunguje, takže se na souhlas neptáme:",
+      "session": "<strong>Přihlašovací cookies</strong> (jejich názvy začínají na <code>authjs</code>, <code>__Secure-authjs</code> nebo <code>__Host-authjs</code>) udržují tvé přihlášení a chrání ho před podvržením. Platí, dokud se neodhlásíš, nebo 90 dní od poslední návštěvy.",
+      "language": "<code>NEXT_LOCALE</code> si pamatuje tvůj jazyk."
+    },
+    "basis": {
+      "title": "Proč můžeme tvé údaje používat",
+      "account": "Účet a odbavení: abychom ti mohli poskytovat službu, ke které ses zaregistroval(a) (čl. 6 odst. 1 písm. b) GDPR).",
+      "logs": "Serverové logy: náš oprávněný zájem na spolehlivém a bezpečném provozu webu (čl. 6 odst. 1 písm. f) GDPR)."
+    },
+    "processors": {
+      "title": "Kdo další s údaji pracuje",
+      "p1": "Tvé údaje neprodáváme ani je nesdílíme kvůli reklamě. Zpracovávají je pro nás tyto služby:",
+      "vercel": "<strong>Vercel</strong> provozuje hosting webu; jeho serverové funkce běží ve Frankfurtu v Německu.",
+      "neon": "<strong>Neon</strong> uchovává databázi, také ve Frankfurtu.",
+      "google": "<strong>Google</strong> zajišťuje přihlášení, podle svých vlastních zásad ochrany soukromí.",
+      "openfreemap": "<strong>OpenFreeMap</strong> poskytuje mapové podklady.",
+      "p2": "Vercel a Neon jsou americké firmy, které pro nás pracují na základě smluv o zpracování údajů. Pokud by údaje mohly opustit EU, spoléhají na záruky, jako jsou standardní smluvní doložky EU."
+    },
+    "retention": {
+      "title": "Jak dlouho údaje uchováváme",
+      "account": "Účet, profil a odbavení: dokud účet nesmažeme. Se smazáním účtu zmizí i tvá odbavení.",
+      "session": "Přihlašovací cookies: dokud se neodhlásíš, nejvýš 90 dní od poslední návštěvy.",
+      "logs": "Serverové logy Vercelu: krátkou dobu podle nastavení Vercelu."
+    },
+    "rights": {
+      "title": "Tvoje práva",
+      "p1": "Můžeš požádat o kopii svých údajů, o jejich opravu, o smazání údajů nebo celého účtu, o omezení zpracování nebo proti němu vznést námitku, nebo o předání údajů ve strojově čitelné podobě. Napiš na <email></email>, odpovíme do jednoho měsíce.",
+      "p2": "Stížnost můžeš podat také u <uoou>Úřadu pro ochranu osobních údajů (ÚOOÚ)</uoou> nebo u úřadu v zemi, kde žiješ."
+    },
+    "age": {
+      "title": "Jen pro dospělé",
+      "p1": "Nádražky jsou o hospodách a jsou pro dospělé: registrovat se můžeš až od 18 let."
+    },
+    "changes": {
+      "title": "Změny",
+      "p1": "Pokud změníme, jak s údaji zacházíme, upravíme tuto stránku i datum nahoře."
+    }
   }
 }

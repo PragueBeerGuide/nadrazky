@@ -23,10 +23,10 @@ describe("StatusChip", () => {
   it("uses the English label in English", () => {
     render(
       <NextIntlClientProvider locale="en" messages={en}>
-        <StatusChip status="maybe_open" />
+        <StatusChip status="unknown" />
       </NextIntlClientProvider>,
     );
-    expect(screen.getByText("Maybe open").dataset.status).toBe("maybe_open");
+    expect(screen.getByText("Status unknown").dataset.status).toBe("unknown");
   });
 });
 

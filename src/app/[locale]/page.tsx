@@ -10,6 +10,7 @@ import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { getTotals, listLines, listPubs, listRegions } from "@/lib/queries";
+import { compareLastConfirmed } from "@/lib/ago";
 
 const mapIcon = "M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zm0 0v14m6-12v14";
 
@@ -26,7 +27,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
     listLines(),
     listPubs({ status: ["open"] }),
   ]);
-  const board = [...open].sort((a, b) => (a.monthsAgo ?? 999) - (b.monthsAgo ?? 999)).slice(0, 7);
+  const board = [...open].sort(compareLastConfirmed).slice(0, 7);
   const topLines = [...lines].sort((a, b) => b.pubCount - a.pubCount).slice(0, 8);
   const byCount = [...regions].sort((a, b) => b.pubCount - a.pubCount);
   const maxRegion = byCount[0]?.pubCount || 1;

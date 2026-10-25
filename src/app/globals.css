@@ -30,9 +30,8 @@
   --open-bg: #dcf0e3;
   --open-ink: #135c34;
   --open-board: #7fd39e;
-  --maybe: #e3a21a;
-  --maybe-bg: #fbefd0;
-  --maybe-ink: #6e4800;
+  /* Rating stars */
+  --star: #e3a21a;
   --unknown: #a3abb6;
   --unknown-bg: #e7e9ed;
   --unknown-ink: #475162;
@@ -83,9 +82,7 @@
   --color-open-bg: var(--open-bg);
   --color-open-ink: var(--open-ink);
   --color-open-board: var(--open-board);
-  --color-maybe: var(--maybe);
-  --color-maybe-bg: var(--maybe-bg);
-  --color-maybe-ink: var(--maybe-ink);
+  --color-star: var(--star);
   --color-unknown: var(--unknown);
   --color-unknown-bg: var(--unknown-bg);
   --color-unknown-ink: var(--unknown-ink);

@@ -16,14 +16,22 @@
     "breadcrumb": "Breadcrumb",
     "languageGroup": "Language",
     "cs": "Čeština",
-    "en": "English"
+    "en": "English",
+    "login": "Log in",
+    "privacy": "Privacy"
   },
   "ago": {
     "months": "{count, plural, =0 {this month} one {# month ago} other {# months ago}}",
     "years": "{count, plural, one {# year ago} other {# years ago}}",
     "monthsShort": "{count, plural, =0 {this mo} other {# mo}}",
     "yearsShort": "{count} yr",
-    "unknown": "unknown"
+    "unknown": "unknown",
+    "today": "today",
+    "yesterday": "yesterday",
+    "thisWeek": "this week",
+    "todayShort": "today",
+    "yesterdayShort": "yesterday",
+    "thisWeekShort": "this wk"
   },
   "home": {
     "eyebrow": "Railway station pubs in Czechia",
@@ -53,12 +61,12 @@
     "allRegions": "All regions →",
     "allLines": "All lines →",
     "helpTitle": "Help us keep it current",
-    "helpText": "For most pubs we don't know if they are still open. Every on-the-spot check-in confirms it.",
+    "helpText": "For most pubs we don't know if they are still open. Every check-in confirms it.",
     "helpWaiting": "{count, plural, one {# pub is still waiting for its check.} other {# pubs are still waiting for theirs.}}",
     "step1": "Get off at the station and find the pub.",
-    "step2": "Check in on the spot — your phone's location confirms you are there.",
+    "step2": "Check in and tell others whether it's open.",
     "step3": "Collect badges for regions and rail lines.",
-    "soon": "Check-ins and badges are coming soon.",
+    "soon": "Badges are coming soon.",
     "helpCta": "Find a pub to check",
     "badgesAlt": "Example badges, coming soon",
     "badgeLine": "Line",
@@ -110,33 +118,40 @@
     "alongLine": "Along line {number}",
     "youAreHere": "you are here",
     "checkInTitle": "Sitting here right now?",
-    "checkInText": "Check in on the spot. Your phone's location will confirm the pub is still open.",
+    "checkInText": "Check in and let others know the pub is still open.",
     "checkIn": "Check in",
-    "checkInSoon": "Check-ins are coming soon",
     "checkIns": "Check-ins",
-    "checkInsSoonText": "Soon you'll be able to confirm that {name} is open by checking in on the spot.",
     "source": "Data source",
     "sourceText": "The station, its position and rail lines come from Wikidata.",
     "openOnMap": "Open on the big map →",
     "positionNote": "The position shown is the station's, not the pub's door yet.",
     "reviewNote": "The station match is waiting for review.",
-    "navigate": "Directions"
+    "navigate": "Directions",
+    "checkInLogin": "Log in to check in",
+    "checkInFinish": "Finish signing up to check in",
+    "checkedInToday": "You checked in here today",
+    "checkInCount": "{count, plural, =0 {No check-ins yet} one {# check-in} other {# check-ins}}",
+    "lastVisit": "Last visit",
+    "lastVisitOpen": "{when}, it was open",
+    "lastVisitClosed": "{when}, it was closed",
+    "noCheckIns": "Nobody has checked in yet. Be the first to confirm {name} is open.",
+    "recentCheckIns": "Latest check-ins",
+    "reportedOpen": "Open",
+    "reportedClosed": "Closed",
+    "rating": "Rating {count} of 5"
   },
   "status": {
     "open": "Open",
-    "maybe_open": "Maybe open",
     "unknown": "Status unknown",
     "closed": "Closed"
   },
   "statusShort": {
     "open": "Open",
-    "maybe_open": "Maybe",
     "unknown": "Unknown",
     "closed": "Closed"
   },
   "summary": {
     "open": "{count} open",
-    "maybe_open": "{count} maybe open",
     "unknown": "{count} status unknown",
     "closed": "{count} closed"
   },
@@ -162,7 +177,6 @@
     "statPubs": "Pubs",
     "statStations": "Stations with a pub",
     "statOpen": "Open",
-    "statMaybe": "Maybe open",
     "statWaiting": "Waiting for a check",
     "stopByStop": "Stop by stop",
     "direction": "{from} → {to}",
@@ -175,7 +189,6 @@
     "badgesSoon": "Badges are coming soon",
     "legendTitle": "Station dots",
     "legendOpen": "An open pub",
-    "legendMaybe": "Maybe open",
     "legendNone": "Nobody has checked lately",
     "onMap": "See line {number} on the map →"
   },
@@ -207,5 +220,274 @@
   "footer": {
     "data": "Data: Wikidata, © OpenStreetMap contributors",
     "by": "Made by Prague Beer Guides"
+  },
+  "auth": {
+    "title": "Log in",
+    "subtitle": "Log in or sign up with your Google account to check in at station pubs.",
+    "adultsOnly": "Nádražky is for adults: you must be 18 or over to sign up.",
+    "google": "Continue with Google",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "devTitle": "Dev login",
+    "devText": "Local development only: signs in with any email, no check.",
+    "devSubmit": "Sign in (dev)",
+    "devRole": "Role",
+    "notConfigured": "Signing in isn't set up on this server yet.",
+    "errors": {
+      "AccessDenied": "Sign-in was cancelled.",
+      "CredentialsSignin": "Sign-in failed.",
+      "default": "Sign-in failed. Please try again."
+    },
+    "finishTitle": "Finish signing up",
+    "finishText": "Pick a username. It is shown next to your check-ins.",
+    "username": "Username",
+    "usernameHint": "3–20 characters: letters a–z, digits and _",
+    "usernameInvalid": "Use 3–20 characters: letters a–z, digits and _.",
+    "usernameTaken": "That username is taken. Try another.",
+    "language": "Language",
+    "adultConfirm": "I confirm I am 18 or over.",
+    "adultRequired": "You must be 18 or over to use Nádražky.",
+    "finish": "Finish sign-up",
+    "saving": "Saving…",
+    "signedInAs": "Signed in as {email}",
+    "notYou": "Not you? Log out",
+    "logIn": "Log in",
+    "logOut": "Log out",
+    "account": "Account",
+    "finishLink": "Finish signing up",
+    "roles": {
+      "user": "Member",
+      "moderator": "Moderator",
+      "admin": "Admin"
+    },
+    "privacyLink": "How we handle your data: <link>Privacy</link>"
+  },
+  "profile": {
+    "title": "Your profile",
+    "memberSince": "Member since {date}",
+    "statsTitle": "Your numbers",
+    "pubs": "{count, plural, one {pub visited} other {pubs visited}}",
+    "outOf": "out of {total}",
+    "checkIns": "{count, plural, one {check-in} other {check-ins}}",
+    "stations": "{count, plural, one {station} other {stations}}",
+    "regions": "{count, plural, one {region} other {regions}}",
+    "lines": "{count, plural, one {rail line} other {rail lines}}",
+    "hadTitle": "What you had",
+    "beers": "{count, plural, one {# beer} other {# beers}}",
+    "shots": "{count, plural, one {# shot} other {# shots}}",
+    "nonAlcoholic": "{count, plural, one {# non-alcoholic drink} other {# non-alcoholic drinks}}",
+    "food": "{count}× food",
+    "regionsTitle": "By region",
+    "regionProgress": "{visited} / {total}",
+    "visitedTitle": "Pubs you've visited",
+    "visits": "{count, plural, one {# visit} other {# visits}}",
+    "lastVisit": "last {date}",
+    "emptyTitle": "No check-ins yet",
+    "emptyText": "Check in at a station pub and it will show up here.",
+    "emptyCta": "Find a pub",
+    "menuLink": "Your profile",
+    "detailsTitle": "Your details",
+    "picture": "Profile picture",
+    "choosePicture": "Choose a picture",
+    "changePicture": "Change picture",
+    "removePicture": "Remove picture",
+    "pictureHint": "A photo of you, cropped to a square. It's shown next to your check-ins.",
+    "hometown": "Hometown",
+    "optional": "optional",
+    "hometownPlaceholder": "e.g. Česká Třebová",
+    "from": "From {hometown}",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved.",
+    "errors": {
+      "signIn": "Log in again to save your details.",
+      "hometown": "Keep your hometown to 60 characters.",
+      "pictureTooBig": "That picture is too big. Try another one.",
+      "pictureFormat": "We can't read that picture. Use a JPEG or PNG photo."
+    }
+  },
+  "checkIn": {
+    "title": "Check in",
+    "hadTitle": "What did you have?",
+    "optional": "optional",
+    "beer": "Beer",
+    "shot": "A shot",
+    "nonAlcoholic": "Non-alcoholic drink",
+    "food": "Food",
+    "ratingTitle": "Rating",
+    "ratingNone": "None",
+    "ratingValue": "{count} of 5",
+    "noteLabel": "Note",
+    "notePlaceholder": "What was it like?",
+    "noteCount": "{count}/{max}",
+    "openTitle": "Was the pub open?",
+    "open": "It was open",
+    "closed": "It was closed",
+    "submit": "Check in here",
+    "saving": "Checking in…",
+    "errors": {
+      "alreadyToday": "You've already checked in here today. Come back tomorrow.",
+      "invalid": "Something in the form isn't right. Try again.",
+      "signIn": "Log in to check in.",
+      "finishSignUp": "Finish signing up to check in.",
+      "notFound": "We couldn't find this pub."
+    },
+    "alreadyTitle": "Checked in today",
+    "alreadyText": "You've already checked in at {name} today. One check-in per pub per day counts.",
+    "back": "Back to the pub",
+    "oncePerDay": "One check-in per pub per day counts.",
+    "howManyBeers": "How many beers?",
+    "howManyShots": "How many shots?",
+    "amountMissing": "Choose how many.",
+    "beerCount": "{count, plural, one {# beer} other {# beers}}",
+    "shotCount": "{count, plural, one {# shot} other {# shots}}"
+  },
+  "report": {
+    "title": "Report a change",
+    "intro": "Is something about {name} wrong or out of date? Tell us and we'll check it.",
+    "kindTitle": "What has changed?",
+    "kinds": {
+      "closed": "It has closed for good",
+      "reopened": "It's open",
+      "name": "It has a different name",
+      "hours": "Opening hours",
+      "address": "Address",
+      "beers": "Beers on tap",
+      "location": "It's somewhere else on the map",
+      "other": "Something else"
+    },
+    "valueLabels": {
+      "name": "New name",
+      "hours": "Opening hours",
+      "address": "Address",
+      "beers": "On tap now"
+    },
+    "valuePlaceholders": {
+      "name": "e.g. Nádražní restaurace",
+      "hours": "e.g. Mon–Fri 10–22, Sat 12–22",
+      "address": "Street and number, town",
+      "beers": "e.g. Pilsner Urquell, Kozel 11°"
+    },
+    "current": "We show now: {value}",
+    "messageLabel": "Details",
+    "messagePlaceholder": "What did you see, and when were you there?",
+    "optional": "optional",
+    "submit": "Send report",
+    "sending": "Sending…",
+    "doneTitle": "Thank you!",
+    "doneText": "We've got your report about {name} and will check it. The pub page changes once it's approved.",
+    "doneTextApproved": "Your report about {name} is approved, because you're a moderator. A new status, name, hours, address or beers show on the pub page now.",
+    "back": "Back to the pub",
+    "another": "Report something else",
+    "errors": {
+      "kind": "Choose what has changed.",
+      "value": "Fill in the new value.",
+      "message": "Describe the change.",
+      "limit": "You've sent {max} reports today. Try again tomorrow.",
+      "signIn": "Log in to report a change.",
+      "finishSignUp": "Finish signing up to report a change.",
+      "notFound": "We couldn't find this pub."
+    },
+    "linkText": "Something wrong or out of date?",
+    "link": "Report a change"
+  },
+  "moderation": {
+    "title": "Moderation",
+    "subtitle": "{count, plural, =0 {No reports are waiting for review.} one {# report is waiting for review.} other {# reports are waiting for review.}}",
+    "openTitle": "Reports waiting for review",
+    "empty": "Nothing to review. Thank you!",
+    "proposed": "Proposed",
+    "current": "We show now",
+    "byHand": {
+      "location": "Approving doesn't move the pin: fix the position by hand.",
+      "other": "Approving doesn't change the pub: make the change by hand."
+    },
+    "reportedBy": "@{username} · {date}",
+    "approve": "Approve",
+    "reject": "Reject",
+    "resolvedTitle": "Recently resolved",
+    "accepted": "Approved",
+    "rejected": "Rejected",
+    "resolvedBy": "by @{username}",
+    "auto": "@{username}, approved automatically",
+    "menuLink": "Moderation",
+    "menuCount": "{count} waiting"
+  },
+  "privacy": {
+    "title": "Privacy",
+    "subtitle": "How Nádražky handles your personal data. Last updated {date}.",
+    "summaryTitle": "In short",
+    "summary": {
+      "browse": "You can browse Nádražky without an account. There is no analytics, no advertising and no tracking.",
+      "google": "To check in, you sign in with Google. We keep your name, email and profile picture from Google, and the username you choose.",
+      "checkins": "Checking in doesn't use your location. We store the pub, the time and the details you add.",
+      "public": "Your username and check-ins are public on the pub's page. You can have your account and everything in it deleted at any time."
+    },
+    "controller": {
+      "title": "Who is responsible",
+      "p1": "Nádražky is run by {name}, a private individual, who is the controller of your personal data. Write to <email></email> with any question or request about your data."
+    },
+    "browsing": {
+      "title": "Browsing without an account",
+      "p1": "Anyone can look at the pubs, the map and the check-ins without an account. We don't use analytics, advertising or tracking cookies. Some data is still handled to show you the site:",
+      "logs": "<strong>Server logs.</strong> Our hosting provider, Vercel, handles every request and briefly records technical data such as your IP address, browser and the page you asked for, to deliver the site and keep it secure.",
+      "map": "<strong>Map tiles.</strong> Maps are loaded from OpenFreeMap, so your browser sends it your IP address when you open a map.",
+      "language": "<strong>Language.</strong> A <code>NEXT_LOCALE</code> cookie remembers which language you use."
+    },
+    "account": {
+      "title": "Your account",
+      "p1": "You can sign up only with a Google account. When you sign in, Google gives us your name, email address, profile picture and an ID for your Google account, and we store these to recognise you. We never see your Google password, and we don't keep Google's access tokens.",
+      "p2": "When you finish signing up, you choose a username and a language and confirm that you are 18 or over. We store the username, the language and when you confirmed your age. On your profile you can also add your hometown and a profile picture; we keep the picture as a small square image, re-encoded so it carries no camera data such as location.",
+      "p3": "Your username and profile picture are public: they're shown next to your check-ins. Your name, email address and hometown are visible only to you and to us."
+    },
+    "checkins": {
+      "title": "Check-ins",
+      "p1": "Checking in doesn't use your phone's location: we never ask for it and never store it.",
+      "p2": "For each check-in we store the pub, the time, whether the pub was open, and the details you add: what you had, a rating and a note.",
+      "p3": "Check-ins are public: the pub's page shows your username with the time, the details and your note."
+    },
+    "reports": {
+      "title": "Reports of changes",
+      "p1": "When you report a change to a pub, we store the report with your account and username. Moderators and admins see it so they can check it and change the pub page. Reports are not shown publicly."
+    },
+    "cookies": {
+      "title": "Cookies",
+      "p1": "We only use cookies the site needs to work, so we don't ask for consent:",
+      "session": "<strong>Sign-in cookies</strong> (names starting with <code>authjs</code>, <code>__Secure-authjs</code> or <code>__Host-authjs</code>) keep you signed in and protect the sign-in from forgery. They last until you log out, or 90 days without a visit.",
+      "language": "<code>NEXT_LOCALE</code> remembers your language."
+    },
+    "basis": {
+      "title": "Why we may use your data",
+      "account": "Your account and check-ins: to provide the service you signed up for (Article 6(1)(b) GDPR).",
+      "logs": "Server logs: our legitimate interest in running a reliable and secure site (Article 6(1)(f) GDPR)."
+    },
+    "processors": {
+      "title": "Who else handles your data",
+      "p1": "We don't sell your data or share it for advertising. These services handle it for us:",
+      "vercel": "<strong>Vercel</strong> hosts the site; its server functions run in Frankfurt, Germany.",
+      "neon": "<strong>Neon</strong> stores the database, also in Frankfurt.",
+      "google": "<strong>Google</strong> provides sign-in, under its own privacy policy.",
+      "openfreemap": "<strong>OpenFreeMap</strong> serves the map tiles.",
+      "p2": "Vercel and Neon are US companies working for us under data processing agreements. Where data may leave the EU, they rely on safeguards such as the EU standard contractual clauses."
+    },
+    "retention": {
+      "title": "How long we keep it",
+      "account": "Your account, profile and check-ins: until your account is deleted. Deleting it removes your check-ins too.",
+      "session": "Sign-in cookies: until you log out, at most 90 days without a visit.",
+      "logs": "Vercel's server logs: a short time, as set by Vercel."
+    },
+    "rights": {
+      "title": "Your rights",
+      "p1": "You can ask for a copy of your data, to correct it, to delete it or your whole account, to restrict or object to its use, or to get it in a portable format. Write to <email></email>; we will reply within one month.",
+      "p2": "You can also complain to the Czech data protection authority, the <uoou>Office for Personal Data Protection (ÚOOÚ)</uoou>, or to the authority where you live."
+    },
+    "age": {
+      "title": "Adults only",
+      "p1": "Nádražky is about pubs and is for adults: you must be 18 or over to sign up."
+    },
+    "changes": {
+      "title": "Changes",
+      "p1": "If we change how we handle your data, we will update this page and the date at the top."
+    }
   }
 }

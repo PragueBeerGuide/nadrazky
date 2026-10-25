@@ -24,10 +24,20 @@ export default defineConfig({
     { name: "phone", use: { ...devices["Pixel 7"] } },
   ],
   webServer: {
-    command: `npm run setup && npm run build && npx next start -p ${PORT}`,
+    // A fresh test database every run, as on CI: tests change pubs (status, hours…), and
+    // a database left over from an earlier run would start them from a different state.
+    command: `rm -rf data/pglite-e2e && npm run setup && npm run build && npx next start -p ${PORT}`,
     url: `http://localhost:${PORT}/cs`,
     reuseExistingServer: !process.env.CI,
     timeout: 300_000,
-    env: { DATABASE_URL: "pglite://./data/pglite-e2e" },
+    // The dev login lets the tests sign in without Google (never on Vercel). The Google
+    // client is a placeholder: it shows the button, and the tests stop at Google's door.
+    env: {
+      DATABASE_URL: "pglite://./data/pglite-e2e",
+      AUTH_DEV_LOGIN: "1",
+      AUTH_TRUST_HOST: "true",
+      AUTH_GOOGLE_ID: "e2e-placeholder.apps.googleusercontent.com",
+      AUTH_GOOGLE_SECRET: "e2e-placeholder",
+    },
   },
 });

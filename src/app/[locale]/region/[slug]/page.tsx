@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/region/[
   return r ? { title: locale === "cs" ? r.nameCs : r.nameEn } : {};
 }
 
-const RANK = { open: 0, maybe_open: 1, unknown: 2, closed: 3 } as const;
+const RANK = { open: 0, unknown: 1, closed: 2 } as const;
 
 export default async function RegionPage({ params }: PageProps<"/[locale]/region/[slug]">) {
   const { locale: raw, slug } = await params;

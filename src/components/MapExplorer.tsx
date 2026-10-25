@@ -17,6 +17,7 @@ import { Label } from "./ui/label";
 import { NativeSelect, NativeSelectOption } from "./ui/native-select";
 import { Toggle } from "./ui/toggle";
 import { cn } from "@/lib/utils";
+import { compareLastConfirmed } from "@/lib/ago";
 
 export type MapPub = {
   slug: string;
@@ -27,15 +28,15 @@ export type MapPub = {
   kind: PubKind;
   lines: string[];
   monthsAgo: number | null;
+  lastConfirmedAt: string | null;
   lat: number;
   lon: number;
 };
 
-const RANK: Record<PubStatus, number> = { open: 0, maybe_open: 1, unknown: 2, closed: 3 };
-const STATUSES: PubStatus[] = ["open", "maybe_open", "unknown", "closed"];
+const RANK: Record<PubStatus, number> = { open: 0, unknown: 1, closed: 2 };
+const STATUSES: PubStatus[] = ["open", "unknown", "closed"];
 const pressedColours: Record<PubStatus, string> = {
   open: "aria-pressed:bg-open-bg aria-pressed:text-open-ink",
-  maybe_open: "aria-pressed:bg-maybe-bg aria-pressed:text-maybe-ink",
   unknown: "aria-pressed:bg-unknown-bg aria-pressed:text-unknown-ink",
   closed: "aria-pressed:bg-closed-bg aria-pressed:text-closed-ink",
 };
@@ -78,7 +79,7 @@ export function MapExplorer({
     );
   }, [pubs, line, query]);
   const counts = useMemo(() => {
-    const c: Record<PubStatus, number> = { open: 0, maybe_open: 0, unknown: 0, closed: 0 };
+    const c: Record<PubStatus, number> = { open: 0, unknown: 0, closed: 0 };
     for (const p of matching) c[p.status]++;
     return c;
   }, [matching]);
@@ -86,7 +87,7 @@ export function MapExplorer({
     () =>
       matching
         .filter((p) => !off.has(p.status))
-        .sort((a, b) => RANK[a.status] - RANK[b.status] || (a.monthsAgo ?? 999) - (b.monthsAgo ?? 999)),
+        .sort((a, b) => RANK[a.status] - RANK[b.status] || compareLastConfirmed(a, b)),
     [matching, off],
   );
   const stations = useMemo(() => {
@@ -99,7 +100,13 @@ export function MapExplorer({
     for (const s of byId.values()) s.best = s.pubs[0].status;
     return [...byId.values()];
   }, [visible]);
-  const selectedStation = stations.find((s) => s.id === selected) ?? null;
+  const selectedStation = useMemo(() => {
+    const station = stations.find((s) => s.id === selected);
+    if (!station) return null;
+    // A pub opened from its own page ("Open on the big map") leads its station's list.
+    const i = station.pubs.findIndex((p) => p.slug === initialPub);
+    return i > 0 ? { ...station, pubs: [station.pubs[i], ...station.pubs.slice(0, i), ...station.pubs.slice(i + 1)] } : station;
+  }, [stations, selected, initialPub]);
   const shownStatuses = STATUSES.filter((s) => s !== "closed" || counts.closed > 0);
 
   const lineOptions = (
@@ -202,7 +209,7 @@ export function MapExplorer({
                       </span>
                     </span>
                     <span className="shrink-0 font-mono text-xs text-muted-foreground">
-                      <Ago months={p.monthsAgo} short />
+                      <Ago months={p.monthsAgo} date={p.lastConfirmedAt} short />
                     </span>
                   </Link>
                 </li>
@@ -313,7 +320,7 @@ function StationPopup({ station }: { station: MapStation }) {
         <span className="flex flex-wrap items-center gap-1.5">
           <StatusChip status={first.status} />
           <span className="text-[13px] text-muted-foreground">
-            {kt(first.kind)} · {t("confirmed", { when: ago(first.monthsAgo) })}
+            {kt(first.kind)} · {t("confirmed", { when: ago(first.monthsAgo, false, first.lastConfirmedAt) })}
           </span>
         </span>
         {rest.length > 0 && (
@@ -378,7 +385,7 @@ function StationSheet({ station, onClose }: { station: MapStation; onClose: () =
               <span className="flex min-w-0 flex-1 flex-col leading-tight">
                 <span className="truncate font-semibold">{p.name}</span>
                 <span className="text-[13px] text-muted-foreground">
-                  {kt(p.kind)} · <Ago months={p.monthsAgo} />
+                  {kt(p.kind)} · <Ago months={p.monthsAgo} date={p.lastConfirmedAt} />
                 </span>
               </span>
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--muted-foreground)" strokeWidth="2" strokeLinecap="round" aria-hidden="true">

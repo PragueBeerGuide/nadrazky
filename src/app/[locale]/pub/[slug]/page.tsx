@@ -1,7 +1,7 @@
 import { asLocale } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Ago } from "@/components/Ago";
 import { LineChip } from "@/components/LineChip";
@@ -19,9 +19,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
+import { getCheckInSummary, hasCheckedInToday, listRecentCheckIns } from "@/lib/checkins";
+import { avatarUrl } from "@/lib/profile";
+import { Avatar } from "@/components/Avatar";
 import { getLineStops, getPub } from "@/lib/queries";
 
 // Breadcrumbs on the sign-blue band
@@ -44,7 +48,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
   setRequestLocale(locale);
   const data = await getPub(slug);
   if (!data) notFound();
-  const { pub, station, region, lines, neighbours } = data;
+  const { pub, station, region, lines, neighbours, confirmedMonthsAgo } = data;
   const t = await getTranslations("pub");
   const nav = await getTranslations("nav");
   const kt = await getTranslations("kind");
@@ -56,6 +60,17 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
   const description = isCs ? pub.descriptionCs : (pub.descriptionEn ?? pub.descriptionCs);
   const directions = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
   const regionName = region ? (isCs ? region.nameCs : region.nameEn) : null;
+  const ct = await getTranslations("checkIn");
+  const rt = await getTranslations("report");
+  const format = await getFormatter();
+  const user = await getCurrentUser();
+  const [summary, recent, checkedInToday] = await Promise.all([
+    getCheckInSummary(pub.id),
+    listRecentCheckIns(pub.id),
+    user ? hasCheckedInToday(user.id, pub.id) : false,
+  ]);
+  const now = new Date();
+  const checkInHref = { pathname: "/pub/[slug]/check-in", params: { slug: pub.slug } } as const;
 
   const facts: [string, React.ReactNode][] = [
     [t("station"), station.name],
@@ -87,7 +102,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
           ] as [string, React.ReactNode],
         ]
       : []),
-    [t("lastConfirmed"), <Ago key="a" months={pub.sourceLastUpdateMonthsAgo} />],
+    [t("lastConfirmed"), <Ago key="a" months={confirmedMonthsAgo} date={pub.lastConfirmedAt} />],
     [
       t("openingHours"),
       pub.openingHours ?? (
@@ -153,16 +168,18 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
             <Card className="w-full gap-3.5 rounded-2xl border-0 p-5 shadow-[0_16px_40px_rgb(5_12_28/0.3)] md:w-auto md:flex-[0_1_400px] md:p-6">
               <h2 className="text-[30px]">{t("checkInTitle")}</h2>
               <p className="text-[15px] text-muted-foreground">{t("checkInText")}</p>
-              <Button disabled aria-describedby="checkin-soon" variant="yellow" size="xl" className="h-14 rounded-xl text-lg">
-                <svg viewBox="0 0 24 24" width="22" height="22" className="size-5.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" />
-                  <path d="m9 10 2 2 4-4" />
-                </svg>
-                {t("checkIn")}
-              </Button>
-              <p id="checkin-soon" className="-mt-1 text-center font-mono text-xs font-semibold tracking-[0.08em] text-muted-foreground uppercase">
-                {t("checkInSoon")}
-              </p>
+              {checkedInToday ? (
+                <p className="flex h-14 items-center justify-center gap-2.5 rounded-xl bg-open-bg text-lg font-semibold text-open-ink">
+                  <CheckIcon />
+                  {t("checkedInToday")}
+                </p>
+              ) : (
+                // Signed out, the check-in page sends the user to log in and back.
+                <Link href={checkInHref} className={cn(buttonVariants({ variant: "yellow", size: "xl" }), "h-14 rounded-xl text-lg")}>
+                  <PinIcon />
+                  {!user ? t("checkInLogin") : signUpFinished(user) ? t("checkIn") : t("checkInFinish")}
+                </Link>
+              )}
               <div className="grid grid-cols-2 gap-2">
                 <a href={directions} className={cn(buttonVariants({ variant: "outline", size: "xl" }), outlineBtn)}>
                   {t("navigate")}
@@ -190,6 +207,12 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
                 </div>
               ))}
             </dl>
+            <p className="mt-6 border-t border-rule-soft pt-4 text-[15px] text-muted-foreground">
+              {rt("linkText")}{" "}
+              <Link href={{ pathname: "/pub/[slug]/report", params: { slug: pub.slug } }} className="link">
+                {rt("link")}
+              </Link>
+            </p>
           </Card>
 
           {route && mainLine && (
@@ -221,14 +244,74 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
             </section>
           )}
 
-          <Card render={<section />} className="flex-row flex-wrap items-center justify-between gap-5 border-dashed border-field p-5 md:p-7">
-            <div className="flex max-w-[52ch] flex-col gap-1">
-              <h2 className="text-[28px]">{t("checkIns")}</h2>
-              <p className="text-muted-foreground">{t("checkInsSoonText", { name: pub.name })}</p>
+          <Card render={<section />} className="gap-5 p-5 md:p-7" aria-labelledby="checkins-title">
+            <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+              <div className="flex flex-col gap-1">
+                <h2 id="checkins-title" className="text-[28px] md:text-[32px]">
+                  {t("checkIns")}
+                </h2>
+                <p className="font-mono text-sm font-semibold text-sign" data-testid="checkin-count">
+                  {t("checkInCount", { count: summary.count })}
+                </p>
+              </div>
+              {summary.last && (
+                <div className="flex flex-col gap-0.5">
+                  <span className="label">{t("lastVisit")}</span>
+                  <span className="text-[17px] font-medium" data-testid="last-visit">
+                    {t(summary.last.pubWasOpen ? "lastVisitOpen" : "lastVisitClosed", {
+                      when: format.relativeTime(summary.last.createdAt, now),
+                    })}
+                  </span>
+                </div>
+              )}
             </div>
-            <Badge variant="secondary" className="h-auto px-3.5 py-1.5 font-mono font-semibold tracking-[0.08em] uppercase">
-              {t("checkInSoon")}
-            </Badge>
+            {recent.length === 0 ? (
+              <p className="text-muted-foreground">{t("noCheckIns", { name: pub.name })}</p>
+            ) : (
+              <ul aria-label={t("recentCheckIns")} className="flex flex-col divide-y divide-rule-soft border-t border-rule-soft">
+                {recent.map((c) => {
+                  const had = [
+                    c.beers > 0 && ct("beerCount", { count: c.beers }),
+                    c.shots > 0 && ct("shotCount", { count: c.shots }),
+                    c.hadNonAlcoholic && ct("nonAlcoholic"),
+                    c.hadFood && ct("food"),
+                  ].filter((x): x is string => !!x);
+                  return (
+                    <li key={c.id} className="flex flex-col gap-2 py-4">
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                        <span className="flex items-center gap-2 font-semibold">
+                          <Avatar url={avatarUrl(c.userId, c.avatarUpdatedAt)} name={c.username ?? "?"} size={24} />@{c.username}
+                        </span>
+                        <time dateTime={c.createdAt.toISOString()} className="font-mono text-xs text-muted-foreground">
+                          {format.dateTime(c.createdAt, { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Prague" })}
+                        </time>
+                        <Badge variant={c.pubWasOpen ? "open" : "closed"}>{t(c.pubWasOpen ? "reportedOpen" : "reportedClosed")}</Badge>
+                        {c.rating && (
+                          <span className="font-mono text-sm font-semibold" aria-label={t("rating", { count: c.rating })}>
+                            <span aria-hidden="true" className="text-star">
+                              {"★".repeat(c.rating)}
+                            </span>
+                            <span aria-hidden="true" className="text-rule">
+                              {"★".repeat(5 - c.rating)}
+                            </span>
+                          </span>
+                        )}
+                      </div>
+                      {had.length > 0 && (
+                        <ul className="flex flex-wrap gap-1.5">
+                          {had.map((label) => (
+                            <Badge key={label} variant="secondary" render={<li />} className="h-auto px-2.5 text-[13px]">
+                              {label}
+                            </Badge>
+                          ))}
+                        </ul>
+                      )}
+                      {c.note && <p className="max-w-[65ch] text-[15px]">{c.note}</p>}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </Card>
         </div>
 
@@ -249,5 +332,22 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
         </aside>
       </div>
     </article>
+  );
+}
+
+function PinIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" />
+      <path d="m9 10 2 2 4-4" />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="m5 12.5 4.5 4.5L19 7.5" />
+    </svg>
   );
 }

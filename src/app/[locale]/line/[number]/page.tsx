@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/line/[nu
   return line ? { title: `${line.number} ${line.nameCs}` } : {};
 }
 
-const dot = { open: "bg-open", maybe_open: "bg-maybe", unknown: "bg-white", closed: "bg-white" } as const;
+const dot = { open: "bg-open", unknown: "bg-white", closed: "bg-white" } as const;
 
 export default async function LinePage({ params }: PageProps<"/[locale]/line/[number]">) {
   const { locale, number } = await params;
@@ -45,7 +45,6 @@ export default async function LinePage({ params }: PageProps<"/[locale]/line/[nu
     [t("statPubs"), pubs.length, ""],
     [t("statStations"), stops.length, ""],
     [t("statOpen"), count("open"), "text-open-board"],
-    [t("statMaybe"), count("maybe_open"), "text-[#f2c15a]"],
     [t("statWaiting"), count("unknown"), ""],
   ] as const;
 
@@ -130,7 +129,6 @@ export default async function LinePage({ params }: PageProps<"/[locale]/line/[nu
             {(
               [
                 ["bg-open", t("legendOpen")],
-                ["bg-maybe", t("legendMaybe")],
                 ["bg-white", t("legendNone")],
               ] as const
             ).map(([bg, label]) => (

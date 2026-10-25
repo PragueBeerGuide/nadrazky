@@ -1,6 +1,7 @@
 import "server-only";
 import { and, asc, count, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { db, schema as s } from "@/db";
+import { compareCzech } from "./czech";
 import { fold } from "./slug";
 import { orderAlongLine } from "./lineOrder";
 
@@ -8,6 +9,15 @@ const { pubs, stations, regions, railLines, stationLines } = s;
 
 export type PubStatus = (typeof s.pubStatus.enumValues)[number];
 export type PubKind = (typeof s.pubKind.enumValues)[number];
+
+/**
+ * "Last confirmed" in whole months: since the latest check-in or approved open/closed report
+ * when there is one, otherwise as nadrazky.eu last reported it.
+ */
+export const confirmedMonthsAgo = sql<number | null>`coalesce(
+  (extract(year from age(now(), ${pubs.lastConfirmedAt})) * 12 + extract(month from age(now(), ${pubs.lastConfirmedAt})))::int,
+  ${pubs.sourceLastUpdateMonthsAgo}
+)`.mapWith((v: unknown) => (v == null ? null : Number(v)));
 
 /** Columns shared by every pub listing. */
 const pubListFields = {
@@ -21,7 +31,9 @@ const pubListFields = {
   regionSlug: stations.regionSlug,
   regionCs: regions.nameCs,
   regionEn: regions.nameEn,
-  monthsAgo: pubs.sourceLastUpdateMonthsAgo,
+  monthsAgo: confirmedMonthsAgo,
+  /** When a check-in or approved report last confirmed the pub; null if never (then monthsAgo is nadrazky.eu's). */
+  lastConfirmedAt: pubs.lastConfirmedAt,
   /** Rail line numbers through the station, ascending. */
   lines: sql<string[]>`(select coalesce(string_agg(${stationLines.lineNumber}, ',' order by ${stationLines.lineNumber}), '') from ${stationLines} where ${stationLines.stationId} = ${stations.id})`.mapWith(
     (v: string) => (v ? v.split(",") : []),
@@ -32,12 +44,12 @@ const pubListFields = {
 
 export type PubListItem = Awaited<ReturnType<typeof listPubs>>[number];
 
+/** Pubs matching the filters, by station then pub name in Czech alphabetical order. */
 export async function listPubs(filters: {
   q?: string;
   region?: string;
   line?: string;
   status?: PubStatus[];
-  limit?: number;
 } = {}) {
   const where = [];
   if (filters.region) where.push(eq(stations.regionSlug, filters.region));
@@ -60,14 +72,13 @@ export async function listPubs(filters: {
       ),
     );
   }
-  return db
+  const rows = await db
     .select(pubListFields)
     .from(pubs)
     .innerJoin(stations, eq(stations.id, pubs.stationId))
     .leftJoin(regions, eq(regions.slug, stations.regionSlug))
-    .where(and(...where))
-    .orderBy(asc(stations.name), asc(pubs.name))
-    .limit(filters.limit ?? 1000);
+    .where(and(...where));
+  return rows.sort((a, b) => compareCzech(a.station, b.station) || compareCzech(a.name, b.name));
 }
 
 // Czech + common accents for SQL translate(); keeps the DB free of extensions.
@@ -80,6 +91,7 @@ export async function getPub(slug: string) {
       pub: pubs,
       station: stations,
       region: regions,
+      confirmedMonthsAgo,
     })
     .from(pubs)
     .innerJoin(stations, eq(stations.id, pubs.stationId))
@@ -97,6 +109,7 @@ export async function getPub(slug: string) {
     .select({ slug: pubs.slug, name: pubs.name, status: pubs.status, kind: pubs.kind })
     .from(pubs)
     .where(and(eq(pubs.stationId, row.station.id), sql`${pubs.id} <> ${row.pub.id}`));
+  neighbours.sort((a, b) => compareCzech(a.name, b.name));
   return { ...row, lines, neighbours };
 }
 
@@ -186,4 +199,4 @@ export type LineStop = {
 };
 
 /** Lower is better: open pubs first. */
-export const STATUS_RANK: Record<PubStatus, number> = { open: 0, maybe_open: 1, unknown: 2, closed: 3 };
+export const STATUS_RANK: Record<PubStatus, number> = { open: 0, unknown: 1, closed: 2 };

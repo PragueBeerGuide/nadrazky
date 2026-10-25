@@ -16,8 +16,7 @@ import { listLines, listPubs, listRegions, type PubListItem, type PubStatus } fr
 import { czechInitial } from "@/lib/czech";
 import { PIN } from "@/lib/map";
 
-const STATUSES: PubStatus[] = ["open", "maybe_open", "unknown", "closed"];
-const collator = new Intl.Collator("cs");
+const STATUSES: PubStatus[] = ["open", "unknown", "closed"];
 // A label stacked above its control
 const field = "flex-col items-stretch gap-1.5 leading-normal";
 const head = "label h-auto px-4 py-3.5 font-semibold text-muted-foreground";
@@ -48,9 +47,8 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
   ]);
   const isCs = locale === "cs";
   const counts = Object.fromEntries(STATUSES.map((s) => [s, all.filter((p) => p.status === s).length])) as Record<PubStatus, number>;
-  const pubs = (status ? all.filter((p) => p.status === status) : all).sort(
-    (a, b) => collator.compare(a.station, b.station) || collator.compare(a.name, b.name),
-  );
+  // listPubs already returns them in Czech alphabetical order.
+  const pubs = status ? all.filter((p) => p.status === status) : all;
   const groups: { letter: string; pubs: PubListItem[] }[] = [];
   for (const p of pubs) {
     const letter = czechInitial(p.station);
@@ -228,7 +226,7 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
                       <StatusChip status={p.status} />
                     </TableCell>
                     <TableCell className="hidden py-3 pr-6 pl-4 text-right font-mono text-[13px] text-muted-foreground md:table-cell">
-                      <Ago months={p.monthsAgo} />
+                      <Ago months={p.monthsAgo} date={p.lastConfirmedAt} />
                     </TableCell>
                   </TableRow>
                 ))}

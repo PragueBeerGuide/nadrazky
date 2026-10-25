@@ -33,7 +33,7 @@ export function LanguageSwitch() {
               // @ts-expect-error -- params always match the current pathname
               router.replace({ pathname, params }, { locale: l })
             }
-            className="h-auto rounded-none px-3 py-2.5 text-[13px] font-semibold text-sign-mist uppercase hover:bg-sign-deep hover:text-white aria-pressed:bg-white aria-pressed:text-sign"
+            className="h-auto rounded-none px-2.5 py-2.5 md:px-3 text-[13px] font-semibold text-sign-mist uppercase hover:bg-sign-deep hover:text-white aria-pressed:bg-white aria-pressed:text-sign"
           >
             {l}
           </Toggle>

@@ -7,6 +7,7 @@ The database of railway station pubs in the Czech Republic — find a station pu
 - Next.js 16 (App Router) + Tailwind CSS 4, with the "Departures" design: Czech railway signage tokens (sign blue, timetable yellow, departure board) in `src/app/globals.css`; Barlow Condensed, IBM Plex Sans and IBM Plex Mono via `next/font`
 - next-intl for Czech (`/cs/...`, default) and English (`/en/...`) with translated URLs (`/cs/hospoda/…`, `/en/pub/…`); texts live in `messages/cs.json` and `messages/en.json`
 - PostgreSQL + Drizzle ORM (`src/db/schema.ts`, migrations in `drizzle/`); PGlite (embedded Postgres) for local development
+- Auth.js (`next-auth` v5) for accounts: sign-in with a Google account only, no passwords (`src/auth.ts`)
 - MapLibre GL with free OpenFreeMap tiles (no API key)
 
 ## Run locally
@@ -21,16 +22,18 @@ npm run dev        # http://localhost:3000
 
 To use a real Postgres server instead (Neon in production), set `DATABASE_URL=postgresql://…` in `.env.local` and run `npm run setup` again.
 
+Accounts work locally without any keys: under `npm run dev` the login page has a **dev login** that signs you in with any email. To try Google sign-in locally, put `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` in `.env.local` (see [Accounts](#accounts)).
+
 ## Tests
 
 ```bash
-npm test             # unit tests (Vitest): line ordering, Czech letters, dates, messages, components
+npm test             # unit tests (Vitest): line ordering, Czech letters, dates, messages, components, sign-in, check-in rules
 npm run test:e2e     # end-to-end tests (Playwright) on a computer-sized and a phone-sized browser
 ```
 
 Unit tests sit next to the code (`src/**/*.test.ts`). Pages are async Server Components, which Vitest can't render, so they are covered by the Playwright tests in `e2e/` instead: every route in Czech and English, filters, the map, and no errors in the browser console.
 
-`npm run test:e2e` builds the app and starts it on port 3200 with its own database in `data/pglite-e2e`, so it can run next to `npm run dev`. The first time, install the browser with `npx playwright install chromium`. If a server is already running on port 3200, the tests reuse it.
+`npm run test:e2e` builds the app and starts it on port 3200 with its own database in `data/pglite-e2e`, created fresh for every run, so it can run next to `npm run dev` and every run starts from the same data. The test server turns on the dev login (`AUTH_DEV_LOGIN=1`), so the tests sign up without Google or email; every test signs up a new user. The first time, install the browser with `npx playwright install chromium`. If a server is already running on port 3200, the tests reuse it.
 
 GitHub Actions runs lint, the unit tests and the end-to-end tests on every push and pull request (`.github/workflows/test.yml`). If the end-to-end tests fail, the run uploads the Playwright report and traces as an artifact. To run the tests the way CI does (fresh server, retries, GitHub reporter), set `CI`:
 
@@ -50,17 +53,76 @@ The app runs on Vercel (project `nadrazky`, functions in Frankfurt, `vercel.json
 
 Pushing to `main` deploys production, and every pull request gets a preview. On Vercel the build runs `scripts/vercel-build.sh`: it applies migrations, imports the pubs only if the database has none (`db:import -- --if-empty`, so pubs fixed by hand are never overwritten), then runs `next build`. To re-import into a database that already has pubs, run `npm run db:import` against it.
 
+## Accounts
+
+Log in and sign up share one page (`/cs/prihlaseni`, `/en/login`), and the only way in is a Google account. The first sign-in creates the account; the user then picks a username and confirms they are 18 or over, and only then is sign-up finished. Sessions are signed cookies (JWT); users and their linked Google accounts are in the `users` and `accounts` tables. Each user has a role: `user` (default), `moderator` or `admin` (see [Reports of changes and moderation](#reports-of-changes-and-moderation)). There is no screen for roles yet; set one in the database:
+
+```sql
+update users set role = 'admin' where email = 'you@example.com';
+```
+
+### Environment variables
+
+Set these in Vercel (Project → Settings → Environment Variables) for Production and Preview, and in `.env.local` for local development. `.env.example` lists them all.
+
+| Variable | Needed | What it is |
+| --- | --- | --- |
+| `DATABASE_URL` | always | Postgres connection (Neon sets it on Vercel). Locally `pglite://./data/pglite`. |
+| `DATABASE_URL_UNPOOLED` | Vercel | Direct Postgres connection for migrations (set by Neon). |
+| `AUTH_SECRET` | production | Signs the session cookies. Generate with `npx auth secret` or `openssl rand -base64 33`. Without it, the site runs with accounts switched off. |
+| `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET` | production | Google OAuth client. Without them the login page says signing in isn't set up. |
+| `AUTH_DEV_LOGIN` | tests only | `1` turns on the dev login in a local production build. It is on by default under `npm run dev` and never works on Vercel. |
+| `AUTH_TRUST_HOST` | self-hosting only | `true` when running `next start` outside Vercel. |
+
+### Setting up Google sign-in
+
+1. In [Google Cloud Console](https://console.cloud.google.com/apis/credentials), create a project (or pick one), then set up the **OAuth consent screen**: app name Nádražky, your support email, scopes `email`, `profile` and `openid`. Publish it, or add testers while it is in testing.
+2. **Create credentials → OAuth client ID → Web application.** Authorised redirect URIs:
+   - `https://nadrazky.vercel.app/api/auth/callback/google` (and the same path on a custom domain, if you add one)
+   - `http://localhost:3000/api/auth/callback/google` (local development)
+3. Copy the client ID and secret into `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`.
+
+Preview deployments have changing URLs that Google won't accept as redirect URIs, so Google sign-in works on production and locally, not on previews.
+
+## Profile pictures
+
+Users can add a hometown and a profile picture on their profile. The browser shrinks a chosen photo to at most 768 px and uploads it with the form (server actions accept up to 2 MB, `next.config.ts`); the server crops it to a 256×256 WebP with `sharp` (`src/lib/avatar.ts`), which drops camera metadata such as GPS, and stores it in the `user_avatars` table. `/api/avatar/[id]?v=…` serves it with a year-long cache; the `v` changes with every new picture. No file storage service is needed. The picture is shown in the header, on the profile and next to the user's check-ins; the hometown only on the user's own profile.
+
+## Check-ins
+
+Checking in needs an account but no location: the app never asks for or stores the visitor's position. A pub's status is **open**, **closed** or **unknown** (where every pub starts; nadrazky.eu's "maybe open" is imported as unknown), and only check-ins and approved reports change it, always to open or closed. Every check-in updates the pub's "last confirmed" date (`pubs.last_confirmed_at`), and one that found the pub open also marks it **open**; one that found it closed leaves the status alone (closing a pub goes through "Report a change"). "Last confirmed" across the site counts from that date, or from nadrazky.eu's months when a pub has none yet. Each user gets **one check-in per pub per day** (the day in Prague time), enforced by a unique index on `checkins (user_id, pub_id, day)`. Optional details: beer, a shot, a non-alcoholic drink, a snack (ticks), a rating from 1 to 5, a note (up to 280 characters), and whether the pub was open or closed. The pub page shows the number of check-ins, the last visit and the latest five check-ins.
+
+## Reports of changes and moderation
+
+Every user has one of three roles: `user` (the default), `moderator` or `admin`. Set a role in the database (see [Accounts](#accounts)); moderators and admins have the same powers for now.
+
+Any signed-in user can report a change to a pub from its page ("Report a change", `/cs/hospoda/[slug]/nahlasit-zmenu`, `/en/pub/[slug]/report`): that it closed or reopened, a new name, opening hours, address or beers on tap (with the new value), a wrong position on the map, or something else (with a description). Reports are stored in `pub_reports`.
+
+- **From a regular user** the report waits as `open` until a moderator or admin approves or rejects it on the moderation page (`/cs/moderace`, `/en/moderation`, linked from the account menu with the number waiting). Regular users can send up to 10 reports a day (`DAILY_REPORT_LIMIT` in `src/lib/report.ts`).
+- **From a moderator or admin** the report is approved at once (`resolved_by` is the reporter) and has no daily limit.
+- **Approving applies the change** (`changeFor` in `src/lib/report.ts`): "closed" and "open again" set the pub's status (and "last confirmed" to this month); a new name, hours, address or beers replace the field. A wrong position and "something else" are free text: approving only marks them done, and the moderation page says to make the change by hand.
+
+`npm run db:import` re-imports pub names from nadrazky.eu, so running it by hand undoes approved name changes (status, hours, address and beers are kept). Vercel's build only imports into an empty database.
+
+Under `npm run dev` and in the end-to-end tests the dev login has a role picker, so moderation can be tried without editing the database.
+
 ## Routes
 
 | Czech | English | Page |
 | --- | --- | --- |
 | `/cs` | `/en` | Home |
 | `/cs/mapa` | `/en/map` | Map of all pubs |
-| `/cs/hospody` | `/en/pubs` | List, search (works without diacritics), region and status filters |
+| `/cs/hospody` | `/en/pubs` | List, search (works without diacritics), region and status filters (open, unknown, closed) |
 | `/cs/hospoda/[slug]` | `/en/pub/[slug]` | Pub detail |
 | `/cs/kraje`, `/cs/kraj/[slug]` | `/en/regions`, `/en/region/[slug]` | Regions |
 | `/cs/trate`, `/cs/trat/[number]` | `/en/lines`, `/en/line/[number]` | Rail lines |
+| `/cs/hospoda/[slug]/odbaveni` | `/en/pub/[slug]/check-in` | Check in at a pub (needs an account) |
+| `/cs/hospoda/[slug]/nahlasit-zmenu` | `/en/pub/[slug]/report` | Report a change to a pub (signed-in users) |
+| `/cs/moderace` | `/en/moderation` | Moderation queue: approve or reject reports (moderators and admins) |
+| `/cs/prihlaseni` | `/en/login` | Log in, sign up, finish sign-up |
+| `/cs/profil` | `/en/profile` | Your profile: pubs, stations, regions and lines visited; hometown and profile picture (signed-in users) |
+| `/cs/ochrana-soukromi` | `/en/privacy` | Privacy policy (controller and contact in `src/lib/privacy.ts`) |
 
 ## Next
 
-Accounts (Auth.js), GPS-verified check-ins, badges, "report a change" and the moderation queue — see the app plan.
+Photos on check-ins and badges — see the app plan.

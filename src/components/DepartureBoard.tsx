@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { PubListItem } from "@/lib/queries";
@@ -20,13 +21,17 @@ export function DepartureBoard({
 }) {
   const t = useTranslations("home");
   const st = useTranslations("status");
+  const titleId = useId();
   const cols = "grid-cols-[48px_minmax(0,1fr)_auto] md:grid-cols-[64px_minmax(0,1fr)_minmax(0,1.15fr)_104px]";
   return (
     <section
+      aria-labelledby={titleId}
       className={`rounded-[14px] border border-[#22324f] bg-board px-4 pt-4 pb-1.5 shadow-[0_24px_48px_rgb(5_12_28/0.35)] md:rounded-2xl md:px-6 md:pt-6 md:pb-4 ${className}`}
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2 pb-2 md:pb-4">
-        <h2 className="text-2xl font-semibold text-white md:text-3xl">{title}</h2>
+        <h2 id={titleId} className="text-2xl font-semibold text-white md:text-3xl">
+          {title}
+        </h2>
         {meta}
       </div>
       <div
@@ -55,14 +60,17 @@ export function DepartureBoard({
                   <span className="h-2 w-2 rounded-full bg-[#3cc172]" />
                   {st(p.status)}
                 </span>
-                <span className="font-mono text-xs text-open-board md:text-board-muted">
+                <time
+                  dateTime={p.lastConfirmedAt ? new Date(p.lastConfirmedAt).toISOString() : undefined}
+                  className="font-mono text-xs text-open-board md:text-board-muted"
+                >
                   <span className="md:hidden">
-                    <Ago months={p.monthsAgo} short />
+                    <Ago months={p.monthsAgo} date={p.lastConfirmedAt} short />
                   </span>
                   <span className="hidden md:inline">
-                    <Ago months={p.monthsAgo} />
+                    <Ago months={p.monthsAgo} date={p.lastConfirmedAt} />
                   </span>
-                </span>
+                </time>
               </span>
             </Link>
           </li>

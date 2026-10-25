@@ -10,9 +10,11 @@ export async function Footer() {
     ["/regions", nav("regions")],
     ["/lines", nav("lines")],
     ["/about", nav("about")],
+    ["/privacy", nav("privacy")],
   ] as const;
   return (
-    <footer className="bg-ink text-sm text-board-text">
+    // On a phone the fixed bottom tab bar (BottomNav) would cover the footer's last row.
+    <footer className="bg-ink pb-[72px] text-sm text-board-text md:pb-0">
       <div className="mx-auto flex max-w-7xl flex-wrap justify-between gap-6 px-4 py-10 md:px-6">
         <div className="flex max-w-xl flex-col gap-2.5">
           <span className="font-display text-[26px] leading-none font-bold text-white">Nádražky</span>

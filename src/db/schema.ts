@@ -1,4 +1,10 @@
+import type { AdapterAccountType } from "next-auth/adapters";
+import { sql } from "drizzle-orm";
 import {
+  boolean,
+  check,
+  customType,
+  date,
   doublePrecision,
   index,
   integer,
@@ -6,11 +12,14 @@ import {
   pgTable,
   primaryKey,
   serial,
+  smallint,
   text,
   timestamp,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
-export const pubStatus = pgEnum("pub_status", ["open", "maybe_open", "unknown", "closed"]);
+/** Check-ins and reports only ever set "open" or "closed"; "unknown" is where every pub starts. */
+export const pubStatus = pgEnum("pub_status", ["open", "unknown", "closed"]);
 export const pubKind = pgEnum("pub_kind", ["pub", "restaurant", "kiosk", "cafe", "unknown"]);
 export const locationMatch = pgEnum("location_match", ["exact", "prefix", "manual", "review", "none"]);
 
@@ -78,12 +87,163 @@ export const pubs = pgTable(
     sourceId: integer("source_id").unique(),
     sourceUrl: text("source_url"),
     sourceLastUpdateMonthsAgo: integer("source_last_update_months_ago"),
+    /** The latest check-in or approved open/closed report; "last confirmed" falls back to the source's months. */
+    lastConfirmedAt: timestamp("last_confirmed_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("pubs_station_idx").on(t.stationId), index("pubs_status_idx").on(t.status)],
 );
 
+/** Binary data (Postgres bytea), for profile pictures. */
+const bytea = customType<{ data: Buffer; driverData: Buffer | Uint8Array }>({
+  dataType: () => "bytea",
+  fromDriver: (value) => Buffer.from(value),
+});
+
+export const userRole = pgEnum("user_role", ["user", "moderator", "admin"]);
+export const userLanguage = pgEnum("user_language", ["cs", "en"]);
+
+/**
+ * Accounts. Auth.js creates the row on the first sign-in with Google;
+ * the user then picks a username and confirms they are 18+ (adultConfirmedAt).
+ * Until both are set the sign-up is not finished. Roles are set by hand for now.
+ */
+export const users = pgTable(
+  "users",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    name: text("name"),
+    username: text("username"),
+    email: text("email").unique(),
+    emailVerified: timestamp("email_verified", { withTimezone: true, mode: "date" }),
+    image: text("image"),
+    language: userLanguage("language").notNull().default("cs"),
+    role: userRole("role").notNull().default("user"),
+    adultConfirmedAt: timestamp("adult_confirmed_at", { withTimezone: true }),
+    /** Optional, as the user writes it. */
+    hometown: text("hometown"),
+    /** When the profile picture (user_avatars) last changed; null without one. Busts caches in its URL. */
+    avatarUpdatedAt: timestamp("avatar_updated_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  // Usernames are unique regardless of case: "Pivo" and "pivo" are the same person.
+  (t) => [
+    uniqueIndex("users_username_idx").on(sql`lower(${t.username})`),
+    check("users_hometown_check", sql`char_length(${t.hometown}) <= 60`),
+  ],
+);
+
+/** Profile pictures, as 256×256 WebP re-encoded on upload (src/lib/avatar.ts). */
+export const userAvatars = pgTable("user_avatars", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  image: bytea("image").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Sign-in methods linked to a user (Google). Used by the Auth.js Drizzle adapter. */
+export const accounts = pgTable(
+  "accounts",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").$type<AdapterAccountType>().notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("provider_account_id").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
+  },
+  (t) => [primaryKey({ columns: [t.provider, t.providerAccountId] }), index("accounts_user_idx").on(t.userId)],
+);
+
+/** Visits to a pub: one per user, pub and Prague calendar day. No location is used or kept. */
+export const checkins = pgTable(
+  "checkins",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    pubId: integer("pub_id")
+      .notNull()
+      .references(() => pubs.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    /** The calendar day in Prague (YYYY-MM-DD) the check-in counts for. */
+    day: date("day", { mode: "string" }).notNull(),
+    /** How many beers and shots; 0 for none. */
+    beers: smallint("beers").notNull().default(0),
+    shots: smallint("shots").notNull().default(0),
+    hadNonAlcoholic: boolean("had_non_alcoholic").notNull().default(false),
+    /** "Food" in the app; the column keeps its first name. */
+    hadFood: boolean("had_snack").notNull().default(false),
+    rating: smallint("rating"),
+    note: text("note"),
+    pubWasOpen: boolean("pub_was_open").notNull(),
+  },
+  (t) => [
+    uniqueIndex("checkins_user_pub_day_idx").on(t.userId, t.pubId, t.day),
+    index("checkins_pub_idx").on(t.pubId, t.createdAt),
+    check("checkins_rating_check", sql`${t.rating} between 1 and 5`),
+    check("checkins_note_check", sql`char_length(${t.note}) <= 280`),
+    check("checkins_beers_check", sql`${t.beers} between 0 and 10`),
+    check("checkins_shots_check", sql`${t.shots} between 0 and 10`),
+  ],
+);
+
+export const pubReportKind = pgEnum("pub_report_kind", [
+  "closed",
+  "reopened",
+  "name",
+  "hours",
+  "address",
+  "beers",
+  "location",
+  "other",
+]);
+export const pubReportStatus = pgEnum("pub_report_status", ["open", "accepted", "rejected"]);
+
+/**
+ * "Report a change" from users: what changed at a pub, waiting for a moderator.
+ * `value` is the proposed new name, hours, address or beers; `message` the user's details.
+ */
+export const pubReports = pgTable(
+  "pub_reports",
+  {
+    id: serial("id").primaryKey(),
+    pubId: integer("pub_id")
+      .notNull()
+      .references(() => pubs.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    kind: pubReportKind("kind").notNull(),
+    value: text("value"),
+    message: text("message"),
+    status: pubReportStatus("status").notNull().default("open"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+    resolvedBy: text("resolved_by").references(() => users.id, { onDelete: "set null" }),
+  },
+  (t) => [
+    index("pub_reports_status_idx").on(t.status, t.createdAt),
+    index("pub_reports_pub_idx").on(t.pubId),
+    index("pub_reports_user_idx").on(t.userId, t.createdAt),
+    check("pub_reports_value_check", sql`char_length(${t.value}) <= 200`),
+    check("pub_reports_message_check", sql`char_length(${t.message}) <= 1000`),
+  ],
+);
+
 export type Pub = typeof pubs.$inferSelect;
+export type User = typeof users.$inferSelect;
 export type Station = typeof stations.$inferSelect;
 export type Region = typeof regions.$inferSelect;

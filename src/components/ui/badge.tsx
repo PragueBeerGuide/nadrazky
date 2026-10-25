@@ -23,7 +23,6 @@ const badgeVariants = cva(
           "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
         link: "text-primary underline-offset-4 hover:underline",
         open: `${status} bg-open-bg text-open-ink before:bg-open`,
-        maybe_open: `${status} bg-maybe-bg text-maybe-ink before:bg-maybe`,
         unknown: `${status} bg-unknown-bg text-unknown-ink before:bg-unknown`,
         closed: `${status} bg-closed-bg text-closed-ink before:bg-closed`,
         // Rail line numbers always sit on timetable yellow

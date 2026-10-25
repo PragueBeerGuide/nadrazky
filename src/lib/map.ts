@@ -7,11 +7,10 @@ export const CZ_BOUNDS: [number, number, number, number] = [12.09, 48.55, 18.86,
 /** Map pin colours, matching the Departures tokens in globals.css (MapLibre needs literal colours). */
 export const PIN = {
   open: "#1E8A4F",
-  maybe_open: "#E3A21A",
   unknown: "#A3ABB6",
   closed: "#B8402F",
   /** Text on a pin of that colour. */
-  ink: { open: "#FFFFFF", maybe_open: "#0E1A2B", unknown: "#0E1A2B", closed: "#FFFFFF" },
+  ink: { open: "#FFFFFF", unknown: "#0E1A2B", closed: "#FFFFFF" },
   stroke: "#FFFFFF",
   selected: "#12306A",
 } as const;
