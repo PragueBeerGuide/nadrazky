@@ -10,14 +10,14 @@ import { StatusChip } from "./StatusChip";
 afterEach(cleanup);
 
 describe("StatusChip", () => {
-  it("shows the translated status with its colour class", () => {
+  it("shows the translated status and marks which one it is", () => {
     render(
       <NextIntlClientProvider locale="cs" messages={cs}>
         <StatusChip status="open" />
       </NextIntlClientProvider>,
     );
     const chip = screen.getByText("V provozu");
-    expect(chip.className).toContain("chip-open");
+    expect(chip.dataset.status).toBe("open");
   });
 
   it("uses the English label in English", () => {
@@ -26,7 +26,7 @@ describe("StatusChip", () => {
         <StatusChip status="maybe_open" />
       </NextIntlClientProvider>,
     );
-    expect(screen.getByText("Maybe open").className).toContain("chip-maybe_open");
+    expect(screen.getByText("Maybe open").dataset.status).toBe("maybe_open");
   });
 });
 

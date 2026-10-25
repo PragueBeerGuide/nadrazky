@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { PageHero } from "@/components/PageHero";
 import { PubRow } from "@/components/PubRow";
+import { Card } from "@/components/ui/card";
 import { getRegion, listPubs } from "@/lib/queries";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/region/[slug]">): Promise<Metadata> {
@@ -38,11 +39,11 @@ export default async function RegionPage({ params }: PageProps<"/[locale]/region
         </nav>
       </PageHero>
       <div className="mx-auto max-w-4xl px-4 py-8 md:px-6 md:py-12">
-        <ul className="card divide-y divide-rule-soft overflow-hidden">
+        <Card render={<ul />} className="gap-0 divide-y divide-rule-soft py-0">
           {pubs.map((p) => (
             <PubRow key={p.slug} pub={p} />
           ))}
-        </ul>
+        </Card>
       </div>
     </>
   );

@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { Toggle } from "@/components/ui/toggle";
 
 /** CS | EN switch; the current language is the white segment. */
 export function LanguageSwitch() {
@@ -22,21 +23,20 @@ export function LanguageSwitch() {
       {routing.locales.map((l) => {
         const current = l === locale;
         return (
-          <button
+          <Toggle
             key={l}
-            type="button"
             lang={l}
             aria-label={t(l)}
-            aria-pressed={current}
-            onClick={() =>
+            pressed={current}
+            onPressedChange={() =>
               current ||
               // @ts-expect-error -- params always match the current pathname
               router.replace({ pathname, params }, { locale: l })
             }
-            className={`px-3 py-2.5 uppercase ${current ? "bg-white text-sign" : "text-sign-mist hover:bg-sign-deep hover:text-white"}`}
+            className="h-auto rounded-none px-3 py-2.5 text-[13px] font-semibold text-sign-mist uppercase hover:bg-sign-deep hover:text-white aria-pressed:bg-white aria-pressed:text-sign"
           >
             {l}
-          </button>
+          </Toggle>
         );
       })}
     </div>

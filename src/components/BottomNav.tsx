@@ -28,7 +28,7 @@ export function BottomNav() {
               <Link
                 href={i.href}
                 aria-current={current ? "page" : undefined}
-                className={`flex flex-col items-center gap-0.5 py-1 text-xs ${current ? "font-semibold text-sign" : "font-medium text-muted"}`}
+                className={`flex flex-col items-center gap-0.5 py-1 text-xs ${current ? "font-semibold text-sign" : "font-medium text-muted-foreground"}`}
               >
                 <span className={`flex rounded-[14px] px-4 py-1 ${current ? "bg-sign-tint" : ""}`}>
                   <svg

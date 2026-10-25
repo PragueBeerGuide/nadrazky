@@ -7,7 +7,16 @@ import { PIN } from "@/lib/map";
 import { fold } from "@/lib/slug";
 import type { PubKind, PubStatus } from "@/lib/queries";
 import { Ago, useAgo } from "./Ago";
+import { LineChip } from "./LineChip";
 import { PubMap, type MapStation } from "./PubMap";
+import { StatusChip } from "./StatusChip";
+import { Button, buttonVariants } from "./ui/button";
+import { Input } from "./ui/input";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
+import { Label } from "./ui/label";
+import { NativeSelect, NativeSelectOption } from "./ui/native-select";
+import { Toggle } from "./ui/toggle";
+import { cn } from "@/lib/utils";
 
 export type MapPub = {
   slug: string;
@@ -24,6 +33,12 @@ export type MapPub = {
 
 const RANK: Record<PubStatus, number> = { open: 0, maybe_open: 1, unknown: 2, closed: 3 };
 const STATUSES: PubStatus[] = ["open", "maybe_open", "unknown", "closed"];
+const pressedColours: Record<PubStatus, string> = {
+  open: "aria-pressed:bg-open-bg aria-pressed:text-open-ink",
+  maybe_open: "aria-pressed:bg-maybe-bg aria-pressed:text-maybe-ink",
+  unknown: "aria-pressed:bg-unknown-bg aria-pressed:text-unknown-ink",
+  closed: "aria-pressed:bg-closed-bg aria-pressed:text-closed-ink",
+};
 
 /** The map page: filters and results beside the map on a computer, floating over it on a phone. */
 export function MapExplorer({
@@ -87,6 +102,17 @@ export function MapExplorer({
   const selectedStation = stations.find((s) => s.id === selected) ?? null;
   const shownStatuses = STATUSES.filter((s) => s !== "closed" || counts.closed > 0);
 
+  const lineOptions = (
+    <>
+      <NativeSelectOption value="">{pt("anyLine")}</NativeSelectOption>
+      {lines.map((l) => (
+        <NativeSelectOption key={l.number} value={l.number}>
+          {l.number} · {l.name}
+        </NativeSelectOption>
+      ))}
+    </>
+  );
+
   const toggle = (s: PubStatus) =>
     setOff((prev) => {
       const next = new Set(prev);
@@ -99,19 +125,21 @@ export function MapExplorer({
     shownStatuses.map((s) => {
       const on = !off.has(s);
       return (
-        <button
+        <Toggle
           key={s}
-          type="button"
-          aria-pressed={on}
-          onClick={() => toggle(s)}
-          className={`inline-flex shrink-0 items-center gap-2 rounded-full border text-sm font-semibold ${
-            compact ? "h-[38px] px-3" : "h-10 px-3.5"
-          } ${on ? `chip-${s} border-current` : "border-field bg-white text-muted line-through decoration-1"}`}
+          variant="outline"
+          pressed={on}
+          onPressedChange={() => toggle(s)}
+          className={cn(
+            "shrink-0 gap-2 rounded-full border-field bg-white font-semibold text-muted-foreground line-through decoration-1 hover:bg-white hover:text-muted-foreground aria-pressed:border-current aria-pressed:no-underline",
+            compact ? "h-9.5 px-3" : "h-10 px-3.5",
+            pressedColours[s],
+          )}
         >
           <span className="h-2.5 w-2.5 rounded-full" style={{ background: PIN[s] }} />
           {st(s)}
-          {!compact && <span className="font-mono text-xs no-underline">· {counts[s]}</span>}
-        </button>
+          {!compact && <span className="font-mono text-xs">· {counts[s]}</span>}
+        </Toggle>
       );
     });
 
@@ -124,37 +152,27 @@ export function MapExplorer({
         <div className="flex flex-col gap-4 border-b border-rule px-6 pt-6 pb-4">
           <h1 className="text-[38px]">{t("title")}</h1>
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="map-search" className="text-sm font-medium">
-              {pt("searchLabel")}
-            </label>
-            <input
+            <Label htmlFor="map-search">{pt("searchLabel")}</Label>
+            <Input
               id="map-search"
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder={pt("searchPlaceholder")}
-              className="field"
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="map-line" className="text-sm font-medium">
-              {pt("line")}
-            </label>
-            <select id="map-line" value={line} onChange={(e) => setLine(e.target.value)} className="field">
-              <option value="">{pt("anyLine")}</option>
-              {lines.map((l) => (
-                <option key={l.number} value={l.number}>
-                  {l.number} · {l.name}
-                </option>
-              ))}
-            </select>
+            <Label htmlFor="map-line">{pt("line")}</Label>
+            <NativeSelect id="map-line" value={line} onChange={(e) => setLine(e.target.value)} className="w-full">
+              {lineOptions}
+            </NativeSelect>
           </div>
           <fieldset className="flex flex-col gap-2">
             <legend className="mb-2 text-sm font-medium">{pt("status")}</legend>
             <div className="flex flex-wrap gap-2">{statusButtons(false)}</div>
           </fieldset>
         </div>
-        <div className="flex items-baseline justify-between border-b border-rule-soft px-6 py-3 text-sm text-muted">
+        <div className="flex items-baseline justify-between border-b border-rule-soft px-6 py-3 text-sm text-muted-foreground">
           <span>
             <strong className="text-ink">{pt("results", { count: visible.length })}</strong>
             {line && <> {t("onLine", { number: line })}</>}
@@ -179,11 +197,11 @@ export function MapExplorer({
                     />
                     <span className="flex min-w-0 flex-1 flex-col">
                       <span className="truncate text-[15px] font-semibold">{p.name}</span>
-                      <span className="truncate text-[13px] text-muted">
+                      <span className="truncate text-[13px] text-muted-foreground">
                         {p.station} · {kt(p.kind)}
                       </span>
                     </span>
-                    <span className="shrink-0 font-mono text-xs text-muted">
+                    <span className="shrink-0 font-mono text-xs text-muted-foreground">
                       <Ago months={p.monthsAgo} short />
                     </span>
                   </Link>
@@ -192,7 +210,7 @@ export function MapExplorer({
             })}
           </ul>
         ) : (
-          <p className="px-6 py-6 text-muted">{t("empty")}</p>
+          <p className="px-6 py-6 text-muted-foreground">{t("empty")}</p>
         )}
       </aside>
 
@@ -209,41 +227,38 @@ export function MapExplorer({
 
         {/* Phone: search and filters float over the map */}
         <div className="absolute inset-x-3 top-3.5 flex flex-col gap-2.5 md:hidden">
-          <div className="flex items-center gap-1 rounded-xl bg-white py-1 pr-1 pl-3.5 shadow-[0_4px_14px_rgb(14_26_43/0.18)]">
-            <label htmlFor="map-search-m" className="sr-only">
+          <InputGroup className="h-auto rounded-xl border-0 bg-white py-1 pr-1 pl-1.5 shadow-[0_4px_14px_rgb(14_26_43/0.18)]">
+            <Label htmlFor="map-search-m" className="sr-only">
               {pt("searchLabel")}
-            </label>
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--muted)" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-              <circle cx="11" cy="11" r="6" />
-              <path d="m20 20-4.5-4.5" />
-            </svg>
-            <input
+            </Label>
+            <InputGroupInput
               id="map-search-m"
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder={pt("searchPlaceholder")}
-              className="h-11 min-w-0 flex-1 bg-transparent px-1.5 text-base outline-none"
+              className="h-11 px-1.5"
             />
-          </div>
+            <InputGroupAddon>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true" className="size-5">
+                <circle cx="11" cy="11" r="6" />
+                <path d="m20 20-4.5-4.5" />
+              </svg>
+            </InputGroupAddon>
+          </InputGroup>
           <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1">
-            <label className="relative inline-flex h-[38px] shrink-0 items-center gap-1.5 rounded-full bg-sign pr-3 pl-1.5 text-sm font-semibold text-white shadow-[0_2px_8px_rgb(14_26_43/0.18)]">
-              <span className="line-chip rounded-full text-xs">{line || "—"}</span>
+            <Label className="relative h-9.5 shrink-0 gap-1.5 rounded-full bg-sign pr-3 pl-1.5 font-semibold text-white shadow-[0_2px_8px_rgb(14_26_43/0.18)]">
+              <LineChip number={line || "—"} className="rounded-full text-xs" />
               {pt("line")}
-              <select
+              <NativeSelect
                 value={line}
                 onChange={(e) => setLine(e.target.value)}
-                className="absolute inset-0 cursor-pointer opacity-0"
+                className="absolute inset-0 opacity-0 [&_select]:h-full [&_select]:cursor-pointer"
                 aria-label={pt("line")}
               >
-                <option value="">{pt("anyLine")}</option>
-                {lines.map((l) => (
-                  <option key={l.number} value={l.number}>
-                    {l.number} · {l.name}
-                  </option>
-                ))}
-              </select>
-            </label>
+                {lineOptions}
+              </NativeSelect>
+            </Label>
             {statusButtons(true)}
           </div>
         </div>
@@ -258,7 +273,7 @@ export function MapExplorer({
           ))}
           {line && (
             <span className="inline-flex items-center gap-1.5">
-              <span className="line-chip text-xs">{line}</span>
+              <LineChip number={line} className="text-xs" />
               {lt("line", { number: line })}
             </span>
           )}
@@ -283,7 +298,6 @@ function directions(s: { lat: number; lon: number }) {
 /** Popup over the selected pin (computer). */
 function StationPopup({ station }: { station: MapStation }) {
   const t = useTranslations("map");
-  const st = useTranslations("status");
   const kt = useTranslations("kind");
   const pt = useTranslations("pub");
   const ago = useAgo();
@@ -292,18 +306,18 @@ function StationPopup({ station }: { station: MapStation }) {
     <div className="flex w-[268px] flex-col gap-2.5 text-ink">
       <div className="flex flex-col pr-8">
         <span className="font-display text-[26px] leading-[1.05] font-bold">{station.name}</span>
-        <span className="text-[13px] text-muted">{t("pubsHere", { count: station.pubs.length })}</span>
+        <span className="text-[13px] text-muted-foreground">{t("pubsHere", { count: station.pubs.length })}</span>
       </div>
       <div className="flex flex-col gap-1.5 border-t border-rule-soft pt-2.5">
         <span className="text-base font-semibold">{first.name}</span>
         <span className="flex flex-wrap items-center gap-1.5">
-          <span className={`chip chip-${first.status}`}>{st(first.status)}</span>
-          <span className="text-[13px] text-muted">
+          <StatusChip status={first.status} />
+          <span className="text-[13px] text-muted-foreground">
             {kt(first.kind)} · {t("confirmed", { when: ago(first.monthsAgo) })}
           </span>
         </span>
         {rest.length > 0 && (
-          <span className="text-sm text-muted">
+          <span className="text-sm text-muted-foreground">
             {t("alsoHere")}{" "}
             {rest.map((p, i) => (
               <span key={p.slug}>
@@ -319,11 +333,11 @@ function StationPopup({ station }: { station: MapStation }) {
       <div className="flex gap-2">
         <Link
           href={{ pathname: "/pub/[slug]", params: { slug: first.slug } }}
-          className="btn btn-sign h-11 min-h-0 flex-1 px-3 text-[15px] text-white"
+          className={cn(buttonVariants({ size: "xl" }), "h-11 flex-1 px-3 text-[15px] text-white")}
         >
           {t("detail")}
         </Link>
-        <a href={directions(station)} className="btn btn-outline h-11 min-h-0 px-3.5 text-[15px]">
+        <a href={directions(station)} className={cn(buttonVariants({ variant: "outline", size: "xl" }), "h-11 px-3.5 text-[15px]")}>
           {pt("navigate")}
         </a>
       </div>
@@ -346,23 +360,16 @@ function StationSheet({ station, onClose }: { station: MapStation; onClose: () =
             </span>
           </span>
           {lines.map((n) => (
-            <span key={n} className="line-chip">
-              {n}
-            </span>
+            <LineChip key={n} number={n} />
           ))}
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label={t("close")}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-platform"
-        >
+        <Button variant="secondary" size="icon-lg" onClick={onClose} aria-label={t("close")} className="size-10 bg-platform text-ink">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
             <path d="M6 6l12 12M18 6 6 18" />
           </svg>
-        </button>
+        </Button>
       </div>
-      <span className="text-[13px] text-muted">{t("pubsHere", { count: station.pubs.length })}</span>
+      <span className="text-[13px] text-muted-foreground">{t("pubsHere", { count: station.pubs.length })}</span>
       <ul className="flex flex-col">
         {station.pubs.map((p, i) => (
           <li key={p.slug} className={i ? "border-t border-rule-soft" : ""}>
@@ -370,11 +377,11 @@ function StationSheet({ station, onClose }: { station: MapStation; onClose: () =
               <span className="h-3 w-3 shrink-0 rounded-full" style={{ background: PIN[p.status] }} />
               <span className="flex min-w-0 flex-1 flex-col leading-tight">
                 <span className="truncate font-semibold">{p.name}</span>
-                <span className="text-[13px] text-muted">
+                <span className="text-[13px] text-muted-foreground">
                   {kt(p.kind)} · <Ago months={p.monthsAgo} />
                 </span>
               </span>
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--muted)" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--muted-foreground)" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
                 <path d="m9 6 6 6-6 6" />
               </svg>
             </Link>

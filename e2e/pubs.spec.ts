@@ -11,7 +11,7 @@ test("the status filter shows only pubs with that status", async ({ page }) => {
   await page.goto("/en/pubs");
   await page.getByRole("link", { name: /^Open · \d+$/ }).click();
   await expect(page).toHaveURL(/status=open/);
-  const chips = page.locator("tbody .chip");
+  const chips = page.locator("tbody [data-status]");
   await expect(chips.first()).toBeVisible();
   await expect(chips).toHaveText(Array((await chips.count())).fill("Open"));
 });

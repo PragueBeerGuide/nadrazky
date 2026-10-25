@@ -5,12 +5,22 @@ import { Link } from "@/i18n/navigation";
 import { Ago } from "@/components/Ago";
 import { LineChip } from "@/components/LineChip";
 import { StatusChip } from "@/components/StatusChip";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import { listLines, listPubs, listRegions, type PubListItem, type PubStatus } from "@/lib/queries";
 import { czechInitial } from "@/lib/czech";
 import { PIN } from "@/lib/map";
 
 const STATUSES: PubStatus[] = ["open", "maybe_open", "unknown", "closed"];
 const collator = new Intl.Collator("cs");
+// A label stacked above its control
+const field = "flex-col items-stretch gap-1.5 leading-normal";
+const head = "label h-auto px-4 py-3.5 font-semibold text-muted-foreground";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("pubs");
@@ -63,10 +73,10 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-5xl md:text-[64px]">{t("title")}</h1>
-          <p className="text-muted md:text-[17px]">{t("subtitle", { pubs: pubs.length, stations: stationCount })}</p>
+          <p className="text-muted-foreground md:text-[17px]">{t("subtitle", { pubs: pubs.length, stations: stationCount })}</p>
         </div>
         <nav aria-label={t("viewLabel")} className="flex gap-1 rounded-[10px] border border-rule bg-white p-1">
-          <span aria-current="page" className="inline-flex h-10 items-center gap-2 rounded-[7px] bg-sign px-4 text-[15px] font-semibold text-white">
+          <span aria-current="page" className={cn(buttonVariants({ size: "md" }), "rounded-[7px] text-[15px] hover:bg-primary")}>
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
               <path d="M4 6h16M4 12h16M4 18h10" />
             </svg>
@@ -74,7 +84,7 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
           </span>
           <Link
             href={line ? { pathname: "/map", query: { line } } : "/map"}
-            className="inline-flex h-10 items-center gap-2 rounded-[7px] px-4 text-[15px] font-semibold hover:bg-platform"
+            className={cn(buttonVariants({ variant: "ghost", size: "md" }), "rounded-[7px] text-[15px] hover:bg-platform")}
           >
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zm0 0v14m6-12v14" />
@@ -84,33 +94,33 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
         </nav>
       </div>
 
-      <form role="search" className="card grid gap-4 rounded-[14px] p-4 md:grid-cols-4 md:items-end md:p-5">
-        <label className="flex flex-col gap-1.5 text-sm font-medium md:col-span-2">
+      <Card render={<form role="search" />} className="grid gap-4 p-4 md:grid-cols-4 md:items-end md:p-5">
+        <Label className={cn(field, "md:col-span-2")}>
           {t("searchLabel")}
-          <input name="q" type="search" defaultValue={q} placeholder={t("searchPlaceholder")} className="field font-normal" />
-        </label>
-        <label className="flex flex-col gap-1.5 text-sm font-medium">
+          <Input name="q" type="search" defaultValue={q} placeholder={t("searchPlaceholder")} className="font-normal" />
+        </Label>
+        <Label className={field}>
           {t("region")}
-          <select name="region" defaultValue={region} className="field font-normal">
-            <option value="">{t("anyRegion")}</option>
+          <NativeSelect name="region" defaultValue={region} className="w-full font-normal">
+            <NativeSelectOption value="">{t("anyRegion")}</NativeSelectOption>
             {regions.map((r) => (
-              <option key={r.slug} value={r.slug}>
+              <NativeSelectOption key={r.slug} value={r.slug}>
                 {isCs ? r.nameCs : r.nameEn}
-              </option>
+              </NativeSelectOption>
             ))}
-          </select>
-        </label>
-        <label className="flex flex-col gap-1.5 text-sm font-medium">
+          </NativeSelect>
+        </Label>
+        <Label className={field}>
           {t("line")}
-          <select name="line" defaultValue={line} className="field font-normal">
-            <option value="">{t("anyLine")}</option>
+          <NativeSelect name="line" defaultValue={line} className="w-full font-normal">
+            <NativeSelectOption value="">{t("anyLine")}</NativeSelectOption>
             {lines.map((l) => (
-              <option key={l.number} value={l.number}>
+              <NativeSelectOption key={l.number} value={l.number}>
                 {l.number} · {l.name}
-              </option>
+              </NativeSelectOption>
             ))}
-          </select>
-        </label>
+          </NativeSelect>
+        </Label>
         {status && <input type="hidden" name="status" value={status} />}
         <div className="flex flex-wrap items-center gap-2 md:col-span-4">
           <span className="w-full text-sm font-medium">{t("status")}</span>
@@ -124,14 +134,16 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
           ))}
           <span className="ml-auto flex gap-2">
             {filtered && (
-              <Link href="/pubs" className="btn btn-outline h-10 min-h-0 px-4 text-sm">
+              <Link href="/pubs" className={buttonVariants({ variant: "outline", size: "md" })}>
                 {t("clear")}
               </Link>
             )}
-            <button className="btn btn-sign h-10 min-h-0 px-5 text-sm">{t("search")}</button>
+            <Button type="submit" size="md" className="px-5">
+              {t("search")}
+            </Button>
           </span>
         </div>
-      </form>
+      </Card>
 
       {groups.length > 1 && (
         <nav aria-label={t("jump")} className="flex flex-wrap gap-1 font-mono text-sm font-semibold">
@@ -139,7 +151,10 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
             <a
               key={g.letter}
               href={`#${anchor(g.letter)}`}
-              className="inline-flex h-9 min-w-9 items-center justify-center rounded-[6px] border border-rule bg-white px-1.5 hover:border-sign hover:bg-sign hover:text-white"
+              className={cn(
+                buttonVariants({ variant: "outline", size: "icon-lg" }),
+                "min-w-9 rounded-sm border-rule px-1.5 font-mono text-sm hover:border-sign hover:bg-sign hover:text-white",
+              )}
             >
               {g.letter}
             </a>
@@ -148,79 +163,83 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
       )}
 
       {pubs.length ? (
-        <div className="card overflow-hidden rounded-[14px]">
-          <table className="w-full border-collapse text-[15px]">
-            <caption className="sr-only">{t("results", { count: pubs.length })}</caption>
-            <thead>
-              <tr className="label text-left">
-                <th scope="col" className="py-3.5 pr-4 pl-4 md:pl-6">
+        <Card className="gap-0 py-0">
+          <Table className="border-collapse text-[15px]">
+            <TableCaption className="sr-only">{t("results", { count: pubs.length })}</TableCaption>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead scope="col" className={cn(head, "md:pl-6")}>
                   {t("colPub")}
-                </th>
-                <th scope="col" className="hidden px-4 py-3.5 md:table-cell">
+                </TableHead>
+                <TableHead scope="col" className={cn(head, "hidden md:table-cell")}>
                   {t("colStation")}
-                </th>
-                <th scope="col" className="hidden px-4 py-3.5 lg:table-cell">
+                </TableHead>
+                <TableHead scope="col" className={cn(head, "hidden lg:table-cell")}>
                   {t("colLines")}
-                </th>
-                <th scope="col" className="hidden px-4 py-3.5 xl:table-cell">
+                </TableHead>
+                <TableHead scope="col" className={cn(head, "hidden xl:table-cell")}>
                   {t("colRegion")}
-                </th>
-                <th scope="col" className="hidden px-4 py-3.5 lg:table-cell">
+                </TableHead>
+                <TableHead scope="col" className={cn(head, "hidden lg:table-cell")}>
                   {t("colType")}
-                </th>
-                <th scope="col" className="px-4 py-3.5">
+                </TableHead>
+                <TableHead scope="col" className={head}>
                   <span className="sr-only md:not-sr-only">{t("colStatus")}</span>
-                </th>
-                <th scope="col" className="hidden py-3.5 pr-6 pl-4 text-right md:table-cell">
+                </TableHead>
+                <TableHead scope="col" className={cn(head, "hidden pr-6 text-right md:table-cell")}>
                   {t("colConfirmed")}
-                </th>
-              </tr>
-            </thead>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
             {groups.map((g) => (
-              <tbody key={g.letter} id={anchor(g.letter)} className="scroll-mt-4">
-                <tr>
-                  <th
+              <TableBody key={g.letter} id={anchor(g.letter)} className="scroll-mt-4">
+                <TableRow className="border-t border-b-rule-soft hover:bg-transparent">
+                  <TableHead
                     colSpan={7}
                     scope="rowgroup"
-                    className="border-t border-rule bg-platform px-4 py-2.5 text-left font-display text-[28px] leading-none font-bold text-sign md:px-6"
+                    className="h-auto bg-platform px-4 py-2.5 font-display text-[28px] leading-none font-bold text-sign md:px-6"
                   >
                     {g.letter}
-                  </th>
-                </tr>
+                  </TableHead>
+                </TableRow>
                 {g.pubs.map((p) => (
-                  <tr key={p.slug} className="border-t border-rule-soft hover:bg-[#f7f9fd]">
-                    <td className="py-3 pr-4 pl-4 md:pl-6">
+                  <TableRow key={p.slug} className="border-rule-soft hover:bg-[#f7f9fd]">
+                    <TableCell className="py-3 pr-4 pl-4 whitespace-normal md:pl-6">
                       <Link href={{ pathname: "/pub/[slug]", params: { slug: p.slug } }} className="font-semibold hover:text-sign hover:underline">
                         {p.name}
                       </Link>
-                      <span className="block text-sm text-muted md:hidden">
+                      <span className="block text-sm text-muted-foreground md:hidden">
                         {p.station} · {kt(p.kind)}
                       </span>
-                    </td>
-                    <td className="hidden px-4 py-3 md:table-cell">{p.station}</td>
-                    <td className="hidden px-4 py-3 whitespace-nowrap lg:table-cell">
+                    </TableCell>
+                    <TableCell className="hidden px-4 py-3 whitespace-normal md:table-cell">{p.station}</TableCell>
+                    <TableCell className="hidden px-4 py-3 lg:table-cell">
                       <span className="inline-flex gap-1">
                         {p.lines.slice(0, 4).map((n) => (
                           <LineChip key={n} number={n} className="text-xs" />
                         ))}
                       </span>
-                    </td>
-                    <td className="hidden px-4 py-3 text-muted xl:table-cell">{(isCs ? p.regionCs : p.regionEn) ?? "—"}</td>
-                    <td className="hidden px-4 py-3 text-muted lg:table-cell">{kt(p.kind)}</td>
-                    <td className="px-4 py-3 text-right md:text-left">
+                    </TableCell>
+                    <TableCell className="hidden px-4 py-3 whitespace-normal text-muted-foreground xl:table-cell">
+                      {(isCs ? p.regionCs : p.regionEn) ?? "—"}
+                    </TableCell>
+                    <TableCell className="hidden px-4 py-3 whitespace-normal text-muted-foreground lg:table-cell">{kt(p.kind)}</TableCell>
+                    <TableCell className="px-4 py-3 text-right md:text-left">
                       <StatusChip status={p.status} />
-                    </td>
-                    <td className="hidden py-3 pr-6 pl-4 text-right font-mono text-[13px] whitespace-nowrap text-muted md:table-cell">
+                    </TableCell>
+                    <TableCell className="hidden py-3 pr-6 pl-4 text-right font-mono text-[13px] text-muted-foreground md:table-cell">
                       <Ago months={p.monthsAgo} />
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
+              </TableBody>
             ))}
-          </table>
-        </div>
+          </Table>
+        </Card>
       ) : (
-        <p className="card p-6">{t("empty")}</p>
+        <Card render={<p />} className="p-6">
+          {t("empty")}
+        </Card>
       )}
     </div>
   );
@@ -241,9 +260,7 @@ function StatusLink({
     <Link
       href={{ pathname: "/pubs", query: href }}
       aria-current={current ? "true" : undefined}
-      className={`inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-semibold ${
-        current ? "border-sign bg-sign text-white" : "border-field bg-white hover:border-ink"
-      }`}
+      className={cn(buttonVariants({ variant: current ? "default" : "outline", size: "md" }), "rounded-full")}
     >
       {dot && <span className="h-2.5 w-2.5 rounded-full" style={{ background: dot, boxShadow: current ? "0 0 0 2px #fff" : undefined }} />}
       {children}

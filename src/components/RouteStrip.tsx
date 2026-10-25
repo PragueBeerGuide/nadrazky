@@ -1,10 +1,11 @@
 import { getTranslations } from "next-intl/server";
+import { Card } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import type { LineRoute } from "@/lib/lineOrder";
 import type { LineStop } from "@/lib/queries";
 
 const dot = { open: "bg-open", maybe_open: "bg-maybe", unknown: "bg-white", closed: "bg-white" } as const;
-const ink = { open: "text-open-ink", maybe_open: "text-maybe-ink", unknown: "text-muted", closed: "text-closed-ink" } as const;
+const ink = { open: "text-open-ink", maybe_open: "text-maybe-ink", unknown: "text-muted-foreground", closed: "text-closed-ink" } as const;
 
 /** Horizontal route strip: the stops either side of this station along the line. */
 export async function RouteStrip({ route, stationId }: { route: LineRoute<LineStop>; stationId: number }) {
@@ -19,7 +20,7 @@ export async function RouteStrip({ route, stationId }: { route: LineRoute<LineSt
   const nearCount = stops.filter((_, i) => Math.abs(from + i - at) <= 1).length;
 
   return (
-    <div className="card overflow-hidden px-3 pt-6 pb-5 md:px-6 md:pt-7 md:pb-6">
+    <Card className="block px-3 pt-6 pb-5 md:px-6 md:pt-7 md:pb-6">
       <ol
         className="grid grid-cols-[repeat(var(--cols-phone),minmax(0,1fr))] md:grid-cols-[repeat(var(--cols),minmax(0,1fr))]"
         style={{ "--cols": stops.length, "--cols-phone": nearCount } as React.CSSProperties}
@@ -60,6 +61,6 @@ export async function RouteStrip({ route, stationId }: { route: LineRoute<LineSt
           );
         })}
       </ol>
-    </div>
+    </Card>
   );
 }

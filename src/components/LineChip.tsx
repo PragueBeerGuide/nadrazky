@@ -1,25 +1,25 @@
-import { Link } from "@/i18n/navigation";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
-const sizes = { sm: "", lg: "line-chip-lg", xl: "line-chip-xl" } as const;
+const sizes = {
+  sm: "",
+  lg: "rounded-md px-3 py-1 text-[1.375rem] leading-7",
+  xl: "rounded-xl px-6 py-3 text-[clamp(2.75rem,7vw,4.5rem)] leading-none",
+} as const;
 
-/** A rail line number on timetable yellow; links to the line when `link` is set. */
+/** A rail line number on timetable yellow. */
 export function LineChip({
   number,
   size = "sm",
-  link = false,
-  className = "",
+  className,
 }: {
   number: string;
   size?: keyof typeof sizes;
-  link?: boolean;
   className?: string;
 }) {
-  const cls = `line-chip ${sizes[size]} ${className}`;
-  return link ? (
-    <Link href={{ pathname: "/line/[number]", params: { number } }} className={`${cls} hover:bg-[#e5b40f]`}>
+  return (
+    <Badge variant="line" className={cn(sizes[size], className)}>
       {number}
-    </Link>
-  ) : (
-    <span className={cls}>{number}</span>
+    </Badge>
   );
 }

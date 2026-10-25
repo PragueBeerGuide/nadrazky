@@ -15,18 +15,18 @@ export function PubRow({ pub }: { pub: PubListItem }) {
       >
         <div className="min-w-0 flex-1">
           <p className="truncate font-semibold">{pub.name}</p>
-          <p className="flex min-w-0 items-center gap-2 text-sm text-muted">
+          <p className="flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
             <span className="truncate">
               {pub.station} · {t(pub.kind)}
             </span>
             {pub.lines.slice(0, 3).map((n) => (
-              <LineChip key={n} number={n} className="hidden text-xs sm:inline-block" />
+              <LineChip key={n} number={n} className="hidden text-xs sm:inline-flex" />
             ))}
           </p>
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1">
           <StatusChip status={pub.status} />
-          <span className="font-mono text-xs text-muted">
+          <span className="font-mono text-xs text-muted-foreground">
             <Ago months={pub.monthsAgo} />
           </span>
         </div>
