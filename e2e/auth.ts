@@ -16,7 +16,7 @@ export async function devSignUp(page: Page, user: { username: string; email: str
   await page.getByRole("button", { name: "Sign in (dev)" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Finish signing up" })).toBeVisible();
   await page.getByLabel("Username").fill(user.username);
-  await page.getByLabel("I confirm I am 18 or over.").check();
+  await page.getByRole("checkbox", { name: "I confirm I am 18 or over." }).check();
   await page.getByRole("button", { name: "Finish sign-up" }).click();
   await expect(page.getByLabel(`Account: @${user.username}`)).toBeVisible();
 }

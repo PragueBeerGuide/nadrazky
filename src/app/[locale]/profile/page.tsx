@@ -13,6 +13,8 @@ import { avatarUrl } from "@/lib/profile";
 import { ProfileForm } from "./ProfileForm";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("profile");
@@ -102,9 +104,9 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
                 <h2 className="text-[28px] md:text-[32px]">{t("hadTitle")}</h2>
                 <ul className="flex flex-wrap gap-2">
                   {had.map((k) => (
-                    <li key={k} className="rounded-full bg-sign-tint px-3.5 py-1.5 font-semibold text-sign">
+                    <Badge key={k} variant="secondary" render={<li />} className="h-auto px-3.5 py-1.5 text-base font-semibold">
                       {t(k, { count: stats[k] })}
-                    </li>
+                    </Badge>
                   ))}
                 </ul>
               </section>
@@ -147,9 +149,11 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
                         <span className={r.visited ? "font-semibold" : "text-muted-foreground"}>{regionName(r)}</span>
                         <span className="font-mono text-xs text-muted-foreground">{t("regionProgress", { visited: r.visited, total: r.total })}</span>
                       </span>
-                      <span className="h-2 overflow-hidden rounded-full bg-rule-soft" aria-hidden="true">
-                        <span className="block h-full rounded-full bg-yellow" style={{ width: `${r.total ? (r.visited / r.total) * 100 : 0}%` }} />
-                      </span>
+                      <Progress
+                        value={r.total ? (r.visited / r.total) * 100 : 0}
+                        aria-hidden="true"
+                        className="[&_[data-slot=progress-indicator]]:bg-yellow [&_[data-slot=progress-track]]:h-2"
+                      />
                     </li>
                   ))}
                 </Card>

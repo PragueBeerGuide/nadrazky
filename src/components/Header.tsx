@@ -1,3 +1,4 @@
+import { UserRoundIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { authEnabled } from "@/lib/auth/config";
@@ -39,10 +40,7 @@ export async function Header() {
             authEnabled() && (
               // On the narrowest phones only the icon shows, so the header fits in 320 px.
               <Link href="/login" className={cn(buttonVariants({ variant: "ghost-dark", size: "xl" }), "h-11 gap-2 px-3 text-[15px] md:px-4")}>
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="8" r="4" />
-                  <path d="M4 21a8 8 0 0 1 16 0" />
-                </svg>
+                <UserRoundIcon className="size-5" />
                 <span className="max-[359px]:sr-only">{t("logIn")}</span>
               </Link>
             )

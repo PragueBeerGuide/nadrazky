@@ -31,7 +31,7 @@ test("signed out, the profile asks to log in first", async ({ page }) => {
 test("a new user's profile is empty and reachable from the account menu", async ({ page }, testInfo) => {
   const user = await signUp(page, testInfo);
   await page.getByLabel(`Account: @${user.username}`).click();
-  await page.getByRole("link", { name: "Your profile" }).click();
+  await page.getByRole("menuitem", { name: "Your profile" }).click();
   await expect(page).toHaveURL(/\/en\/profile$/);
   await expect(page.getByRole("heading", { level: 1, name: `@${user.username}` })).toBeVisible();
   await expect(stat(page, "pubs").value).toHaveText("0");
@@ -92,7 +92,7 @@ test("adds a hometown and a profile picture, shown in the header and next to che
   await expect(page.getByText("From Česká Třebová")).toBeVisible();
   const src = await page.locator("main h1 img").getAttribute("src");
   expect(src).toMatch(/^\/api\/avatar\/[\w-]+\?v=\d+$/);
-  await expect(page.locator("header summary img")).toHaveAttribute("src", src!);
+  await expect(page.locator("header [data-slot=dropdown-menu-trigger] img")).toHaveAttribute("src", src!);
 
   const picture = await page.request.get(src!);
   expect(picture.status()).toBe(200);

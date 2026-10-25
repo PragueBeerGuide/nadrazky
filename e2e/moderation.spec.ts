@@ -113,7 +113,7 @@ test("moderators reach the queue from the account menu, in Czech too", async ({ 
   const user = await signUp(page, testInfo, "", "moderator");
   await page.goto("/cs");
   await page.getByLabel(`Účet: @${user.username}`).click();
-  await page.getByRole("link", { name: /^Moderace/ }).click();
+  await page.getByRole("menuitem", { name: /^Moderace/ }).click();
   await expect(page).toHaveURL(/\/cs\/moderace$/);
   await expect(page.getByRole("heading", { level: 1, name: "Moderace" })).toBeVisible();
 });

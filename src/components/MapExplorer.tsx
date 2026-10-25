@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRightIcon, SearchIcon, XIcon } from "lucide-react";
 import { useDeferredValue, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -11,6 +12,7 @@ import { LineChip } from "./LineChip";
 import { PubMap, type MapStation } from "./PubMap";
 import { StatusChip } from "./StatusChip";
 import { Button, buttonVariants } from "./ui/button";
+import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
 import { Label } from "./ui/label";
@@ -247,10 +249,7 @@ export function MapExplorer({
               className="h-11 px-1.5"
             />
             <InputGroupAddon>
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true" className="size-5">
-                <circle cx="11" cy="11" r="6" />
-                <path d="m20 20-4.5-4.5" />
-              </svg>
+              <SearchIcon className="size-5" />
             </InputGroupAddon>
           </InputGroup>
           <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1">
@@ -271,7 +270,7 @@ export function MapExplorer({
         </div>
 
         {/* Computer: legend */}
-        <div className="absolute bottom-4 left-4 hidden flex-wrap gap-x-4 gap-y-2 rounded-[10px] bg-white px-3.5 py-2.5 text-[13px] font-medium shadow-[0_2px_8px_rgb(14_26_43/0.18)] md:flex">
+        <Card className="absolute bottom-4 left-4 hidden flex-row flex-wrap gap-x-4 gap-y-2 rounded-lg border-0 px-3.5 py-2.5 text-[13px] font-medium shadow-[0_2px_8px_rgb(14_26_43/0.18)] md:flex">
           {shownStatuses.map((s) => (
             <span key={s} className="inline-flex items-center gap-1.5">
               <span className="h-3 w-3 rounded-full" style={{ background: PIN[s] }} />
@@ -284,14 +283,14 @@ export function MapExplorer({
               {lt("line", { number: line })}
             </span>
           )}
-        </div>
+        </Card>
 
         {/* Phone: the selected station as a bottom sheet */}
         {selectedStation && (
-          <div className="absolute inset-x-0 bottom-0 z-10 flex max-h-[55%] flex-col gap-3 overflow-auto rounded-t-[20px] bg-white px-4 pt-2 pb-4 shadow-[0_-8px_24px_rgb(14_26_43/0.18)] md:hidden">
-            <span aria-hidden="true" className="h-[5px] w-10 self-center rounded-full bg-rule" />
+          <Card className="absolute inset-x-0 bottom-0 z-10 max-h-[55%] gap-3 overflow-auto rounded-none rounded-t-[20px] border-0 px-4 pt-2 pb-4 shadow-[0_-8px_24px_rgb(14_26_43/0.18)] md:hidden">
+            <span aria-hidden="true" className="h-[5px] w-10 shrink-0 self-center rounded-full bg-rule" />
             <StationSheet station={selectedStation} onClose={() => setSelected(null)} />
-          </div>
+          </Card>
         )}
       </section>
     </div>
@@ -371,9 +370,7 @@ function StationSheet({ station, onClose }: { station: MapStation; onClose: () =
           ))}
         </div>
         <Button variant="secondary" size="icon-lg" onClick={onClose} aria-label={t("close")} className="size-10 bg-platform text-ink">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
-            <path d="M6 6l12 12M18 6 6 18" />
-          </svg>
+          <XIcon strokeWidth={2.2} className="size-4" />
         </Button>
       </div>
       <span className="text-[13px] text-muted-foreground">{t("pubsHere", { count: station.pubs.length })}</span>
@@ -388,9 +385,7 @@ function StationSheet({ station, onClose }: { station: MapStation; onClose: () =
                   {kt(p.kind)} · <Ago months={p.monthsAgo} date={p.lastConfirmedAt} />
                 </span>
               </span>
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--muted-foreground)" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                <path d="m9 6 6 6-6 6" />
-              </svg>
+              <ChevronRightIcon className="size-4.5 shrink-0 text-muted-foreground" />
             </Link>
           </li>
         ))}

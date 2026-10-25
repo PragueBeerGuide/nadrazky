@@ -9,6 +9,9 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Alert } from "@/components/ui/alert";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 type Props = {
   slug: string;
@@ -63,24 +66,18 @@ function Form({ slug, name, kinds, current, onAnother }: Props & { onAnother: ()
 
       <fieldset className="flex flex-col" aria-describedby={state.fields?.kind ? "kind-error" : undefined}>
         <legend className="mb-3 font-display text-[22px] font-bold">{t("kindTitle")}</legend>
-        <div className="flex flex-col gap-2">
+        {/* Controlled, so the choice survives the form reset after a rejected submit */}
+        <RadioGroup name="kind" value={kind} onValueChange={(v) => setKind(v as ReportKind)} className="gap-2">
           {kinds.map((k) => (
-            <label
+            <Label
               key={k}
-              className="flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border border-field bg-white px-3.5 py-2.5 font-medium has-checked:border-sign has-checked:bg-sign-tint has-checked:text-sign has-focus-visible:outline-3 has-focus-visible:outline-yellow"
+              className="min-h-12 cursor-pointer gap-3 rounded-xl border border-field bg-white px-3.5 py-2.5 text-base leading-normal has-focus-visible:outline-3 has-focus-visible:outline-yellow has-data-checked:border-sign has-data-checked:bg-sign-tint has-data-checked:text-sign"
             >
-              <input
-                type="radio"
-                name="kind"
-                value={k}
-                defaultChecked={state.values?.kind === k}
-                onChange={() => setKind(k)}
-                className="size-5 shrink-0 accent-sign"
-              />
+              <RadioGroupItem value={k} className="size-5" />
               {t(`kinds.${k}`)}
-            </label>
+            </Label>
           ))}
-        </div>
+        </RadioGroup>
         {state.fields?.kind && (
           <p id="kind-error" className="mt-2 text-sm font-medium text-closed-ink">
             {t("errors.kind")}
@@ -143,7 +140,7 @@ function Form({ slug, name, kinds, current, onAnother }: Props & { onAnother: ()
       </div>
 
       {state.error && (
-        <div role="alert" className="rounded-xl bg-closed-bg px-4 py-3 text-[15px] font-medium text-closed-ink">
+        <Alert variant="error" className="rounded-xl">
           {state.error === "signIn" || state.error === "finishSignUp" ? (
             <Link href="/login" className="underline underline-offset-2">
               {t(`errors.${state.error}`)}
@@ -151,7 +148,7 @@ function Form({ slug, name, kinds, current, onAnother }: Props & { onAnother: ()
           ) : (
             <p>{t(`errors.${state.error}`, { max: DAILY_REPORT_LIMIT })}</p>
           )}
-        </div>
+        </Alert>
       )}
 
       <Button variant="yellow" size="xl" type="submit" disabled={pending} className="h-14 rounded-xl text-lg">

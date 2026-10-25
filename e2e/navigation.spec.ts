@@ -3,10 +3,12 @@ import { expect, test } from "./fixtures";
 test("the language switch keeps you on the same page", async ({ page }) => {
   await page.goto("/cs/hospody");
   await expect(page.getByRole("heading", { level: 1, name: "Nádražní hospody" })).toBeVisible();
-  await page.getByRole("button", { name: "English" }).click();
+  await page.getByRole("button", { name: "Jazyk: Čeština" }).click();
+  await page.getByRole("menuitemradio", { name: "English" }).click();
   await expect(page).toHaveURL(/\/en\/pubs$/);
   await expect(page.getByRole("heading", { level: 1, name: "Station pubs" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "English" })).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Language: English" }).click();
+  await expect(page.getByRole("menuitemradio", { name: "English" })).toHaveAttribute("aria-checked", "true");
 });
 
 test("the current section is marked in the navigation", async ({ page }, { project }) => {
