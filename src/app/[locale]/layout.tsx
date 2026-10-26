@@ -39,7 +39,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
           <Header />
-          <main className="flex-1 pb-[72px] md:pb-0">{children}</main>
+          <main className="flex-1">{children}</main>
           <Footer />
           <BottomNav />
         </NextIntlClientProvider>

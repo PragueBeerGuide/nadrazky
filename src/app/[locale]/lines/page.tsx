@@ -20,18 +20,21 @@ export default async function LinesPage({ params }: PageProps<"/[locale]/lines">
   return (
     <>
       <PageHero title={t("title")} subtitle={t("subtitle", { count: lines.length })} />
-      <ul className="mx-auto grid max-w-7xl grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3 px-4 py-8 md:gap-4 md:px-6 md:py-12">
+      <ul className="page-column grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-2.5 py-6 md:gap-4 md:py-12">
         {lines.map((l) => (
           <li key={l.number}>
             <Card
               render={<Link href={{ pathname: "/line/[number]", params: { number: l.number } }} />}
-              className="h-full gap-3 p-4 hover:border-sign md:p-5"
+              className="h-full flex-row items-center gap-3.5 p-3.5 hover:border-sign md:flex-col md:items-stretch md:gap-3 md:p-5"
             >
-              <span className="flex items-center justify-between">
+              <span className="flex shrink-0 items-center justify-between">
                 <LineChip number={l.number} size="lg" />
-                <span className="font-mono text-[13px] text-muted-foreground">{t("pubCount", { count: l.pubCount })}</span>
+                <span className="hidden font-mono text-[13px] text-muted-foreground md:inline">{t("pubCount", { count: l.pubCount })}</span>
               </span>
-              <span className="text-[17px] leading-snug font-semibold">{l.name}</span>
+              <span className="flex min-w-0 flex-col gap-0.5">
+                <span className="text-[17px] leading-snug font-semibold">{l.name}</span>
+                <span className="font-mono text-[13px] text-muted-foreground md:hidden">{t("pubCount", { count: l.pubCount })}</span>
+              </span>
             </Card>
           </li>
         ))}

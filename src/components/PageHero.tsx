@@ -14,8 +14,8 @@ export function PageHero({
 }) {
   return (
     <>
-      <section className="bg-sign px-4 pt-8 pb-8 text-white md:px-6 md:pt-12 md:pb-12">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3">
+      <section className="bg-sign pt-8 pb-8 text-white md:pt-12 md:pb-12">
+        <div className="page-column flex flex-col gap-3">
           {eyebrow && <p className="eyebrow">{eyebrow}</p>}
           <h1 className="text-5xl md:text-[64px]">{title}</h1>
           {subtitle && <p className="max-w-2xl text-lg text-sign-mist">{subtitle}</p>}

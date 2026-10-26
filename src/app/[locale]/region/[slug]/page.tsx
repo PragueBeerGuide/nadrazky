@@ -38,7 +38,7 @@ export default async function RegionPage({ params }: PageProps<"/[locale]/region
           </Link>
         </nav>
       </PageHero>
-      <div className="mx-auto max-w-4xl px-4 py-8 md:px-6 md:py-12">
+      <div className="page-column py-8 *:max-w-4xl md:py-12">
         <Card render={<ul />} className="gap-0 divide-y divide-rule-soft py-0">
           {pubs.map((p) => (
             <PubRow key={p.slug} pub={p} />

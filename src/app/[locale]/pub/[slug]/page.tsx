@@ -118,8 +118,8 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
 
   return (
     <article>
-      <section className="bg-sign px-4 pt-4 pb-7 text-white md:px-6 md:pt-6 md:pb-14">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 md:gap-8">
+      <section className="bg-sign pt-4 pb-7 text-white md:pt-6 md:pb-14">
+        <div className="page-column flex flex-col gap-6 md:gap-8">
           <Breadcrumb aria-label={nav("breadcrumb")}>
             <BreadcrumbList className={crumbs.list}>
               <BreadcrumbItem>
@@ -143,7 +143,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <div className="flex flex-wrap items-end justify-between gap-8 md:gap-10">
+          <div className="flex flex-wrap items-end justify-between gap-6 md:gap-10">
             <div className="flex min-w-0 flex-[1_1_520px] flex-col gap-4 md:gap-5">
               <StationSign name={station.name} size="lg" className="self-start" />
               <h1 className="text-[40px] md:text-[60px]">{pub.name}</h1>
@@ -157,7 +157,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
                     key={l.number}
                     variant="outline"
                     render={<Link href={{ pathname: "/line/[number]", params: { number: l.number } }} />}
-                    className="h-auto max-w-full gap-2 border-sign-line py-0.5 pr-3.5 pl-1 text-sm font-normal text-white [a]:hover:bg-sign-deep [a]:hover:text-white md:text-[15px]"
+                    className="h-auto max-w-full gap-2 border-sign-line py-0.5 pr-3.5 pl-1 text-sm max-sm:border-transparent max-sm:p-0 font-normal text-white [a]:hover:bg-sign-deep [a]:hover:text-white md:text-[15px]"
                   >
                     <LineChip number={l.number} className="rounded-full" />
                     <span className="hidden truncate sm:inline">{l.name}</span>
@@ -195,7 +195,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
       </section>
       <RailTrack />
 
-      <div className="mx-auto flex max-w-7xl flex-wrap items-start gap-6 px-4 pt-6 pb-12 md:gap-8 md:px-6 md:pt-12 md:pb-16">
+      <div className="page-column flex flex-wrap items-start gap-6 pt-6 pb-12 md:gap-8 md:pt-12 md:pb-16">
         <div className="flex min-w-0 flex-[999_1_560px] flex-col gap-6 md:gap-8">
           <Card render={<section />} className="block p-5 md:p-7">
             <h2 className="mb-5 text-[28px] md:text-[32px]">{t("about")}</h2>
@@ -226,12 +226,12 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
           {neighbours.length > 0 && (
             <section className="flex flex-col gap-4">
               <h2 className="text-[28px] md:text-[32px]">{t("alsoHere")}</h2>
-              <ul className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
+              <ul className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3 md:gap-4">
                 {neighbours.map((n) => (
                   <li key={n.slug}>
                     <Card
                       render={<Link href={{ pathname: "/pub/[slug]", params: { slug: n.slug } }} />}
-                      className="h-full gap-2.5 p-5 hover:border-sign"
+                      className="h-full gap-2 p-4 hover:border-sign md:gap-2.5 md:p-5"
                     >
                       <span className="text-lg font-semibold">{n.name}</span>
                       <span className="flex flex-wrap items-center gap-2">

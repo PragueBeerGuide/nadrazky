@@ -44,7 +44,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
   return (
     <>
       <section className="bg-sign text-white">
-        <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 pt-3 pb-7 md:gap-12 md:px-6 md:pt-14 md:pb-[72px] lg:grid-cols-2">
+        <div className="page-column grid items-center gap-8 pt-6 pb-8 md:gap-12 md:pt-14 md:pb-[72px] lg:grid-cols-2">
           <div className="flex flex-col gap-4 md:gap-6">
             <p className="eyebrow text-xs md:text-[13px]">{t("eyebrow")}</p>
             <h1 className="text-[52px] leading-[0.92] tracking-[-0.01em] md:text-[clamp(56px,8vw,104px)]">
@@ -103,7 +103,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         <RailTrack />
       </section>
 
-      <div className="px-4 pt-5 md:hidden">
+      <div className="page-column pt-6 md:hidden">
         <DepartureBoard
           pubs={board.slice(0, 4)}
           title={t("boardTitle")}
@@ -115,8 +115,8 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         />
       </div>
 
-      <section aria-label={t("statsTitle")} className="mt-6 border-y border-rule bg-white px-4 py-6 md:mt-0 md:border-t-0 md:px-6 md:py-10">
-        <dl className="mx-auto grid max-w-7xl grid-cols-2 gap-6 md:grid-cols-4">
+      <section aria-label={t("statsTitle")} className="mt-8 border-y border-rule bg-white py-6 md:mt-0 md:border-t-0 md:py-10">
+        <dl className="page-column grid grid-cols-2 gap-x-6 gap-y-5 md:grid-cols-4">
           {stats.map(([key, n, color]) => (
             <div key={key} className="flex flex-col-reverse gap-1">
               <dt className="text-sm text-muted-foreground md:text-base">{t(`stats.${key}`, { count: n })}</dt>
@@ -126,17 +126,17 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         </dl>
       </section>
 
-      <section className="px-4 pt-10 pb-6 md:px-6 md:pt-16">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 md:gap-6">
+      <section className="pt-8 pb-4 md:pt-16 md:pb-6">
+        <div className="page-column flex flex-col gap-4 md:gap-6">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="text-[30px] md:text-5xl">{t("byLine")}</h2>
             <Link href="/lines" className="link text-sm md:text-base">
               {t("allLines")}
             </Link>
           </div>
-          <ul className="-mx-4 flex snap-x gap-2.5 overflow-x-auto px-4 pb-1 md:mx-0 md:grid md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] md:gap-4 md:overflow-visible md:px-0">
+          <ul className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-2.5 overflow-x-auto px-4 pb-1 md:mx-0 md:grid md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] md:gap-4 md:overflow-visible md:px-0">
             {topLines.map((l) => (
-              <li key={l.number} className="w-[200px] shrink-0 snap-start md:w-auto">
+              <li key={l.number} className="w-[220px] shrink-0 snap-start md:w-auto">
                 <Card
                   render={<Link href={{ pathname: "/line/[number]", params: { number: l.number } }} />}
                   className="h-full gap-2.5 p-3.5 hover:border-sign md:gap-3.5 md:p-5"
@@ -153,20 +153,20 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         </div>
       </section>
 
-      <section className="px-4 pt-6 pb-12 md:px-6 md:pt-12 md:pb-16">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 md:gap-6">
+      <section className="pt-8 pb-10 md:pt-12 md:pb-16">
+        <div className="page-column flex flex-col gap-4 md:gap-6">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="text-[30px] md:text-5xl">{t("byRegion")}</h2>
             <Link href="/regions" className="link text-sm md:text-base">
               {t("allRegions")}
             </Link>
           </div>
-          <ul className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3">
+          <ul className="divide-y divide-rule-soft overflow-hidden rounded-xl border bg-card md:grid md:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] md:gap-3 md:divide-y-0 md:overflow-visible md:rounded-none md:border-0 md:bg-transparent">
             {byCount.map((r) => (
               <li key={r.slug}>
                 <Card
                   render={<Link href={{ pathname: "/region/[slug]", params: { slug: r.slug } }} />}
-                  className="gap-2.5 rounded-lg px-4.5 py-4 hover:border-sign"
+                  className="gap-2 rounded-none border-0 px-4 py-3 hover:bg-sign-tint md:gap-2.5 md:rounded-lg md:border md:px-4.5 md:py-4 md:hover:border-sign md:hover:bg-card"
                 >
                   <span className="flex items-baseline justify-between gap-3">
                     <span className="font-semibold">{isCs ? r.nameCs : r.nameEn}</span>
@@ -202,8 +202,8 @@ async function HelpBand({
   const rt = await getTranslations("regions");
   const steps = [t("step1"), t("step2"), t("step3")];
   return (
-    <section className="bg-yellow px-4 py-12 text-ink md:px-6 md:py-16">
-      <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2">
+    <section className="bg-yellow py-10 text-ink md:py-16">
+      <div className="page-column grid items-center gap-10 md:gap-12 lg:grid-cols-2">
         <div className="flex flex-col gap-5">
           <h2 className="text-[40px] leading-[0.95] md:text-[56px]">{t("helpTitle")}</h2>
           <p className="max-w-[40ch] text-lg md:text-[19px]">
@@ -226,7 +226,7 @@ async function HelpBand({
             </Link>
           </div>
         </div>
-        <div role="img" aria-label={t("badgesAlt")} className="flex flex-wrap justify-center gap-6">
+        <div role="img" aria-label={t("badgesAlt")} className="flex flex-wrap justify-center gap-x-4 gap-y-3 md:gap-6">
           {topLine && (
             <Badge ring="bg-sign" border="border-yellow" label={t("badgeLine")} title={topLine.number} titleClass="text-5xl text-sign" sub={rt("pubCount", { count: topLine.pubCount })} subClass="text-sign" />
           )}

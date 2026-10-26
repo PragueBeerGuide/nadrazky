@@ -34,7 +34,7 @@ export default async function ReportPage({ params }: PageProps<"/[locale]/pub/[s
   return (
     <>
       <PageHero eyebrow={`${t("title")} · ${station.name}`} title={pub.name} subtitle={t("intro", { name: pub.name })} />
-      <div className="mx-auto max-w-xl px-4 py-8 md:py-12">
+      <div className="page-column py-8 *:max-w-xl md:py-12">
         <ReportForm
           slug={pub.slug}
           name={pub.name}

@@ -125,7 +125,7 @@ export default async function PrivacyPage({ params }: PageProps<"/[locale]/priva
   return (
     <>
       <PageHero title={t("title")} subtitle={t("subtitle", { date })} />
-      <div className="mx-auto flex max-w-2xl flex-col gap-10 px-4 py-10 md:py-14">
+      <div className="page-column flex flex-col gap-10 py-10 *:max-w-2xl md:py-14">
         <Card render={<section />} aria-labelledby="summary" className="flex flex-col gap-4 p-5 md:p-7">
           <h2 id="summary" className="text-[28px]">
             {t("summaryTitle")}

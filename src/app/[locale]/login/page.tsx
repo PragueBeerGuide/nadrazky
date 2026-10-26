@@ -55,7 +55,7 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[l
   return (
     <>
       <PageHero title={user ? t("finishTitle") : t("title")} subtitle={user ? t("finishText") : t("subtitle")} />
-      <div className="mx-auto flex max-w-lg flex-col gap-4 px-4 py-8 md:py-12">
+      <div className="page-column flex flex-col gap-4 py-8 *:max-w-lg md:py-12">
         {user ? (
           <Card render={<section />} className="flex flex-col gap-5 p-5 md:p-7">
             <p className="text-[15px] text-muted-foreground">{t("signedInAs", { email: user.email ?? user.name ?? "" })}</p>

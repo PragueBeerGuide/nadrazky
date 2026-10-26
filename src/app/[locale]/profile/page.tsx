@@ -73,8 +73,8 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
         }
       />
 
-      <section aria-label={t("statsTitle")} className="border-b border-rule bg-white px-4 py-6 md:px-6 md:py-10">
-        <dl className="mx-auto grid max-w-7xl grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
+      <section aria-label={t("statsTitle")} className="border-b border-rule bg-white py-6 md:py-10">
+        <dl className="page-column grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
           {numbers.map(({ key, n, ...rest }) => (
             // column-reverse keeps <dt> first for screen readers; justify-end lines the numbers up at the top.
             <div key={key} className="flex flex-col-reverse justify-end gap-1" data-testid={`stat-${key}`}>
@@ -88,7 +88,7 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
         </dl>
       </section>
 
-      <div className="mx-auto flex max-w-7xl flex-col gap-10 px-4 py-8 md:px-6 md:py-12">
+      <div className="page-column flex flex-col gap-10 py-8 md:py-12">
         {stats.checkIns === 0 ? (
           <Card render={<section />} className="flex flex-col items-start gap-3 p-5 md:p-7">
             <h2 className="text-[28px]">{t("emptyTitle")}</h2>

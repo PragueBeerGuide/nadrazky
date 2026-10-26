@@ -40,7 +40,7 @@ export default async function CheckInPage({ params }: PageProps<"/[locale]/pub/[
   return (
     <>
       <PageHero eyebrow={`${t("title")} · ${station.name}`} title={pub.name} />
-      <div className="mx-auto flex max-w-xl flex-col gap-4 px-4 py-8 md:py-12">
+      <div className="page-column flex flex-col gap-4 py-8 *:max-w-xl md:py-12">
         {done ? (
           <Card render={<section />} className="flex flex-col gap-4 p-5 md:p-7">
             <h2 className="text-[28px]">{t("alreadyTitle")}</h2>
