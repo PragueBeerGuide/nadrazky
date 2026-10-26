@@ -98,6 +98,7 @@
     "colType": "Type",
     "colStatus": "Status",
     "colConfirmed": "Confirmed",
+    "colActions": "Actions",
     "results": "{count, plural, one {# pub} other {# pubs}}",
     "clear": "Clear filters",
     "empty": "Nothing found. Try another station name."
@@ -138,7 +139,17 @@
     "recentCheckIns": "Latest check-ins",
     "reportedOpen": "Open",
     "reportedClosed": "Closed",
-    "rating": "Rating {count} of 5"
+    "rating": "Rating {count} of 5",
+    "delete": {
+      "button": "Delete pub",
+      "label": "Delete {name}",
+      "hint": "Moderators and admins can delete a pub that doesn't belong here.",
+      "title": "Delete {name}?",
+      "text": "It disappears from lists, the map, counts and everyone's profile. Its check-ins and reports are kept in the database.",
+      "cancel": "Cancel",
+      "confirm": "Delete",
+      "done": "{name} is deleted."
+    }
   },
   "status": {
     "open": "Open",

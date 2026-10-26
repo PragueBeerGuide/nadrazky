@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Ago } from "@/components/Ago";
+import { DeletePubButton } from "@/components/DeletePubButton";
 import { LineChip } from "@/components/LineChip";
 import { StatusChip } from "@/components/StatusChip";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -13,6 +14,8 @@ import { Label } from "@/components/ui/label";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { getCurrentUser } from "@/lib/auth/currentUser";
+import { canDeletePubs } from "@/lib/auth/roles";
 import { listLines, listPubs, listRegions, type PubListItem, type PubStatus } from "@/lib/queries";
 import { czechInitial } from "@/lib/czech";
 import { PIN } from "@/lib/map";
@@ -43,11 +46,14 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
   const t = await getTranslations("pubs");
   const st = await getTranslations("status");
   const kt = await getTranslations("kind");
-  const [all, regions, lines] = await Promise.all([
+  const [all, regions, lines, user] = await Promise.all([
     listPubs({ q, region: region || undefined, line: line || undefined }),
     listRegions(locale),
     listLines(),
+    getCurrentUser(),
   ]);
+  // Moderators and admins get a delete button on every row.
+  const canDelete = canDeletePubs(user?.role);
   const isCs = locale === "cs";
   const counts = Object.fromEntries(STATUSES.map((s) => [s, all.filter((p) => p.status === s).length])) as Record<PubStatus, number>;
   // listPubs already returns them in Czech alphabetical order.
@@ -183,16 +189,21 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
                 <TableHead scope="col" className={head}>
                   <span className="sr-only md:not-sr-only">{t("colStatus")}</span>
                 </TableHead>
-                <TableHead scope="col" className={cn(head, "hidden pr-6 text-right md:table-cell")}>
+                <TableHead scope="col" className={cn(head, "hidden text-right md:table-cell", canDelete ? "pr-4" : "pr-6")}>
                   {t("colConfirmed")}
                 </TableHead>
+                {canDelete && (
+                  <TableHead scope="col" className={cn(head, "pr-4 md:pr-6")}>
+                    <span className="sr-only">{t("colActions")}</span>
+                  </TableHead>
+                )}
               </TableRow>
             </TableHeader>
             {groups.map((g) => (
               <TableBody key={g.letter} id={anchor(g.letter)} className="scroll-mt-4">
                 <TableRow className="border-t border-b-rule-soft hover:bg-transparent">
                   <TableHead
-                    colSpan={7}
+                    colSpan={canDelete ? 8 : 7}
                     scope="rowgroup"
                     className="h-auto bg-platform px-4 py-2.5 font-display text-[28px] leading-none font-bold text-sign md:px-6"
                   >
@@ -224,9 +235,14 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
                     <TableCell className="px-4 py-3 text-right md:text-left">
                       <StatusChip status={p.status} />
                     </TableCell>
-                    <TableCell className="hidden py-3 pr-6 pl-4 text-right font-mono text-[13px] text-muted-foreground md:table-cell">
+                    <TableCell className={cn("hidden py-3 pl-4 text-right font-mono text-[13px] text-muted-foreground md:table-cell", canDelete ? "pr-4" : "pr-6")}>
                       <Ago months={p.monthsAgo} date={p.lastConfirmedAt} />
                     </TableCell>
+                    {canDelete && (
+                      <TableCell className="py-2 pr-4 pl-0 text-right md:pr-6">
+                        <DeletePubButton id={p.id} name={p.name} compact />
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>

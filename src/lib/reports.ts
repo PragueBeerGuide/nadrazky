@@ -5,6 +5,7 @@ import { db, schema as s } from "@/db";
 import type { Role } from "./auth/roles";
 import { checkInDay, TIME_ZONE } from "./checkin";
 import { changeFor, isAutoApproved, type ReportKind } from "./report";
+import { livePub } from "./queries";
 
 const { pubReports, pubs, stations, users } = s;
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
@@ -70,7 +71,11 @@ export async function resolveReport(reportId: number, moderatorId: string, decis
 }
 
 export async function countOpenReports() {
-  const [row] = await db.select({ count: count() }).from(pubReports).where(eq(pubReports.status, "open"));
+  const [row] = await db
+    .select({ count: count() })
+    .from(pubReports)
+    .innerJoin(pubs, eq(pubs.id, pubReports.pubId))
+    .where(and(eq(pubReports.status, "open"), livePub));
   return row?.count ?? 0;
 }
 
@@ -102,7 +107,7 @@ function reportsQuery() {
   return db
     .select(reportFields)
     .from(pubReports)
-    .innerJoin(pubs, eq(pubs.id, pubReports.pubId))
+    .innerJoin(pubs, and(eq(pubs.id, pubReports.pubId), livePub))
     .innerJoin(stations, eq(stations.id, pubs.stationId))
     .innerJoin(reporter, eq(reporter.id, pubReports.userId))
     .leftJoin(resolver, eq(resolver.id, pubReports.resolvedBy));

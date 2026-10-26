@@ -2,6 +2,7 @@ import "server-only";
 import { and, count, countDistinct, desc, eq, gt, max, sql, type AnyColumn } from "drizzle-orm";
 import { db, schema as s } from "@/db";
 import { checkInDay } from "./checkin";
+import { livePub } from "./queries";
 
 const { checkins, users, pubs, stations, stationLines, regions } = s;
 
@@ -85,13 +86,13 @@ export async function getUserStats(userId: string) {
       .from(checkins)
       .innerJoin(pubs, eq(pubs.id, checkins.pubId))
       .innerJoin(stations, eq(stations.id, pubs.stationId))
-      .where(eq(checkins.userId, userId)),
+      .where(and(eq(checkins.userId, userId), livePub)),
     db
       .select({ lines: countDistinct(stationLines.lineNumber) })
       .from(checkins)
       .innerJoin(pubs, eq(pubs.id, checkins.pubId))
       .innerJoin(stationLines, eq(stationLines.stationId, pubs.stationId))
-      .where(eq(checkins.userId, userId)),
+      .where(and(eq(checkins.userId, userId), livePub)),
   ]);
   return { ...totals, lines: lines?.lines ?? 0 };
 }
@@ -109,7 +110,7 @@ export async function getRegionProgress(userId: string) {
     })
     .from(regions)
     .leftJoin(stations, eq(stations.regionSlug, regions.slug))
-    .leftJoin(pubs, eq(pubs.stationId, stations.id))
+    .leftJoin(pubs, and(eq(pubs.stationId, stations.id), livePub))
     .groupBy(regions.slug);
 }
 
@@ -126,7 +127,7 @@ export async function listVisitedPubs(userId: string) {
     .from(checkins)
     .innerJoin(pubs, eq(pubs.id, checkins.pubId))
     .innerJoin(stations, eq(stations.id, pubs.stationId))
-    .where(eq(checkins.userId, userId))
+    .where(and(eq(checkins.userId, userId), livePub))
     .groupBy(pubs.id, stations.name)
     .orderBy(desc(max(checkins.createdAt)));
 }

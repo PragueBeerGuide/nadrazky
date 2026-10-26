@@ -1,11 +1,14 @@
 import "server-only";
-import { and, asc, count, eq, ilike, inArray, or, sql } from "drizzle-orm";
+import { and, asc, count, eq, ilike, inArray, isNull, or, sql, type SQL } from "drizzle-orm";
 import { db, schema as s } from "@/db";
 import { compareCzech } from "./czech";
 import { fold } from "./slug";
 import { orderAlongLine } from "./lineOrder";
 
 const { pubs, stations, regions, railLines, stationLines } = s;
+
+/** Pubs that aren't deleted. Every query that lists, counts or looks up pubs applies it. */
+export const livePub = isNull(pubs.deletedAt);
 
 export type PubStatus = (typeof s.pubStatus.enumValues)[number];
 export type PubKind = (typeof s.pubKind.enumValues)[number];
@@ -21,6 +24,7 @@ export const confirmedMonthsAgo = sql<number | null>`coalesce(
 
 /** Columns shared by every pub listing. */
 const pubListFields = {
+  id: pubs.id,
   slug: pubs.slug,
   name: pubs.name,
   kind: pubs.kind,
@@ -51,7 +55,7 @@ export async function listPubs(filters: {
   line?: string;
   status?: PubStatus[];
 } = {}) {
-  const where = [];
+  const where: (SQL | undefined)[] = [livePub];
   if (filters.region) where.push(eq(stations.regionSlug, filters.region));
   if (filters.status?.length) where.push(inArray(pubs.status, filters.status));
   if (filters.line) {
@@ -96,7 +100,7 @@ export async function getPub(slug: string) {
     .from(pubs)
     .innerJoin(stations, eq(stations.id, pubs.stationId))
     .leftJoin(regions, eq(regions.slug, stations.regionSlug))
-    .where(eq(pubs.slug, slug))
+    .where(and(eq(pubs.slug, slug), livePub))
     .limit(1);
   if (!row) return null;
   const lines = await db
@@ -108,7 +112,7 @@ export async function getPub(slug: string) {
   const neighbours = await db
     .select({ slug: pubs.slug, name: pubs.name, status: pubs.status, kind: pubs.kind })
     .from(pubs)
-    .where(and(eq(pubs.stationId, row.station.id), sql`${pubs.id} <> ${row.pub.id}`));
+    .where(and(eq(pubs.stationId, row.station.id), sql`${pubs.id} <> ${row.pub.id}`, livePub));
   neighbours.sort((a, b) => compareCzech(a.name, b.name));
   return { ...row, lines, neighbours };
 }
@@ -124,7 +128,7 @@ export async function listRegions(locale: "cs" | "en" = "cs") {
     })
     .from(regions)
     .leftJoin(stations, eq(stations.regionSlug, regions.slug))
-    .leftJoin(pubs, eq(pubs.stationId, stations.id))
+    .leftJoin(pubs, and(eq(pubs.stationId, stations.id), livePub))
     .groupBy(regions.slug);
   const collator = new Intl.Collator(locale);
   return rows.sort((a, b) => collator.compare(locale === "cs" ? a.nameCs : a.nameEn, locale === "cs" ? b.nameCs : b.nameEn));
@@ -144,7 +148,7 @@ export async function listLines() {
     })
     .from(railLines)
     .innerJoin(stationLines, eq(stationLines.lineNumber, railLines.number))
-    .innerJoin(pubs, eq(pubs.stationId, stationLines.stationId))
+    .innerJoin(pubs, and(eq(pubs.stationId, stationLines.stationId), livePub))
     .groupBy(railLines.number)
     .orderBy(asc(railLines.number));
 }
@@ -162,7 +166,8 @@ export async function getTotals() {
       unknown: sql<number>`count(*) filter (where ${pubs.status} = 'unknown')`.mapWith(Number),
       stations: sql<number>`count(distinct ${pubs.stationId})`.mapWith(Number),
     })
-    .from(pubs);
+    .from(pubs)
+    .where(livePub);
   return row;
 }
 

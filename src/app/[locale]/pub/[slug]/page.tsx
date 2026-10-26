@@ -24,11 +24,12 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
-import { canEditRailData } from "@/lib/auth/roles";
+import { canDeletePubs, canEditRailData } from "@/lib/auth/roles";
 import { getCheckInSummary, hasCheckedInToday, listRecentCheckIns } from "@/lib/checkins";
 import { avatarUrl } from "@/lib/profile";
 import { Avatar } from "@/components/Avatar";
 import { getLineStops, getPub } from "@/lib/queries";
+import { DeletePubButton } from "@/components/DeletePubButton";
 
 // Breadcrumbs on the sign-blue band
 const crumbs = {
@@ -222,6 +223,12 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
                 {rt("link")}
               </Link>
             </p>
+            {canDeletePubs(user?.role) && (
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-rule-soft pt-4">
+                <p className="text-sm text-muted-foreground">{t("delete.hint")}</p>
+                <DeletePubButton id={pub.id} name={pub.name} />
+              </div>
+            )}
           </Card>
 
           {route && mainLine && (
