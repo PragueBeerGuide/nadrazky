@@ -78,6 +78,13 @@
       "when": 1792879631637,
       "tag": "0010_drop_beer_shot_flags",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1793019729799,
+      "tag": "0011_friend_requests",
+      "breakpoints": true
     }
   ]
 }

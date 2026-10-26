@@ -5,4 +5,4 @@ export const DATA_CONTROLLER = {
 };
 
 /** Change this date whenever the privacy page's content changes. */
-export const PRIVACY_UPDATED = "2026-10-24";
+export const PRIVACY_UPDATED = "2026-10-26";

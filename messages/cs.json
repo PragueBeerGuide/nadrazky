@@ -306,6 +306,38 @@
       "pictureFormat": "Tuhle fotku neumíme načíst. Použij fotku ve formátu JPEG nebo PNG."
     }
   },
+  "friends": {
+    "title": "Přátelé",
+    "subtitle": "{count, plural, =0 {Najdi další štamgasty nádražek podle přezdívky.} one {Máš # přítele.} few {Máš # přátele.} other {Máš # přátel.}}",
+    "searchTitle": "Najít lidi",
+    "searchLabel": "Přezdívka",
+    "searchPlaceholder": "např. pivar_42",
+    "search": "Hledat",
+    "searchHint": "Lidi najdeš jen podle přezdívky.",
+    "searchInvalid": "Napiš aspoň 2 znaky přezdívky: a–z, číslice nebo _.",
+    "noResults": "Nikdo nemá v přezdívce „{query}“.",
+    "resultsTitle": "Výsledky hledání",
+    "incomingTitle": "Žádosti o přátelství",
+    "outgoingTitle": "Odeslané žádosti",
+    "friendsTitle": "Tvoji přátelé",
+    "noFriends": "Zatím tu nikdo není. Vyhledej někoho nahoře a pošli žádost o přátelství.",
+    "add": "Přidat do přátel",
+    "pending": "Čeká",
+    "cancel": "Zrušit žádost",
+    "accept": "Přijmout",
+    "decline": "Odmítnout",
+    "remove": "Odebrat",
+    "friend": "Přátelé",
+    "menuLink": "Přátelé",
+    "menuCount": "{count, plural, one {# nová} few {# nové} other {# nových}}",
+    "profileTitle": "Přátelé",
+    "profileFriends": "{count, plural, =0 {Zatím žádní přátelé.} one {# přítel} few {# přátelé} other {# přátel}}",
+    "profileRequests": "{count, plural, one {Čeká na tebe # žádost} few {Čekají na tebe # žádosti} other {Čeká na tebe # žádostí}}",
+    "profileLink": "Přátelé a žádosti",
+    "toasts": {
+      "send": "Žádost o přátelství pro @{username} je odeslaná"
+    }
+  },
   "checkIn": {
     "title": "Odbavení",
     "hadTitle": "Co sis dal(a)?",
@@ -450,6 +482,11 @@
       "title": "Hlášení změn",
       "p1": "Když nahlásíš změnu u hospody, uložíme hlášení k tvému účtu a přezdívce. Vidí ho moderátoři a správci, aby ho mohli zkontrolovat a upravit stránku hospody. Hlášení nejsou veřejná."
     },
+    "friends": {
+      "title": "Přátelé",
+      "p1": "Ostatní přihlášení uživatelé tě můžou najít podle přezdívky a poslat ti žádost o přátelství. Ukládáme, kdo koho požádal, kdy a jestli žádost přijal, nebo odmítl.",
+      "p2": "Žádost vidíte jen vy dva, stejně jako seznam tvých přátel. Odmítnutí je tiché: druhá strana se o něm nedozví. Kdokoli z vás může přátelství kdykoli zrušit, a tím ho smažeme."
+    },
     "cookies": {
       "title": "Cookies",
       "p1": "Používáme jen cookies, bez kterých web nefunguje, takže se na souhlas neptáme:",
@@ -472,7 +509,7 @@
     },
     "retention": {
       "title": "Jak dlouho údaje uchováváme",
-      "account": "Účet, profil a odbavení: dokud účet nesmažeme. Se smazáním účtu zmizí i tvá odbavení.",
+      "account": "Účet, profil, odbavení a přátelé: dokud účet nesmažeme. Se smazáním účtu zmizí i tvá odbavení a žádosti o přátelství.",
       "session": "Přihlašovací cookies: dokud se neodhlásíš, nejvýš 90 dní od poslední návštěvy.",
       "logs": "Serverové logy Vercelu: krátkou dobu podle nastavení Vercelu."
     },

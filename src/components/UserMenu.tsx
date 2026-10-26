@@ -16,15 +16,18 @@ type Props = {
   finished: boolean;
   /** Reports waiting for review; set only for moderators and admins. */
   waiting: number | null;
+  /** Friend requests waiting for the user's answer. */
+  requests: number;
 };
 
 const item = cn(buttonVariants({ variant: "ghost" }), "h-11 w-full justify-start px-3 text-[15px] font-medium");
 
 /** The signed-in user in the header: their picture, which opens a popover with the profile and log out. */
-export function UserMenu({ user, finished, waiting }: Props) {
+export function UserMenu({ user, finished, waiting, requests }: Props) {
   const t = useTranslations("auth");
   const pt = useTranslations("profile");
   const mt = useTranslations("moderation");
+  const ft = useTranslations("friends");
   const locale = useLocale();
   const [open, setOpen] = useState(false);
   const label = user.username ? `@${user.username}` : (user.name ?? user.email ?? "");
@@ -39,7 +42,10 @@ export function UserMenu({ user, finished, waiting }: Props) {
       >
         <Avatar url={user.avatarUrl} name={initial} size={32} />
         <span className="hidden max-w-[16ch] truncate text-[15px] font-semibold md:inline">{label}</span>
-        {!finished && <span className="size-2 rounded-full bg-yellow md:hidden" aria-hidden="true" />}
+        {/* Sign-up to finish (on phones, where the name is hidden) or friend requests to answer */}
+        {(!finished || requests > 0) && (
+          <span className={`size-2 rounded-full bg-yellow ${requests > 0 ? "" : "md:hidden"}`} aria-hidden="true" />
+        )}
       </PopoverTrigger>
       <PopoverContent align="end" sideOffset={8} className="z-[1100] w-64 gap-1 rounded-xl p-2 shadow-[0_16px_40px_rgb(14_26_43/0.28)]">
         <PopoverHeader className="min-w-0 px-3 pt-2 pb-3">
@@ -49,9 +55,15 @@ export function UserMenu({ user, finished, waiting }: Props) {
         </PopoverHeader>
         <nav className="flex flex-col">
           {finished ? (
-            <Link href="/profile" onClick={close} className={item}>
-              {pt("menuLink")}
-            </Link>
+            <>
+              <Link href="/profile" onClick={close} className={item}>
+                {pt("menuLink")}
+              </Link>
+              <Link href="/friends" onClick={close} className={cn(item, "justify-between")}>
+                {ft("menuLink")}
+                {requests > 0 && <Badge className="bg-yellow font-mono font-semibold text-ink">{ft("menuCount", { count: requests })}</Badge>}
+              </Link>
+            </>
           ) : (
             <Link href="/login" onClick={close} className={cn(item, "font-semibold")}>
               <span className="size-2 rounded-full bg-yellow" aria-hidden="true" />
