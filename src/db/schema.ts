@@ -243,6 +243,39 @@ export const pubReports = pgTable(
   ],
 );
 
+export const friendRequestStatus = pgEnum("friend_request_status", ["pending", "accepted", "declined"]);
+
+/**
+ * Friend requests, and the friendships they become once accepted. One row per pair of
+ * users whichever way it was sent (the unique index on the pair), never to oneself.
+ * The rules for sending, accepting and the rest are in src/lib/friend.ts.
+ */
+export const friendRequests = pgTable(
+  "friend_requests",
+  {
+    id: serial("id").primaryKey(),
+    requesterId: text("requester_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    recipientId: text("recipient_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    status: friendRequestStatus("status").notNull().default("pending"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    /** When the recipient accepted or declined it. */
+    respondedAt: timestamp("responded_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("friend_requests_pair_idx").on(
+      sql`least(${t.requesterId}, ${t.recipientId})`,
+      sql`greatest(${t.requesterId}, ${t.recipientId})`,
+    ),
+    index("friend_requests_recipient_idx").on(t.recipientId, t.status),
+    index("friend_requests_requester_idx").on(t.requesterId, t.status),
+    check("friend_requests_not_self_check", sql`${t.requesterId} <> ${t.recipientId}`),
+  ],
+);
+
 export type Pub = typeof pubs.$inferSelect;
 export type User = typeof users.$inferSelect;
 export type Station = typeof stations.$inferSelect;

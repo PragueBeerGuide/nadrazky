@@ -19,6 +19,7 @@ export const routing = defineRouting({
     "/login": { cs: "/prihlaseni", en: "/login" },
     "/privacy": { cs: "/ochrana-soukromi", en: "/privacy" },
     "/profile": { cs: "/profil", en: "/profile" },
+    "/friends": { cs: "/pratele", en: "/friends" },
     "/moderation": { cs: "/moderace", en: "/moderation" },
   },
 });

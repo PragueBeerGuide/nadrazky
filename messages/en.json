@@ -306,6 +306,35 @@
       "pictureFormat": "We can't read that picture. Use a JPEG or PNG photo."
     }
   },
+  "friends": {
+    "title": "Friends",
+    "subtitle": "{count, plural, =0 {Find other station-pub regulars by their username.} one {You have # friend.} other {You have # friends.}}",
+    "searchTitle": "Find people",
+    "searchLabel": "Username",
+    "searchPlaceholder": "e.g. pivar_42",
+    "search": "Search",
+    "searchHint": "People can be found by their username only.",
+    "searchInvalid": "Type at least 2 characters of a username: a–z, digits or _.",
+    "noResults": "Nobody's username contains “{query}”.",
+    "resultsTitle": "Search results",
+    "incomingTitle": "Friend requests",
+    "outgoingTitle": "Requests you sent",
+    "friendsTitle": "Your friends",
+    "noFriends": "No friends yet. Search for someone above and send them a request.",
+    "add": "Add friend",
+    "sent": "Request sent",
+    "cancel": "Cancel",
+    "accept": "Accept",
+    "decline": "Decline",
+    "remove": "Remove",
+    "friend": "Friends",
+    "menuLink": "Friends",
+    "menuCount": "{count} new",
+    "profileTitle": "Friends",
+    "profileFriends": "{count, plural, =0 {No friends yet.} one {# friend} other {# friends}}",
+    "profileRequests": "{count, plural, one {# request is waiting for you} other {# requests are waiting for you}}",
+    "profileLink": "Friends and requests"
+  },
   "checkIn": {
     "title": "Check in",
     "hadTitle": "What did you have?",
@@ -450,6 +479,11 @@
       "title": "Reports of changes",
       "p1": "When you report a change to a pub, we store the report with your account and username. Moderators and admins see it so they can check it and change the pub page. Reports are not shown publicly."
     },
+    "friends": {
+      "title": "Friends",
+      "p1": "Other signed-in users can find you by your username and send you a friend request. We store who asked whom, when, and whether the request was accepted or declined.",
+      "p2": "A request is visible only to the two of you, and so is your friends list. Declining is quiet: the other person isn't told. Either of you can remove the friendship at any time, which deletes it."
+    },
     "cookies": {
       "title": "Cookies",
       "p1": "We only use cookies the site needs to work, so we don't ask for consent:",
@@ -472,7 +506,7 @@
     },
     "retention": {
       "title": "How long we keep it",
-      "account": "Your account, profile and check-ins: until your account is deleted. Deleting it removes your check-ins too.",
+      "account": "Your account, profile, check-ins and friends: until your account is deleted. Deleting it removes your check-ins and friend requests too.",
       "session": "Sign-in cookies: until you log out, at most 90 days without a visit.",
       "logs": "Vercel's server logs: a short time, as set by Vercel."
     },
