@@ -1,0 +1,810 @@
+[
+  {
+    "number": "001",
+    "nameCs": "Praha – Česká Třebová – Přerov – Bohumín"
+  },
+  {
+    "number": "010",
+    "nameCs": "Kolín – Česká Třebová"
+  },
+  {
+    "number": "011",
+    "nameCs": "Praha – Kolín"
+  },
+  {
+    "number": "012",
+    "nameCs": "Pečky – Kouřim"
+  },
+  {
+    "number": "014",
+    "nameCs": "Kolín – Ledečko"
+  },
+  {
+    "number": "015",
+    "nameCs": "Přelouč – Prachovice"
+  },
+  {
+    "number": "016",
+    "nameCs": "Borohrádek – Chrudim"
+  },
+  {
+    "number": "017",
+    "nameCs": "Česká Třebová – Dzbel"
+  },
+  {
+    "number": "018",
+    "nameCs": "Choceň – Litomyšl"
+  },
+  {
+    "number": "020",
+    "nameCs": "Praha – Velký Osek – Hradec Králové"
+  },
+  {
+    "number": "021",
+    "nameCs": "Hradec Králové – Týniště nad Orlicí – Letohrad"
+  },
+  {
+    "number": "023",
+    "nameCs": "Doudleby nad Orlicí – Rokytnice v Orlických horách"
+  },
+  {
+    "number": "024",
+    "nameCs": "Ústí nad Orlicí – Štíty"
+  },
+  {
+    "number": "025",
+    "nameCs": "Dolní Lipka – Hanušovice"
+  },
+  {
+    "number": "026",
+    "nameCs": "Choceň – Týniště nad Orlicí – Náchod"
+  },
+  {
+    "number": "027",
+    "nameCs": "Starkoč – Meziměstí – Broumov"
+  },
+  {
+    "number": "028",
+    "nameCs": "Chlumec nad Cidlinou – Křinec"
+  },
+  {
+    "number": "030",
+    "nameCs": "Pardubice – Liberec"
+  },
+  {
+    "number": "032",
+    "nameCs": "Jaroměř – Trutnov – Svoboda nad Úpou"
+  },
+  {
+    "number": "034",
+    "nameCs": "Smržovka – Josefův Důl"
+  },
+  {
+    "number": "035",
+    "nameCs": "Železný Brod – Tanvald"
+  },
+  {
+    "number": "036",
+    "nameCs": "Liberec – Tanvald – Harrachov – Szklarska Poręba"
+  },
+  {
+    "number": "037",
+    "nameCs": "Liberec – Jindřichovice pod Smrkem"
+  },
+  {
+    "number": "038",
+    "nameCs": "Raspenava – Bílý Potok pod Smrkem"
+  },
+  {
+    "number": "040",
+    "nameCs": "Chlumec nad Cidlinou – Trutnov"
+  },
+  {
+    "number": "041",
+    "nameCs": "Hradec Králové – Jičín – Turnov"
+  },
+  {
+    "number": "042",
+    "nameCs": "Martinice v Krkonoších – Rokytnice nad Jizerou"
+  },
+  {
+    "number": "043",
+    "nameCs": "Trutnov – Královec – Lubawka/Žacléř"
+  },
+  {
+    "number": "044",
+    "nameCs": "Kunčice nad Labem – Vrchlabí"
+  },
+  {
+    "number": "045",
+    "nameCs": "Trutnov – Svoboda nad Úpou"
+  },
+  {
+    "number": "046",
+    "nameCs": "Lomnice nad Popelkou – Stará Paka"
+  },
+  {
+    "number": "047",
+    "nameCs": "Trutnov – Teplice nad Metují"
+  },
+  {
+    "number": "060",
+    "nameCs": "Poříčany – Nymburk"
+  },
+  {
+    "number": "061",
+    "nameCs": "Nymburk – Jičín"
+  },
+  {
+    "number": "062",
+    "nameCs": "Nymburk – Mladá Boleslav"
+  },
+  {
+    "number": "063",
+    "nameCs": "Bakov nad Jizerou – Dolní Bousov"
+  },
+  {
+    "number": "064",
+    "nameCs": "Mšeno – Mladá Boleslav – Lomnice nad Popelkou"
+  },
+  {
+    "number": "070",
+    "nameCs": "Praha-Čakovice – Turnov"
+  },
+  {
+    "number": "071",
+    "nameCs": "Praha – Praha-Čakovice"
+  },
+  {
+    "number": "072",
+    "nameCs": "Ústí nad Labem – Lysá nad Labem"
+  },
+  {
+    "number": "073",
+    "nameCs": "Ústí nad Labem-Střekov – Děčín"
+  },
+  {
+    "number": "074",
+    "nameCs": "Čelákovice – Neratovice"
+  },
+  {
+    "number": "076",
+    "nameCs": "Mělník – Mšeno"
+  },
+  {
+    "number": "080",
+    "nameCs": "Bakov nad Jizerou – Jedlová"
+  },
+  {
+    "number": "081",
+    "nameCs": "Děčín – Benešov nad Ploučnicí – Rumburk/Česká Lípa"
+  },
+  {
+    "number": "082",
+    "nameCs": "Česká Kamenice – Kamenický Šenov"
+  },
+  {
+    "number": "083",
+    "nameCs": "Rumburk – Dolní Poustevna – Sebnitz – Bad Schandau – Děčín"
+  },
+  {
+    "number": "084",
+    "nameCs": "Rumburk – Panský – Mikulášovice"
+  },
+  {
+    "number": "085",
+    "nameCs": "Rybniště – Varnsdorf"
+  },
+  {
+    "number": "086",
+    "nameCs": "Liberec – Česká Lípa"
+  },
+  {
+    "number": "087",
+    "nameCs": "Lovosice – Česká Lípa"
+  },
+  {
+    "number": "088",
+    "nameCs": "Rumburk – Ebersbach"
+  },
+  {
+    "number": "089",
+    "nameCs": "Liberec – Zittau – Varnsdorf Seifhennersdorf"
+  },
+  {
+    "number": "090",
+    "nameCs": "Praha – Ústí nad Labem – Děčín"
+  },
+  {
+    "number": "091",
+    "nameCs": "Praha – Kralupy nad Vltavou"
+  },
+  {
+    "number": "092",
+    "nameCs": "Neratovice – Kralupy nad Vltavou"
+  },
+  {
+    "number": "093",
+    "nameCs": "Kralupy nad Vltavou – Kladno"
+  },
+  {
+    "number": "094",
+    "nameCs": "Vraňany – Lužec nad Vltavou"
+  },
+  {
+    "number": "095",
+    "nameCs": "Vraňany – Straškov – Zlonice"
+  },
+  {
+    "number": "096",
+    "nameCs": "Roudnice nad Labem – Straškov – Libochovice"
+  },
+  {
+    "number": "097",
+    "nameCs": "Lovosice – Teplice v Čechách"
+  },
+  {
+    "number": "110",
+    "nameCs": "Kralupy nad Vltavou – Louny"
+  },
+  {
+    "number": "111",
+    "nameCs": "Kralupy nad Vltavou – Velvary"
+  },
+  {
+    "number": "113",
+    "nameCs": "Lovosice – Most"
+  },
+  {
+    "number": "114",
+    "nameCs": "Lovosice – Postoloprty"
+  },
+  {
+    "number": "120",
+    "nameCs": "Praha – Kladno – Rakovník"
+  },
+  {
+    "number": "121",
+    "nameCs": "Hostivice – Podlešín"
+  },
+  {
+    "number": "122",
+    "nameCs": "Praha-Smíchov – Hostivice – Rudná u Prahy"
+  },
+  {
+    "number": "123",
+    "nameCs": "Most – Žatec"
+  },
+  {
+    "number": "124",
+    "nameCs": "Lužná u Rakovníka – Chomutov – Jirkov"
+  },
+  {
+    "number": "126",
+    "nameCs": "Most – Rakovník"
+  },
+  {
+    "number": "130",
+    "nameCs": "Ústí nad Labem – Chomutov"
+  },
+  {
+    "number": "131",
+    "nameCs": "Ústí nad Labem – Úpořiny – Bílina"
+  },
+  {
+    "number": "132",
+    "nameCs": "Kadaň-Prunéřov – Hradec u Kadaně"
+  },
+  {
+    "number": "134",
+    "nameCs": "Teplice v Čechách – Litvínov"
+  },
+  {
+    "number": "135",
+    "nameCs": "Most – Moldava v Krušných horách"
+  },
+  {
+    "number": "137",
+    "nameCs": "Chomutov – Cranzahl"
+  },
+  {
+    "number": "140",
+    "nameCs": "Chomutov – Karlovy Vary – Cheb"
+  },
+  {
+    "number": "141",
+    "nameCs": "Karlovy Vary – Merklín"
+  },
+  {
+    "number": "142",
+    "nameCs": "Karlovy Vary – Johanngeorgenstadt"
+  },
+  {
+    "number": "144",
+    "nameCs": "Nová Role – Chodov – Nové Sedlo u Lokte"
+  },
+  {
+    "number": "145",
+    "nameCs": "Sokolov – Kraslice – Zwotental"
+  },
+  {
+    "number": "146",
+    "nameCs": "Cheb – Luby u Chebu"
+  },
+  {
+    "number": "147",
+    "nameCs": "Cheb – Františkovy Lázně – Bad Brambach"
+  },
+  {
+    "number": "148",
+    "nameCs": "Cheb – Hranice v Čechách"
+  },
+  {
+    "number": "149",
+    "nameCs": "Karlovy Vary – Mariánské Lázně"
+  },
+  {
+    "number": "160",
+    "nameCs": "Plzeň – Žatec"
+  },
+  {
+    "number": "161",
+    "nameCs": "Rakovník – Bečov nad Teplou"
+  },
+  {
+    "number": "162",
+    "nameCs": "Rakovník – Kralovice u Rakovníka"
+  },
+  {
+    "number": "164",
+    "nameCs": "Kadaň – Kaštice"
+  },
+  {
+    "number": "170",
+    "nameCs": "Praha – Beroun – Plzeň – Klatovy"
+  },
+  {
+    "number": "171",
+    "nameCs": "Praha – Beroun"
+  },
+  {
+    "number": "172",
+    "nameCs": "Zadní Třebaň – Lochovice"
+  },
+  {
+    "number": "173",
+    "nameCs": "Praha – Rudná u Prahy – Beroun"
+  },
+  {
+    "number": "174",
+    "nameCs": "Beroun – Rakovník"
+  },
+  {
+    "number": "175",
+    "nameCs": "Rokycany – Nezvěstice"
+  },
+  {
+    "number": "176",
+    "nameCs": "Ejpovice – Radnice"
+  },
+  {
+    "number": "177",
+    "nameCs": "Pňovany – Bezdružice"
+  },
+  {
+    "number": "178",
+    "nameCs": "Plzeň – Cheb"
+  },
+  {
+    "number": "179",
+    "nameCs": "Cheb – Schirnding"
+  },
+  {
+    "number": "180",
+    "nameCs": "Plzeň – Domažlice – Furth im Wald"
+  },
+  {
+    "number": "181",
+    "nameCs": "Nýřany – Heřmanova Huť"
+  },
+  {
+    "number": "182",
+    "nameCs": "Staňkov – Poběžovice"
+  },
+  {
+    "number": "183",
+    "nameCs": "Plzeň – Klatovy – Železná Ruda"
+  },
+  {
+    "number": "184",
+    "nameCs": "Domažlice – Planá u Mariánských Lázní"
+  },
+  {
+    "number": "185",
+    "nameCs": "Horažďovice předměstí – Domažlice"
+  },
+  {
+    "number": "186",
+    "nameCs": "Svojšín – Bor"
+  },
+  {
+    "number": "190",
+    "nameCs": "Strakonice – České Budějovice"
+  },
+  {
+    "number": "191",
+    "nameCs": "Plzeň – Strakonice"
+  },
+  {
+    "number": "192",
+    "nameCs": "Nepomuk – Blatná"
+  },
+  {
+    "number": "193",
+    "nameCs": "Dívčice – Netolice"
+  },
+  {
+    "number": "194",
+    "nameCs": "České Budějovice – Černý Kříž"
+  },
+  {
+    "number": "195",
+    "nameCs": "Rybník – Lipno nad Vltavou"
+  },
+  {
+    "number": "196",
+    "nameCs": "České Budějovice – Summerau"
+  },
+  {
+    "number": "197",
+    "nameCs": "Číčenice – Nové Údolí"
+  },
+  {
+    "number": "198",
+    "nameCs": "Strakonice – Volary"
+  },
+  {
+    "number": "199",
+    "nameCs": "České Budějovice – Gmünd"
+  },
+  {
+    "number": "200",
+    "nameCs": "Zdice – Protivín"
+  },
+  {
+    "number": "201",
+    "nameCs": "Tábor – Ražice"
+  },
+  {
+    "number": "202",
+    "nameCs": "Tábor – Bechyně"
+  },
+  {
+    "number": "203",
+    "nameCs": "Březnice – Strakonice"
+  },
+  {
+    "number": "204",
+    "nameCs": "Březnice – Rožmitál pod Třemšínem"
+  },
+  {
+    "number": "210",
+    "nameCs": "Praha – Vrané nad Vltavou – Čerčany/Dobříš"
+  },
+  {
+    "number": "212",
+    "nameCs": "Čerčany – Světlá nad Sázavou"
+  },
+  {
+    "number": "220",
+    "nameCs": "Praha – České Budějovice"
+  },
+  {
+    "number": "221",
+    "nameCs": "Praha – Benešov u Prahy"
+  },
+  {
+    "number": "222",
+    "nameCs": "Benešov u Prahy – Trhový Štěpánov – Dolní Kralovice"
+  },
+  {
+    "number": "223",
+    "nameCs": "Olbramovice – Sedlčany"
+  },
+  {
+    "number": "224",
+    "nameCs": "Tábor – Horní Cerekev"
+  },
+  {
+    "number": "225",
+    "nameCs": "Havlíčkův Brod – Veselí nad Lužnicí"
+  },
+  {
+    "number": "226",
+    "nameCs": "České Velenice – Veselí nad Lužnicí"
+  },
+  {
+    "number": "227",
+    "nameCs": "Kostelec u Jihlavy – Slavonice"
+  },
+  {
+    "number": "228",
+    "nameCs": "Jindřichův Hradec – Obrataň"
+  },
+  {
+    "number": "229",
+    "nameCs": "Jindřichův Hradec – Nová Bystřice"
+  },
+  {
+    "number": "230",
+    "nameCs": "Praha – Kolín – Havlíčkův Brod"
+  },
+  {
+    "number": "231",
+    "nameCs": "Praha – Lysá nad Labem – Kolín"
+  },
+  {
+    "number": "232",
+    "nameCs": "Praha – Lysá nad Labem – Milovice"
+  },
+  {
+    "number": "233",
+    "nameCs": "Čelákovice – Mochov"
+  },
+  {
+    "number": "235",
+    "nameCs": "Kutná Hora – Zruč nad Sázavou"
+  },
+  {
+    "number": "236",
+    "nameCs": "Čáslav – Třemošnice"
+  },
+  {
+    "number": "237",
+    "nameCs": "Havlíčkův Brod – Humpolec"
+  },
+  {
+    "number": "238",
+    "nameCs": "Pardubice – Havlíčkův Brod"
+  },
+  {
+    "number": "240",
+    "nameCs": "Brno – Jihlava"
+  },
+  {
+    "number": "241",
+    "nameCs": "Znojmo – Okříšky"
+  },
+  {
+    "number": "243",
+    "nameCs": "Moravské Budějovice – Jemnice"
+  },
+  {
+    "number": "244",
+    "nameCs": "Brno – Hrušovany nad Jevišovkou-Šanov"
+  },
+  {
+    "number": "246",
+    "nameCs": "Břeclav – Znojmo"
+  },
+  {
+    "number": "247",
+    "nameCs": "Břeclav – Lednice"
+  },
+  {
+    "number": "248",
+    "nameCs": "Znojmo – Retz"
+  },
+  {
+    "number": "250",
+    "nameCs": "Praha – Havlíčkův Brod – Tišnov – Brno – Kúty"
+  },
+  {
+    "number": "251",
+    "nameCs": "Tišnov – Brno – Vranovice"
+  },
+  {
+    "number": "253",
+    "nameCs": "Vranovice – Pohořelice"
+  },
+  {
+    "number": "254",
+    "nameCs": "Šakvice – Hustopeče u Brna"
+  },
+  {
+    "number": "255",
+    "nameCs": "Hodonín – Zaječí"
+  },
+  {
+    "number": "256",
+    "nameCs": "Žďár nad Sázavou – Nové Město na Moravě – Tišnov"
+  },
+  {
+    "number": "257",
+    "nameCs": "Křižanov – Studenec"
+  },
+  {
+    "number": "260",
+    "nameCs": "Česká Třebová – Brno – Vyškov na Moravě"
+  },
+  {
+    "number": "261",
+    "nameCs": "Svitavy – Žďárec u Skutče"
+  },
+  {
+    "number": "262",
+    "nameCs": "Skalice nad Svitavou – Velké Opatovice"
+  },
+  {
+    "number": "270",
+    "nameCs": "Česká Třebová – Přerov"
+  },
+  {
+    "number": "271",
+    "nameCs": "Olomouc – Přerov – Bohumín"
+  },
+  {
+    "number": "276",
+    "nameCs": "Suchdol nad Odrou – Budišov nad Budišovkou"
+  },
+  {
+    "number": "277",
+    "nameCs": "Suchdol nad Odrou – Fulnek"
+  },
+  {
+    "number": "278",
+    "nameCs": "Suchdol nad Odrou – Nový Jičín město"
+  },
+  {
+    "number": "279",
+    "nameCs": "Studénka – Bílovec"
+  },
+  {
+    "number": "280",
+    "nameCs": "Hranice na Moravě – Púchov"
+  },
+  {
+    "number": "281",
+    "nameCs": "Valašské Meziříčí – Rožnov pod Radhoštěm"
+  },
+  {
+    "number": "282",
+    "nameCs": "Vsetín – Velké Karlovice"
+  },
+  {
+    "number": "290",
+    "nameCs": "Olomouc – Šumperk"
+  },
+  {
+    "number": "291",
+    "nameCs": "Zábřeh na Moravě – Šumperk – Kouty nad Desnou"
+  },
+  {
+    "number": "292",
+    "nameCs": "Šumperk – Krnov"
+  },
+  {
+    "number": "294",
+    "nameCs": "Hanušovice – Staré Město pod Sněžníkem"
+  },
+  {
+    "number": "295",
+    "nameCs": "Lipová Lázně – Javorník ve Slezsku"
+  },
+  {
+    "number": "297",
+    "nameCs": "Mikulovice – Zlaté Hory"
+  },
+  {
+    "number": "298",
+    "nameCs": "Třemešná ve Slezsku – Osoblaha"
+  },
+  {
+    "number": "300",
+    "nameCs": "Brno – Přerov"
+  },
+  {
+    "number": "301",
+    "nameCs": "Nezamyslice – Olomouc"
+  },
+  {
+    "number": "303",
+    "nameCs": "Kojetín – Valašské Meziříčí"
+  },
+  {
+    "number": "304",
+    "nameCs": "Kojetín – Tovačov"
+  },
+  {
+    "number": "305",
+    "nameCs": "Kroměříž – Zborovice"
+  },
+  {
+    "number": "306",
+    "nameCs": "Prostějov – Dzbel"
+  },
+  {
+    "number": "307",
+    "nameCs": "Prostějov – Senice na Hané – Červenka"
+  },
+  {
+    "number": "308",
+    "nameCs": "Litovel předměstí – Mladeč"
+  },
+  {
+    "number": "309",
+    "nameCs": "Olomouc – Senice na Hané – Drahanovice"
+  },
+  {
+    "number": "310",
+    "nameCs": "Olomouc – Opava východ"
+  },
+  {
+    "number": "312",
+    "nameCs": "Bruntál – Malá Morávka"
+  },
+  {
+    "number": "313",
+    "nameCs": "Milotice nad Opavou – Vrbno pod Pradědem"
+  },
+  {
+    "number": "314",
+    "nameCs": "Opava východ – Svobodné Heřmanice"
+  },
+  {
+    "number": "315",
+    "nameCs": "Opava východ – Hradec nad Moravicí"
+  },
+  {
+    "number": "317",
+    "nameCs": "Opava východ – Hlučín"
+  },
+  {
+    "number": "320",
+    "nameCs": "Bohumín – Čadca"
+  },
+  {
+    "number": "321",
+    "nameCs": "Opava východ – Ostrava – Havířov – Český Těšín"
+  },
+  {
+    "number": "322",
+    "nameCs": "Český Těšín – Frýdek-Místek"
+  },
+  {
+    "number": "323",
+    "nameCs": "Ostrava – Valašské Meziříčí"
+  },
+  {
+    "number": "325",
+    "nameCs": "Studénka – Veřovice"
+  },
+  {
+    "number": "326",
+    "nameCs": "Dětmarovice – Petrovice u Karviné"
+  },
+  {
+    "number": "330",
+    "nameCs": "Přerov – Břeclav"
+  },
+  {
+    "number": "331",
+    "nameCs": "Otrokovice – Vizovice"
+  },
+  {
+    "number": "340",
+    "nameCs": "Brno – Uherské Hradiště"
+  },
+  {
+    "number": "341",
+    "nameCs": "Staré Město u Uherského Hradiště – Vlárský průsmyk"
+  },
+  {
+    "number": "342",
+    "nameCs": "Bzenec – Moravský Písek"
+  },
+  {
+    "number": "343",
+    "nameCs": "Hodonín – Veselí nad Moravou – Vrbovce"
+  }
+]

@@ -1,6 +1,7 @@
 /**
  * Imports the station pub list (from nadrazky.eu, used with the owner's consent)
- * with station positions, regions and rail lines from Wikidata.
+ * with station positions, regions and rail lines from Wikidata; the rail lines
+ * themselves come from data/seed/rail-lines.json (railLines.ts).
  * Idempotent: re-running updates rows by their nadrazky.eu id.
  *
  *   npm run db:import
@@ -11,6 +12,7 @@ import { count, sql } from "drizzle-orm";
 import { openDb } from "./client";
 import * as s from "./schema";
 import { REGIONS } from "./regions";
+import { readRailLines, syncRailLines } from "./railLines";
 import { slugify } from "../lib/slug";
 import { statusFromSource } from "../lib/status";
 
@@ -55,23 +57,18 @@ async function main() {
     .values([...regionRows.values()])
     .onConflictDoUpdate({ target: s.regions.slug, set: { nameCs: sql`excluded.name_cs`, nameEn: sql`excluded.name_en` } });
 
-  // Rail lines: "Praha – Brno (010) | ..." -> number + name
-  const lines = new Map<string, string>();
+  // Rail lines come from the reviewed list; the pub list only links stations to them
+  // ("Praha – Brno (010) | ..."), and only to numbers in that list.
+  const { lines } = await syncRailLines(db);
+  const known = new Set(readRailLines().map((l) => l.number));
   const stationLines = new Map<string, Set<string>>();
   for (const r of rows) {
     for (const part of r.rail_lines.split(" | ").filter(Boolean)) {
       const m = part.match(/^(.*) \((\d{3}[A-Z]?)\)$/);
-      if (!m) continue;
-      lines.set(m[2], m[1].trim());
+      if (!m || !known.has(m[2])) continue;
       if (!stationLines.has(r.station)) stationLines.set(r.station, new Set());
       stationLines.get(r.station)!.add(m[2]);
     }
-  }
-  if (lines.size) {
-    await db
-      .insert(s.railLines)
-      .values([...lines].map(([number, nameCs]) => ({ number, nameCs })))
-      .onConflictDoUpdate({ target: s.railLines.number, set: { nameCs: sql`excluded.name_cs` } });
   }
 
   // Stations (one per station name in the source list)
@@ -137,7 +134,7 @@ async function main() {
   }
 
   const [{ n }] = await db.select({ n: count() }).from(s.pubs);
-  console.log(`Imported ${rows.length} rows: ${stationIds.size} stations, ${lines.size} rail lines, ${n} pubs in the database.`);
+  console.log(`Imported ${rows.length} rows: ${stationIds.size} stations, ${lines} rail lines, ${n} pubs in the database.`);
   await close();
 }
 
