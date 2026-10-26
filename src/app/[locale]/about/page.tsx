@@ -16,7 +16,7 @@ export default async function AboutPage({ params }: PageProps<"/[locale]/about">
   return (
     <>
       <PageHero title={t("title")} />
-      <div className="mx-auto max-w-2xl px-4 py-10 md:py-14">
+      <div className="page-column py-10 *:max-w-2xl md:py-14">
         <p className="text-lg leading-relaxed">{t("body")}</p>
         <h2 className="mt-10 text-[32px]">{t("dataTitle")}</h2>
         <p className="mt-3 leading-relaxed">{t("dataBody")}</p>

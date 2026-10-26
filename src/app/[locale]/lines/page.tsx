@@ -20,7 +20,7 @@ export default async function LinesPage({ params }: PageProps<"/[locale]/lines">
   return (
     <>
       <PageHero title={t("title")} subtitle={t("subtitle", { count: lines.length })} />
-      <ul className="mx-auto grid max-w-7xl grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-2.5 px-4 py-6 md:gap-4 md:px-6 md:py-12">
+      <ul className="page-column grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-2.5 py-6 md:gap-4 md:py-12">
         {lines.map((l) => (
           <li key={l.number}>
             <Card

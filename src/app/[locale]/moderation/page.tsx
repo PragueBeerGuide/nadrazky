@@ -60,7 +60,7 @@ export default async function ModerationPage({ params }: PageProps<"/[locale]/mo
   return (
     <>
       <PageHero title={t("title")} subtitle={t("subtitle", { count: open.length })} />
-      <div className="mx-auto flex max-w-3xl flex-col gap-10 px-4 py-8 md:py-12">
+      <div className="page-column flex flex-col gap-10 py-8 *:max-w-3xl md:py-12">
         {open.length === 0 ? (
           <Card render={<p />} className="p-5 md:p-7">{t("empty")}</Card>
         ) : (

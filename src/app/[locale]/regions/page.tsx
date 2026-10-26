@@ -23,7 +23,7 @@ export default async function RegionsPage({ params }: PageProps<"/[locale]/regio
   return (
     <>
       <PageHero title={t("title")} subtitle={t("subtitle")} />
-      <ul className="mx-auto grid max-w-7xl grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3 px-4 py-8 md:px-6 md:py-12">
+      <ul className="page-column grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3 py-8 md:py-12">
         {regions.map((r) => (
           <li key={r.slug}>
             <Card

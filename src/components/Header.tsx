@@ -19,7 +19,7 @@ export async function Header() {
   const waiting = user && canModerate(user.role) ? await countOpenReports() : null;
   return (
     <header className="bg-sign text-white">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 md:h-[74px] md:gap-7 md:px-6">
+      <div className="page-column flex h-16 items-center gap-3 md:h-[74px] md:gap-7">
         <Link
           href="/"
           className="inline-flex shrink-0 rounded-[6px] bg-white p-[3px] text-sign"

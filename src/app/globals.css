@@ -152,6 +152,21 @@
   }
 }
 
+/*
+ * The page column: header, heroes, sections and footer all start and end on
+ * the same edges at every width. Full-bleed backgrounds go on an outer
+ * element; narrower content sits inside, left-aligned (e.g. *:max-w-2xl).
+ */
+@utility page-column {
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--container-7xl);
+  padding-inline: calc(var(--spacing) * 4);
+  @media (width >= 48rem) {
+    padding-inline: calc(var(--spacing) * 6);
+  }
+}
+
 @layer components {
   /* Mono, spaced capitals: timetable labels */
   .label {

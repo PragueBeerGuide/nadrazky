@@ -44,7 +44,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
   return (
     <>
       <section className="bg-sign text-white">
-        <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 pt-6 pb-8 md:gap-12 md:px-6 md:pt-14 md:pb-[72px] lg:grid-cols-2">
+        <div className="page-column grid items-center gap-8 pt-6 pb-8 md:gap-12 md:pt-14 md:pb-[72px] lg:grid-cols-2">
           <div className="flex flex-col gap-4 md:gap-6">
             <p className="eyebrow text-xs md:text-[13px]">{t("eyebrow")}</p>
             <h1 className="text-[52px] leading-[0.92] tracking-[-0.01em] md:text-[clamp(56px,8vw,104px)]">
@@ -103,7 +103,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         <RailTrack />
       </section>
 
-      <div className="px-4 pt-6 md:hidden">
+      <div className="page-column pt-6 md:hidden">
         <DepartureBoard
           pubs={board.slice(0, 4)}
           title={t("boardTitle")}
@@ -115,8 +115,8 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         />
       </div>
 
-      <section aria-label={t("statsTitle")} className="mt-8 border-y border-rule bg-white px-4 py-6 md:mt-0 md:border-t-0 md:px-6 md:py-10">
-        <dl className="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-5 md:grid-cols-4">
+      <section aria-label={t("statsTitle")} className="mt-8 border-y border-rule bg-white py-6 md:mt-0 md:border-t-0 md:py-10">
+        <dl className="page-column grid grid-cols-2 gap-x-6 gap-y-5 md:grid-cols-4">
           {stats.map(([key, n, color]) => (
             <div key={key} className="flex flex-col-reverse gap-1">
               <dt className="text-sm text-muted-foreground md:text-base">{t(`stats.${key}`, { count: n })}</dt>
@@ -126,8 +126,8 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         </dl>
       </section>
 
-      <section className="px-4 pt-8 pb-4 md:px-6 md:pt-16 md:pb-6">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 md:gap-6">
+      <section className="pt-8 pb-4 md:pt-16 md:pb-6">
+        <div className="page-column flex flex-col gap-4 md:gap-6">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="text-[30px] md:text-5xl">{t("byLine")}</h2>
             <Link href="/lines" className="link text-sm md:text-base">
@@ -153,8 +153,8 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         </div>
       </section>
 
-      <section className="px-4 pt-8 pb-10 md:px-6 md:pt-12 md:pb-16">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 md:gap-6">
+      <section className="pt-8 pb-10 md:pt-12 md:pb-16">
+        <div className="page-column flex flex-col gap-4 md:gap-6">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="text-[30px] md:text-5xl">{t("byRegion")}</h2>
             <Link href="/regions" className="link text-sm md:text-base">
@@ -202,8 +202,8 @@ async function HelpBand({
   const rt = await getTranslations("regions");
   const steps = [t("step1"), t("step2"), t("step3")];
   return (
-    <section className="bg-yellow px-4 py-10 text-ink md:px-6 md:py-16">
-      <div className="mx-auto grid max-w-7xl items-center gap-10 md:gap-12 lg:grid-cols-2">
+    <section className="bg-yellow py-10 text-ink md:py-16">
+      <div className="page-column grid items-center gap-10 md:gap-12 lg:grid-cols-2">
         <div className="flex flex-col gap-5">
           <h2 className="text-[40px] leading-[0.95] md:text-[56px]">{t("helpTitle")}</h2>
           <p className="max-w-[40ch] text-lg md:text-[19px]">

@@ -70,7 +70,7 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
   const anchor = (letter: string) => `letter-${letter.toLowerCase()}`;
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 pt-6 pb-12 md:gap-6 md:px-6 md:pt-10 md:pb-16">
+    <div className="page-column flex flex-col gap-5 pt-6 pb-12 md:gap-6 md:pt-10 md:pb-16">
       <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-5xl md:text-[64px]">{t("title")}</h1>

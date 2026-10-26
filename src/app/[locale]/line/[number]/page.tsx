@@ -51,8 +51,8 @@ export default async function LinePage({ params }: PageProps<"/[locale]/line/[nu
 
   return (
     <>
-      <section className="bg-sign px-4 pt-4 pb-8 text-white md:px-6 md:pt-6 md:pb-12">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 md:gap-7">
+      <section className="bg-sign pt-4 pb-8 text-white md:pt-6 md:pb-12">
+        <div className="page-column flex flex-col gap-6 md:gap-7">
           <Breadcrumb aria-label={nav("breadcrumb")}>
             <BreadcrumbList className="gap-x-1.5 gap-y-0 text-[#b9c6e2]">
               <BreadcrumbItem>
@@ -85,7 +85,7 @@ export default async function LinePage({ params }: PageProps<"/[locale]/line/[nu
       </section>
       <RailTrack />
 
-      <div className="mx-auto flex max-w-7xl flex-wrap items-start gap-6 px-4 pt-8 pb-12 md:gap-8 md:px-6 md:pt-12 md:pb-16">
+      <div className="page-column flex flex-wrap items-start gap-6 pt-8 pb-12 md:gap-8 md:pt-12 md:pb-16">
         <div className="flex min-w-0 flex-[999_1_600px] flex-col gap-5 md:gap-6">
           <div className="flex flex-col gap-2">
             <div className="flex flex-wrap items-baseline justify-between gap-2">

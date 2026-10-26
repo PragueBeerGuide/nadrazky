@@ -118,8 +118,8 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
 
   return (
     <article>
-      <section className="bg-sign px-4 pt-4 pb-7 text-white md:px-6 md:pt-6 md:pb-14">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 md:gap-8">
+      <section className="bg-sign pt-4 pb-7 text-white md:pt-6 md:pb-14">
+        <div className="page-column flex flex-col gap-6 md:gap-8">
           <Breadcrumb aria-label={nav("breadcrumb")}>
             <BreadcrumbList className={crumbs.list}>
               <BreadcrumbItem>
@@ -195,7 +195,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
       </section>
       <RailTrack />
 
-      <div className="mx-auto flex max-w-7xl flex-wrap items-start gap-6 px-4 pt-6 pb-12 md:gap-8 md:px-6 md:pt-12 md:pb-16">
+      <div className="page-column flex flex-wrap items-start gap-6 pt-6 pb-12 md:gap-8 md:pt-12 md:pb-16">
         <div className="flex min-w-0 flex-[999_1_560px] flex-col gap-6 md:gap-8">
           <Card render={<section />} className="block p-5 md:p-7">
             <h2 className="mb-5 text-[28px] md:text-[32px]">{t("about")}</h2>
