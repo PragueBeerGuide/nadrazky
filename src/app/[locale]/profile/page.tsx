@@ -6,6 +6,7 @@ import { Link, getPathname } from "@/i18n/navigation";
 import { asLocale } from "@/i18n/routing";
 import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
 import { getRegionProgress, getUserStats, listVisitedPubs } from "@/lib/checkins";
+import { countFriends } from "@/lib/friends";
 import { TIME_ZONE } from "@/lib/checkin";
 import { getTotals } from "@/lib/queries";
 import { Avatar } from "@/components/Avatar";
@@ -32,13 +33,15 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
     redirect(getPathname({ locale, href: { pathname: "/login", query: { next: getPathname({ locale, href: "/profile" }) } } }));
   }
 
-  const [t, format, stats, regions, visited, totals] = await Promise.all([
+  const [t, ft, format, stats, regions, visited, totals, friendCounts] = await Promise.all([
     getTranslations("profile"),
+    getTranslations("friends"),
     getFormatter(),
     getUserStats(user.id),
     getRegionProgress(user.id),
     listVisitedPubs(user.id),
     getTotals(),
+    countFriends(user.id),
   ]);
   const date = (d: Date) => format.dateTime(d, { day: "numeric", month: "short", year: "numeric", timeZone: TIME_ZONE });
   const collator = new Intl.Collator(locale);
@@ -161,6 +164,22 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
             </div>
           </>
         )}
+        <Card render={<section aria-labelledby="friends-title" />} className="flex flex-wrap items-center justify-between gap-4 p-5 md:p-7">
+          <div className="flex flex-col gap-1">
+            <h2 id="friends-title" className="text-[28px] md:text-[32px]">
+              {ft("profileTitle")}
+            </h2>
+            <p className="text-muted-foreground">
+              {ft("profileFriends", { count: friendCounts.friends })}
+              {friendCounts.incoming > 0 && (
+                <span className="block font-semibold text-foreground">{ft("profileRequests", { count: friendCounts.incoming })}</span>
+              )}
+            </p>
+          </div>
+          <Link href="/friends" className={buttonVariants({ variant: friendCounts.incoming > 0 ? "yellow" : "outline", size: "xl" })}>
+            {ft("profileLink")}
+          </Link>
+        </Card>
         <ProfileForm username={user.username ?? ""} hometown={user.hometown} avatarUrl={picture} />
       </div>
     </>

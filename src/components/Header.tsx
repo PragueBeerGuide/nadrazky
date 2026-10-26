@@ -6,6 +6,7 @@ import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
 import { canModerate } from "@/lib/auth/roles";
 import { avatarUrl } from "@/lib/profile";
 import { countOpenReports } from "@/lib/reports";
+import { countIncomingRequests } from "@/lib/friends";
 import { LanguageSwitch } from "./LanguageSwitch";
 import { NavLinks } from "./NavLinks";
 import { UserMenu } from "./UserMenu";
@@ -15,8 +16,13 @@ import { cn } from "@/lib/utils";
 export async function Header() {
   const t = await getTranslations("auth");
   const user = await getCurrentUser();
-  // Moderators and admins see how many reports are waiting.
-  const waiting = user && canModerate(user.role) ? await countOpenReports() : null;
+  const finished = user ? signUpFinished(user) : false;
+  const [waiting, requests] = await Promise.all([
+    // Moderators and admins see how many reports are waiting.
+    user && canModerate(user.role) ? countOpenReports() : null,
+    // Friend requests waiting for an answer.
+    user && finished ? countIncomingRequests(user.id) : 0,
+  ]);
   return (
     <header className="bg-sign text-white">
       <div className="page-column flex h-16 items-center gap-3 md:h-[74px] md:gap-7">
@@ -33,8 +39,9 @@ export async function Header() {
           {user ? (
             <UserMenu
               user={{ name: user.name, username: user.username, email: user.email, role: user.role, avatarUrl: avatarUrl(user.id, user.avatarUpdatedAt) }}
-              finished={signUpFinished(user)}
+              finished={finished}
               waiting={waiting}
+              requests={requests}
             />
           ) : (
             authEnabled() && (
