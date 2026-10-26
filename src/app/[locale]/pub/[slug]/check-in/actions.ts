@@ -1,6 +1,6 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db, schema } from "@/db";
@@ -9,6 +9,7 @@ import { asLocale } from "@/i18n/routing";
 import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
 import { alreadyCheckedIn, checkInDay, checkInSchema, pubChangeAfterCheckIn } from "@/lib/checkin";
 import { recentCheckInTimes } from "@/lib/checkins";
+import { livePub } from "@/lib/queries";
 
 export type CheckInError = "signIn" | "finishSignUp" | "invalid" | "notFound" | "alreadyToday";
 export type CheckInState = { error?: CheckInError; missingAmount?: { beer?: boolean; shot?: boolean } };
@@ -31,7 +32,7 @@ export async function checkIn(_: CheckInState, formData: FormData): Promise<Chec
   }
   const { slug, ...details } = input.data;
 
-  const [pub] = await db.select({ id: schema.pubs.id }).from(schema.pubs).where(eq(schema.pubs.slug, slug));
+  const [pub] = await db.select({ id: schema.pubs.id }).from(schema.pubs).where(and(eq(schema.pubs.slug, slug), livePub));
   if (!pub) return { error: "notFound" };
 
   const now = new Date();

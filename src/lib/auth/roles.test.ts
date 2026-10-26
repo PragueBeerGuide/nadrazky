@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canEditRailData, canModerate } from "./roles";
+import { canDeletePubs, canEditRailData, canModerate } from "./roles";
 
 describe("canModerate", () => {
   it("lets moderators and admins review reports", () => {
@@ -20,5 +20,14 @@ describe("canEditRailData", () => {
     expect(canEditRailData("moderator")).toBe(false);
     expect(canEditRailData("user")).toBe(false);
     expect(canEditRailData(null)).toBe(false);
+  });
+});
+
+describe("canDeletePubs", () => {
+  it("lets moderators and admins delete pubs", () => {
+    expect(canDeletePubs("admin")).toBe(true);
+    expect(canDeletePubs("moderator")).toBe(true);
+    expect(canDeletePubs("user")).toBe(false);
+    expect(canDeletePubs(null)).toBe(false);
   });
 });

@@ -85,6 +85,13 @@
       "when": 1793019729799,
       "tag": "0011_friend_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1793042685533,
+      "tag": "0012_pub_deleted",
+      "breakpoints": true
     }
   ]
 }

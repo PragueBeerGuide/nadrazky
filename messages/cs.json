@@ -138,7 +138,16 @@
     "recentCheckIns": "Poslední odbavení",
     "reportedOpen": "Otevřeno",
     "reportedClosed": "Zavřeno",
-    "rating": "Hodnocení {count} z 5"
+    "rating": "Hodnocení {count} z 5",
+    "delete": {
+      "button": "Smazat hospodu",
+      "hint": "Moderátoři a správci můžou smazat hospodu, která sem nepatří.",
+      "title": "Smazat {name}?",
+      "text": "Zmizí ze seznamů, z mapy, ze statistik i z profilů všech uživatelů. Její odbavení a hlášení zůstanou uložené v databázi.",
+      "cancel": "Zrušit",
+      "confirm": "Smazat",
+      "done": "Hospoda {name} je smazaná."
+    }
   },
   "status": {
     "open": "V provozu",

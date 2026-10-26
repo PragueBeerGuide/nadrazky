@@ -1,10 +1,11 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
 import { reportLimitApplies, reportLimitReached, reportSchema } from "@/lib/report";
 import { countReportsToday, createReport } from "@/lib/reports";
+import { livePub } from "@/lib/queries";
 
 export type ReportState = {
   done?: boolean;
@@ -33,7 +34,7 @@ export async function submitReport(_: ReportState, formData: FormData): Promise<
   }
   const { slug, kind, value, message } = input.data;
 
-  const [pub] = await db.select({ id: schema.pubs.id }).from(schema.pubs).where(eq(schema.pubs.slug, slug));
+  const [pub] = await db.select({ id: schema.pubs.id }).from(schema.pubs).where(and(eq(schema.pubs.slug, slug), livePub));
   if (!pub) return { error: "notFound", values };
   if (reportLimitApplies(user.role) && reportLimitReached(await countReportsToday(user.id))) {
     return { error: "limit", values };

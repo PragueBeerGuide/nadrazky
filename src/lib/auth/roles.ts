@@ -1,10 +1,15 @@
-/** The three user levels. Moderators and admins review reports, admins also edit rail data; roles are set in the database. */
+/** The three user levels. Moderators and admins review reports and delete pubs, admins also edit rail data; roles are set in the database. */
 export const ROLES = ["user", "moderator", "admin"] as const;
 export type Role = (typeof ROLES)[number];
 
 /** Moderators and admins may review reports, and their own reports are approved at once. */
 export function canModerate(role: Role | null | undefined) {
   return role === "moderator" || role === "admin";
+}
+
+/** Moderators and admins may delete a pub; it is hidden, not erased (pubs.deletedAt). */
+export function canDeletePubs(role: Role | null | undefined) {
+  return canModerate(role);
 }
 
 /** Only admins link stations and rail lines (the admin pages under /admin). */

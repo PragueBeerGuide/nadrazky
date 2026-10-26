@@ -1,6 +1,7 @@
 import type { AdapterAccountType } from "next-auth/adapters";
 import { sql } from "drizzle-orm";
 import {
+  type AnyPgColumn,
   boolean,
   check,
   customType,
@@ -89,6 +90,9 @@ export const pubs = pgTable(
     sourceLastUpdateMonthsAgo: integer("source_last_update_months_ago"),
     /** The latest check-in or approved open/closed report; "last confirmed" falls back to the source's months. */
     lastConfirmedAt: timestamp("last_confirmed_at", { withTimezone: true }),
+    /** Deleted by a moderator or admin: kept with its check-ins and reports, but hidden everywhere (livePub in src/lib/queries.ts). */
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+    deletedBy: text("deleted_by").references((): AnyPgColumn => users.id, { onDelete: "set null" }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
