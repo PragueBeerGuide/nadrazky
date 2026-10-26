@@ -41,7 +41,7 @@ test("finds a user by username, sends a request and they accept it", async ({ pa
   await expect(bobPage).toHaveURL(/\/en\/friends$/);
   await row(bobPage, "Friend requests", anna.username).getByRole("button", { name: "Accept" }).click();
   // Only sending gets a toast.
-  await expect(bobPage.locator("[data-sonner-toast]")).toHaveCount(0);
+  await expect(bobPage.locator("[data-slot=toast]")).toHaveCount(0);
   await expect(row(bobPage, "Your friends", anna.username)).toBeVisible();
   await expect(bobPage.getByRole("region", { name: "Friend requests" })).toHaveCount(0);
   await expect(bobPage.getByRole("heading", { level: 1, name: "Friends" })).toBeVisible();
@@ -98,7 +98,7 @@ test("the sent toast clears the phone tab bar, in Czech too", async ({ page, bro
 
   await page.goto(`/cs/pratele?q=${bob.username}`);
   await page.getByRole("button", { name: "Přidat do přátel" }).click();
-  const toast = page.locator("[data-sonner-toast]");
+  const toast = page.locator("[data-slot=toast]");
   await expect(toast).toHaveText(`Žádost o přátelství pro @${bob.username} je odeslaná`);
 
   // On phones the toast sits above the tab bar (once it has finished sliding in).

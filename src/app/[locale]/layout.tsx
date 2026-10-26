@@ -7,7 +7,7 @@ import { asLocale, routing } from "@/i18n/routing";
 import { Header } from "@/components/Header";
 import { BottomNav } from "@/components/BottomNav";
 import { Footer } from "@/components/Footer";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toast";
 import "../globals.css";
 
 const barlow = Barlow_Condensed({ variable: "--font-barlow", subsets: ["latin", "latin-ext"], weight: ["500", "600", "700"] });
@@ -43,7 +43,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
           <main className="flex-1">{children}</main>
           <Footer />
           <BottomNav />
-          <Toaster position="bottom-center" />
+          <Toaster />
         </NextIntlClientProvider>
       </body>
     </html>

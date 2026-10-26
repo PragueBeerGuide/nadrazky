@@ -38,10 +38,8 @@
   --closed: #b8402f;
   --closed-bg: #f5dedb;
   --closed-ink: #8a2b21;
-  /* Toasts (src/components/ui/sonner.tsx): departure-board ink, above the phone tab bar (BottomNav) */
-  --toast: var(--ink);
-  --toast-foreground: #fff;
-  --toast-offset: calc(68px + env(safe-area-inset-bottom) + 12px);
+  /* Toasts (src/components/ui/toast.tsx) sit above the phone tab bar (BottomNav). */
+  --toast-bottom: calc(68px + env(safe-area-inset-bottom) + 12px);
 
   /* shadcn/ui tokens, mapped onto the palette above */
   --background: var(--platform);
@@ -252,6 +250,6 @@
 /* No tab bar from md up, so toasts sit near the bottom edge. */
 @media (min-width: 768px) {
   :root {
-    --toast-offset: 24px;
+    --toast-bottom: 24px;
   }
 }

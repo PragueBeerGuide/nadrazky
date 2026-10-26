@@ -2,11 +2,11 @@
 
 import { useFormStatus } from "react-dom";
 import { useTranslations } from "next-intl";
-import { toast } from "sonner";
 import type { Relation } from "@/lib/friend";
 import { friendAction } from "./actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toast";
 
 type Props = {
   userId: string;
@@ -23,7 +23,7 @@ export function FriendActions({ userId, username, relation, removable = false }:
   // A sent request is confirmed with a toast; the row then shows it as pending.
   async function act(formData: FormData) {
     const { sent } = await friendAction(formData);
-    if (sent) toast.success(t("toasts.send", { username }));
+    if (sent) toast.add({ title: t("toasts.send", { username }), type: "success" });
   }
 
   return (
