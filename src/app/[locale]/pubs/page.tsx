@@ -20,6 +20,8 @@ import { PIN } from "@/lib/map";
 const STATUSES: PubStatus[] = ["open", "unknown", "closed"];
 // A label stacked above its control
 const field = "flex-col items-stretch gap-1.5 leading-normal";
+// Two selects share a phone-width row; a tighter inset keeps "Všechny kraje" whole.
+const halfSelect = "w-full font-normal max-md:[&_select]:pr-8 max-md:[&_select]:pl-3 max-md:[&_svg]:right-2.5";
 const head = "label h-auto px-4 py-3.5 font-semibold text-muted-foreground";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -69,8 +71,8 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 pt-6 pb-12 md:gap-6 md:px-6 md:pt-10 md:pb-16">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex flex-col gap-1">
+      <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
+        <div className="flex flex-col gap-1.5">
           <h1 className="text-5xl md:text-[64px]">{t("title")}</h1>
           <p className="text-muted-foreground md:text-[17px]">{t("subtitle", { pubs: pubs.length, stations: stationCount })}</p>
         </div>
@@ -89,14 +91,14 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
         </nav>
       </div>
 
-      <Card render={<form role="search" />} className="grid gap-4 p-4 md:grid-cols-4 md:items-end md:p-5">
-        <Label className={cn(field, "md:col-span-2")}>
+      <Card render={<form role="search" />} className="grid grid-cols-2 gap-3 p-4 md:grid-cols-4 md:items-end md:gap-4 md:p-5">
+        <Label className={cn(field, "col-span-2")}>
           {t("searchLabel")}
           <Input name="q" type="search" defaultValue={q} placeholder={t("searchPlaceholder")} className="font-normal" />
         </Label>
-        <Label className={field}>
+        <Label className={cn(field, "min-w-0 max-[359px]:col-span-2")}>
           {t("region")}
-          <NativeSelect name="region" defaultValue={region} className="w-full font-normal">
+          <NativeSelect name="region" defaultValue={region} className={halfSelect}>
             <NativeSelectOption value="">{t("anyRegion")}</NativeSelectOption>
             {regions.map((r) => (
               <NativeSelectOption key={r.slug} value={r.slug}>
@@ -105,9 +107,9 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
             ))}
           </NativeSelect>
         </Label>
-        <Label className={field}>
+        <Label className={cn(field, "min-w-0 max-[359px]:col-span-2")}>
           {t("line")}
-          <NativeSelect name="line" defaultValue={line} className="w-full font-normal">
+          <NativeSelect name="line" defaultValue={line} className={halfSelect}>
             <NativeSelectOption value="">{t("anyLine")}</NativeSelectOption>
             {lines.map((l) => (
               <NativeSelectOption key={l.number} value={l.number}>
@@ -117,7 +119,7 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
           </NativeSelect>
         </Label>
         {status && <input type="hidden" name="status" value={status} />}
-        <div className="flex flex-wrap items-center gap-2 md:col-span-4">
+        <div className="col-span-2 flex flex-wrap items-center gap-2 md:col-span-4">
           <span className="w-full text-sm font-medium">{t("status")}</span>
           <StatusLink href={query()} current={!status}>
             {t("anyStatus")} · {all.length}
@@ -127,7 +129,7 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
               {st(s)} · {counts[s]}
             </StatusLink>
           ))}
-          <span className="ml-auto flex gap-2">
+          <span className="ml-auto flex gap-2 max-md:mt-1 max-md:w-full max-md:[&>*]:flex-1">
             {filtered && (
               <Link href="/pubs" className={buttonVariants({ variant: "outline", size: "md" })}>
                 {t("clear")}
@@ -141,14 +143,14 @@ export default async function PubsPage({ params, searchParams }: PageProps<"/[lo
       </Card>
 
       {groups.length > 1 && (
-        <nav aria-label={t("jump")} className="flex flex-wrap gap-1 font-mono text-sm font-semibold">
+        <nav aria-label={t("jump")} className="-mx-4 flex gap-1 overflow-x-auto px-4 pb-1 font-mono text-sm font-semibold md:mx-0 md:flex-wrap md:overflow-visible md:px-0 md:pb-0">
           {groups.map((g) => (
             <a
               key={g.letter}
               href={`#${anchor(g.letter)}`}
               className={cn(
                 buttonVariants({ variant: "outline", size: "icon-lg" }),
-                "min-w-9 rounded-sm border-rule px-1.5 font-mono text-sm hover:border-sign hover:bg-sign hover:text-white",
+                "min-w-9 shrink-0 rounded-sm border-rule px-1.5 font-mono text-sm hover:border-sign hover:bg-sign hover:text-white",
               )}
             >
               {g.letter}

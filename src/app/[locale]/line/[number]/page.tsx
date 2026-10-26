@@ -66,14 +66,14 @@ export default async function LinePage({ params }: PageProps<"/[locale]/line/[nu
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <div className="flex flex-wrap items-center gap-5 md:gap-7">
+          <div className="flex flex-wrap items-center gap-4 md:gap-7">
             <LineChip number={line.number} size="xl" />
             <div className="flex min-w-0 flex-[1_1_420px] flex-col gap-1.5">
               <p className="eyebrow">{t("eyebrow")}</p>
               <h1 className="text-[40px] md:text-[56px]">{line.nameCs}</h1>
             </div>
           </div>
-          <dl className="flex flex-wrap gap-2.5 md:gap-3">
+          <dl className="grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap md:gap-3">
             {stats.map(([label, n, color]) => (
               <div key={label} className="flex flex-col rounded-[10px] bg-sign-deep px-4 py-2.5 md:px-[18px] md:py-3">
                 <dt className="text-[13px] text-[#b9c6e2]">{label}</dt>
@@ -161,7 +161,7 @@ async function Stops({ stops, branchAt }: { stops: LineStop[]; branchAt: Set<num
             />
             <span className={`relative mt-[18px] h-6 w-6 rounded-full border-[5px] border-sign ${dot[s.best]}`} />
           </span>
-          <div className={`flex flex-col gap-2.5 pt-3.5 pb-[18px] ${i === stops.length - 1 ? "" : "border-b border-rule-soft"}`}>
+          <div className={`flex min-w-0 flex-col gap-2.5 pt-3.5 pb-4 md:pb-[18px] ${i === stops.length - 1 ? "" : "border-b border-rule-soft"}`}>
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
               <h3 className="text-2xl leading-[1.1] md:text-[28px]">{s.station}</h3>
               {branchAt.has(s.stationId) && (
@@ -170,16 +170,16 @@ async function Stops({ stops, branchAt }: { stops: LineStop[]; branchAt: Set<num
                 </Badge>
               )}
             </div>
-            <ul className="flex flex-wrap gap-2">
+            <ul className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               {s.pubs.map((p) => (
                 <li key={p.slug}>
                   <Card
                     render={<Link href={{ pathname: "/pub/[slug]", params: { slug: p.slug } }} />}
-                    className="inline-flex flex-row items-center gap-2.5 rounded-lg py-2 pr-3.5 pl-2.5 hover:border-sign"
+                    className="gap-1.5 rounded-lg px-3.5 py-2.5 hover:border-sign"
                   >
-                    <StatusChip status={p.status} className="text-xs" />
-                    <span className="flex flex-col leading-tight">
-                      <span className="text-[15px] font-semibold">{p.name}</span>
+                    <span className="text-[15px] leading-tight font-semibold">{p.name}</span>
+                    <span className="flex flex-wrap items-center gap-2">
+                      <StatusChip status={p.status} className="text-xs" />
                       <span className="text-[13px] text-muted-foreground">{kt(p.kind)}</span>
                     </span>
                   </Card>
