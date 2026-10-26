@@ -2,6 +2,7 @@
 
 import { useFormStatus } from "react-dom";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import type { Relation } from "@/lib/friend";
 import { friendAction } from "./actions";
 import { Badge } from "@/components/ui/badge";
@@ -9,15 +10,24 @@ import { Button } from "@/components/ui/button";
 
 type Props = {
   userId: string;
+  username: string;
   relation: Relation;
   /** In the friends list a friend can be removed; elsewhere they only show as a friend. */
   removable?: boolean;
 };
 
 /** The buttons next to another user: add, cancel, accept or decline, or remove a friend. */
-export function FriendActions({ userId, relation, removable = false }: Props) {
+export function FriendActions({ userId, username, relation, removable = false }: Props) {
+  const t = useTranslations("friends");
+
+  // A sent request is confirmed with a toast; the row then shows it as pending.
+  async function act(formData: FormData) {
+    const { sent } = await friendAction(formData);
+    if (sent) toast.success(t("toasts.send", { username }));
+  }
+
   return (
-    <form action={friendAction} className="flex shrink-0 flex-wrap items-center gap-2">
+    <form action={act} className="flex shrink-0 flex-wrap items-center gap-2">
       <input type="hidden" name="userId" value={userId} />
       <Buttons relation={relation} removable={removable} />
     </form>
@@ -39,7 +49,7 @@ function Buttons({ relation, removable }: { relation: Relation; removable: boole
     case "sent":
       return (
         <>
-          <span className="text-sm text-muted-foreground">{t("sent")}</span>
+          <Badge variant="unknown">{t("pending")}</Badge>
           {button("cancel", t("cancel"))}
         </>
       );

@@ -121,7 +121,7 @@ function People({ people, label, removable }: { people: FriendUser[]; label?: st
             <Avatar url={p.avatarUrl} name={p.username} size={40} />
             <span className="min-w-0 font-semibold break-words">@{p.username}</span>
           </span>
-          <FriendActions userId={p.id} relation={p.relation} removable={removable} />
+          <FriendActions userId={p.id} username={p.username} relation={p.relation} removable={removable} />
         </li>
       ))}
     </Card>

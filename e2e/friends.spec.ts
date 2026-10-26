@@ -26,7 +26,10 @@ test("finds a user by username, sends a request and they accept it", async ({ pa
 
   const result = await find(page, bob.username);
   await result.getByRole("button", { name: "Add friend" }).click();
-  await expect(result).toContainText("Request sent");
+  // A toast confirms it; the row then shows the request as pending, with a way to cancel it.
+  await expect(page.getByText(`Friend request sent to @${bob.username}`)).toBeVisible();
+  await expect(result).toContainText("Pending");
+  await expect(result.getByRole("button", { name: "Cancel request" })).toBeVisible();
   await expect(row(page, "Requests you sent", bob.username)).toBeVisible();
 
   // Bob sees the request waiting in his account menu and accepts it on the friends page.
@@ -37,6 +40,8 @@ test("finds a user by username, sends a request and they accept it", async ({ pa
   await menuItem.click();
   await expect(bobPage).toHaveURL(/\/en\/friends$/);
   await row(bobPage, "Friend requests", anna.username).getByRole("button", { name: "Accept" }).click();
+  // Only sending gets a toast.
+  await expect(bobPage.locator("[data-sonner-toast]")).toHaveCount(0);
   await expect(row(bobPage, "Your friends", anna.username)).toBeVisible();
   await expect(bobPage.getByRole("region", { name: "Friend requests" })).toHaveCount(0);
   await expect(bobPage.getByRole("heading", { level: 1, name: "Friends" })).toBeVisible();
@@ -69,8 +74,8 @@ test("a declined request stays sent for the requester until they cancel it", asy
 
   await page.reload();
   const sent = row(page, "Requests you sent", bob.username);
-  await expect(sent).toContainText("Request sent");
-  await sent.getByRole("button", { name: "Cancel" }).click();
+  await expect(sent).toContainText("Pending");
+  await sent.getByRole("button", { name: "Cancel request" }).click();
   await expect(page.getByRole("region", { name: "Requests you sent" })).toHaveCount(0);
   await expect((await find(page, bob.username)).getByRole("button", { name: "Add friend" })).toBeVisible();
 });
@@ -83,6 +88,28 @@ test("search doesn't list yourself or take what can't be a username", async ({ p
   await page.getByRole("searchbox", { name: "Username" }).fill("jan novák");
   await page.getByRole("button", { name: "Search" }).click();
   await expect(page.getByText("Type at least 2 characters of a username")).toBeVisible();
+});
+
+test("the sent toast clears the phone tab bar, in Czech too", async ({ page, browser }, testInfo) => {
+  const bobPage = await browser.newPage();
+  const bob = await signUp(bobPage, testInfo);
+  await bobPage.close();
+  await signUp(page, testInfo);
+
+  await page.goto(`/cs/pratele?q=${bob.username}`);
+  await page.getByRole("button", { name: "Přidat do přátel" }).click();
+  const toast = page.locator("[data-sonner-toast]");
+  await expect(toast).toHaveText(`Žádost o přátelství pro @${bob.username} je odeslaná`);
+
+  // On phones the toast sits above the tab bar (once it has finished sliding in).
+  const tabBar = page.getByRole("navigation", { name: "Sekce", exact: true });
+  if (await tabBar.isVisible()) {
+    const barTop = (await tabBar.boundingBox())!.y;
+    await expect.poll(async () => {
+      const box = await toast.boundingBox();
+      return box ? box.y + box.height : Infinity;
+    }).toBeLessThanOrEqual(barTop);
+  }
 });
 
 test("the profile links to friends, in Czech too", async ({ page }, testInfo) => {

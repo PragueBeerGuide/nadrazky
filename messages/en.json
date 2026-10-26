@@ -322,8 +322,8 @@
     "friendsTitle": "Your friends",
     "noFriends": "No friends yet. Search for someone above and send them a request.",
     "add": "Add friend",
-    "sent": "Request sent",
-    "cancel": "Cancel",
+    "pending": "Pending",
+    "cancel": "Cancel request",
     "accept": "Accept",
     "decline": "Decline",
     "remove": "Remove",
@@ -333,7 +333,10 @@
     "profileTitle": "Friends",
     "profileFriends": "{count, plural, =0 {No friends yet.} one {# friend} other {# friends}}",
     "profileRequests": "{count, plural, one {# request is waiting for you} other {# requests are waiting for you}}",
-    "profileLink": "Friends and requests"
+    "profileLink": "Friends and requests",
+    "toasts": {
+      "send": "Friend request sent to @{username}"
+    }
   },
   "checkIn": {
     "title": "Check in",

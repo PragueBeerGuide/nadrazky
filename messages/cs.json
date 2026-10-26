@@ -322,8 +322,8 @@
     "friendsTitle": "Tvoji přátelé",
     "noFriends": "Zatím tu nikdo není. Vyhledej někoho nahoře a pošli žádost o přátelství.",
     "add": "Přidat do přátel",
-    "sent": "Žádost odeslána",
-    "cancel": "Zrušit",
+    "pending": "Čeká",
+    "cancel": "Zrušit žádost",
     "accept": "Přijmout",
     "decline": "Odmítnout",
     "remove": "Odebrat",
@@ -333,7 +333,10 @@
     "profileTitle": "Přátelé",
     "profileFriends": "{count, plural, =0 {Zatím žádní přátelé.} one {# přítel} few {# přátelé} other {# přátel}}",
     "profileRequests": "{count, plural, one {Čeká na tebe # žádost} few {Čekají na tebe # žádosti} other {Čeká na tebe # žádostí}}",
-    "profileLink": "Přátelé a žádosti"
+    "profileLink": "Přátelé a žádosti",
+    "toasts": {
+      "send": "Žádost o přátelství pro @{username} je odeslaná"
+    }
   },
   "checkIn": {
     "title": "Odbavení",

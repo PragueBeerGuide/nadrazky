@@ -2,7 +2,7 @@ import "server-only";
 import { and, asc, count, desc, eq, isNotNull, ne, or, sql } from "drizzle-orm";
 import { db, schema as s } from "@/db";
 import { avatarUrl } from "./profile";
-import { changeFor, containsPattern, relationFor, SEARCH_LIMIT, type FriendAction, type Relation } from "./friend";
+import { changeFor, containsPattern, relationFor, SEARCH_LIMIT, type FriendAction, type FriendChange, type Relation } from "./friend";
 
 const { friendRequests, users } = s;
 
@@ -21,16 +21,16 @@ const finished = and(isNotNull(users.username), isNotNull(users.adultConfirmedAt
 
 /**
  * Sends, cancels, accepts, declines or removes, by the rules in src/lib/friend.ts.
- * Returns false when the action doesn't apply (anymore), e.g. the other user cancelled
- * a moment ago or hasn't finished signing up.
+ * Returns the change made, or null when the action doesn't apply (anymore), e.g. the
+ * other user cancelled a moment ago or hasn't finished signing up.
  */
-export async function applyFriendAction(meId: string, themId: string, action: FriendAction) {
+export async function applyFriendAction(meId: string, themId: string, action: FriendAction): Promise<FriendChange | null> {
   return db.transaction(async (tx) => {
     const [them] = await tx.select({ id: users.id }).from(users).where(and(eq(users.id, themId), finished));
-    if (!them) return false;
+    if (!them) return null;
     const [request] = await tx.select().from(friendRequests).where(between(meId, themId)).for("update");
     const change = changeFor(action, request, meId, themId);
-    if (!change) return false;
+    if (!change) return null;
 
     if (change.kind === "insert") {
       // Both sending at once: the pair's unique index lets only one row in.
@@ -39,7 +39,7 @@ export async function applyFriendAction(meId: string, themId: string, action: Fr
         .values({ requesterId: meId, recipientId: themId })
         .onConflictDoNothing()
         .returning({ id: friendRequests.id });
-      return rows.length > 0;
+      return rows.length > 0 ? change : null;
     }
     // The row as read: if it changed since, nothing happens.
     const same = and(eq(friendRequests.id, request!.id), eq(friendRequests.status, request!.status));
@@ -47,7 +47,7 @@ export async function applyFriendAction(meId: string, themId: string, action: Fr
       change.kind === "respond"
         ? await tx.update(friendRequests).set({ status: change.status, respondedAt: new Date() }).where(same).returning({ id: friendRequests.id })
         : await tx.delete(friendRequests).where(same).returning({ id: friendRequests.id });
-    return rows.length > 0;
+    return rows.length > 0 ? change : null;
   });
 }
 
