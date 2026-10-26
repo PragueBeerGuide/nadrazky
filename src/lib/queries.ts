@@ -24,6 +24,7 @@ export const confirmedMonthsAgo = sql<number | null>`coalesce(
 
 /** Columns shared by every pub listing. */
 const pubListFields = {
+  id: pubs.id,
   slug: pubs.slug,
   name: pubs.name,
   kind: pubs.kind,

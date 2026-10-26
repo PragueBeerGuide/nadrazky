@@ -98,6 +98,7 @@
     "colType": "Typ",
     "colStatus": "Stav",
     "colConfirmed": "Ověřeno",
+    "colActions": "Akce",
     "results": "{count, plural, one {# hospoda} few {# hospody} other {# hospod}}",
     "clear": "Zrušit filtry",
     "empty": "Nic jsme nenašli. Zkus jiný název stanice."
@@ -141,6 +142,7 @@
     "rating": "Hodnocení {count} z 5",
     "delete": {
       "button": "Smazat hospodu",
+      "label": "Smazat {name}",
       "hint": "Moderátoři a správci můžou smazat hospodu, která sem nepatří.",
       "title": "Smazat {name}?",
       "text": "Zmizí ze seznamů, z mapy, ze statistik i z profilů všech uživatelů. Její odbavení a hlášení zůstanou uložené v databázi.",

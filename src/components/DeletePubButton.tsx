@@ -17,10 +17,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
-import { deletePubAction } from "./actions";
+import { deletePubAction } from "@/app/[locale]/pub/[slug]/actions";
 
-/** For moderators and admins on a pub page: deletes the pub after a confirmation, then goes to the pub list. */
-export function DeletePubButton({ id, name }: { id: number; name: string }) {
+type Props = {
+  id: number;
+  name: string;
+  /** In a list of pubs: an icon button, and the list stays open (it updates without the pub). */
+  compact?: boolean;
+};
+
+/** For moderators and admins: deletes a pub after a confirmation; on its own page, then goes to the pub list. */
+export function DeletePubButton({ id, name, compact = false }: Props) {
   const t = useTranslations("pub.delete");
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -33,16 +40,22 @@ export function DeletePubButton({ id, name }: { id: number; name: string }) {
       await deletePubAction(formData);
       setOpen(false);
       toast.add({ title: t("done", { name }), type: "success" });
-      router.replace("/pubs");
+      if (!compact) router.replace("/pubs");
     });
   }
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger render={<Button variant="destructive" size="md" className="h-11" />}>
-        <Trash2Icon />
-        {t("button")}
-      </AlertDialogTrigger>
+      {compact ? (
+        <AlertDialogTrigger render={<Button variant="destructive" size="icon" aria-label={t("label", { name })} className="size-10" />}>
+          <Trash2Icon />
+        </AlertDialogTrigger>
+      ) : (
+        <AlertDialogTrigger render={<Button variant="destructive" size="md" className="h-11" />}>
+          <Trash2Icon />
+          {t("button")}
+        </AlertDialogTrigger>
+      )}
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{t("title", { name })}</AlertDialogTitle>

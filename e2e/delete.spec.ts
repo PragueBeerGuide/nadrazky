@@ -40,3 +40,31 @@ test("a moderator deletes a pub and it disappears everywhere", async ({ page }, 
   await page.goto(search);
   await expect(page.getByRole("link", { name: pub.name, exact: true })).toHaveCount(0);
 });
+
+const LIST_PUBS = [
+  { slug: "znojmo-pizzeria-cirkus", name: "Pizzeria Cirkus" },
+  { slug: "zlin-prstne-restaurace-u-kajmana", name: "Restaurace U Kajmana" },
+] as const;
+
+test("a moderator deletes a pub from the pub list", async ({ page }, testInfo) => {
+  const pub = LIST_PUBS[testInfo.project.name === "phone" ? 1 : 0];
+  const search = `/en/pubs?q=${encodeURIComponent(pub.name)}`;
+  await signUp(page, testInfo, search, "moderator");
+  const row = page.getByRole("row").filter({ has: page.getByRole("link", { name: pub.name, exact: true }) });
+  await expect(row).toHaveCount(1);
+
+  await row.getByRole("button", { name: `Delete ${pub.name}` }).click();
+  await page.getByRole("alertdialog", { name: `Delete ${pub.name}?` }).getByRole("button", { name: "Delete", exact: true }).click();
+  await expect(page.getByText(`${pub.name} is deleted.`)).toBeVisible();
+  await expect(row).toHaveCount(0);
+  await expect(page).toHaveURL(new RegExp(`/en/pubs\\?q=`));
+
+  const response = await page.goto(`/en/pub/${pub.slug}`);
+  expect(response?.status()).toBe(404);
+});
+
+test("regular users get no delete buttons in the pub list", async ({ page }, testInfo) => {
+  await signUp(page, testInfo, "/en/pubs?q=Davle");
+  await expect(page.getByRole("link", { name: "Remagen" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Delete / })).toHaveCount(0);
+});

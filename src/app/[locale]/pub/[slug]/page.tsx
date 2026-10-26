@@ -29,7 +29,7 @@ import { getCheckInSummary, hasCheckedInToday, listRecentCheckIns } from "@/lib/
 import { avatarUrl } from "@/lib/profile";
 import { Avatar } from "@/components/Avatar";
 import { getLineStops, getPub } from "@/lib/queries";
-import { DeletePubButton } from "./DeletePubButton";
+import { DeletePubButton } from "@/components/DeletePubButton";
 
 // Breadcrumbs on the sign-blue band
 const crumbs = {
