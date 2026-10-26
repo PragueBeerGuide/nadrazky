@@ -1,18 +1,20 @@
 /**
  * Imports the station pub list (from nadrazky.eu, used with the owner's consent)
  * with station positions, regions and rail lines from Wikidata; the rail lines
- * themselves come from data/seed/rail-lines.json (railLines.ts).
+ * themselves come from data/seed/rail-lines.json (railLines.ts), and all stations and
+ * stops from the railway register (stations.ts).
  * Idempotent: re-running updates rows by their nadrazky.eu id.
  *
  *   npm run db:import
  *   npm run db:import -- --if-empty   only when there are no pubs yet (used on deploy)
  */
 import { readFileSync } from "node:fs";
-import { count, sql } from "drizzle-orm";
+import { count, eq, sql } from "drizzle-orm";
 import { openDb } from "./client";
 import * as s from "./schema";
 import { REGIONS } from "./regions";
 import { readRailLines, syncRailLines } from "./railLines";
+import { readStationMatcher, syncStations } from "./stations";
 import { slugify } from "../lib/slug";
 import { statusFromSource } from "../lib/status";
 
@@ -71,26 +73,40 @@ async function main() {
     }
   }
 
-  // Stations (one per station name in the source list)
+  // Stations: all of them from the railway register, then the pub list's stations matched
+  // to it by name. The few it doesn't list are kept under the pub list's name and position.
+  await syncStations(db);
+  const match = readStationMatcher();
+  const idBySr70 = new Map(
+    (await db.select({ id: s.stations.id, sr70: s.stations.sr70 }).from(s.stations)).flatMap((x) => (x.sr70 ? [[x.sr70, x.id] as const] : [])),
+  );
   const stationIds = new Map<string, number>();
   for (const r of rows) {
     if (stationIds.has(r.station)) continue;
-    const region = REGIONS[r.region];
-    const [st] = await db
-      .insert(s.stations)
-      .values({
-        slug: slugify(r.station),
-        name: r.station,
-        wikidataId: r.wikidata_id || null,
-        regionSlug: region?.slug ?? null,
-        lat: r.lat,
-        lon: r.lon,
-      })
-      .onConflictDoUpdate({
-        target: s.stations.slug,
-        set: { name: sql`excluded.name`, wikidataId: sql`excluded.wikidata_id`, regionSlug: sql`excluded.region_slug`, lat: sql`excluded.lat`, lon: sql`excluded.lon` },
-      })
-      .returning({ id: s.stations.id });
+    const sr70 = match(r.station);
+    const registered = sr70 ? idBySr70.get(sr70) : undefined;
+    let st: { id: number };
+    if (registered) {
+      st = { id: registered };
+      if (r.wikidata_id) await db.update(s.stations).set({ wikidataId: r.wikidata_id }).where(eq(s.stations.id, registered));
+    } else {
+      const region = REGIONS[r.region];
+      [st] = await db
+        .insert(s.stations)
+        .values({
+          slug: slugify(r.station),
+          name: r.station,
+          wikidataId: r.wikidata_id || null,
+          regionSlug: region?.slug ?? null,
+          lat: r.lat,
+          lon: r.lon,
+        })
+        .onConflictDoUpdate({
+          target: s.stations.slug,
+          set: { name: sql`excluded.name`, wikidataId: sql`excluded.wikidata_id`, regionSlug: sql`excluded.region_slug`, lat: sql`excluded.lat`, lon: sql`excluded.lon` },
+        })
+        .returning({ id: s.stations.id });
+    }
     stationIds.set(r.station, st.id);
     const nums = stationLines.get(r.station);
     if (nums?.size) {

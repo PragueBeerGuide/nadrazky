@@ -23,6 +23,8 @@ import {
 export const pubStatus = pgEnum("pub_status", ["open", "unknown", "closed"]);
 export const pubKind = pgEnum("pub_kind", ["pub", "restaurant", "kiosk", "cafe", "unknown"]);
 export const locationMatch = pgEnum("location_match", ["exact", "prefix", "manual", "review", "none"]);
+/** A station (stanice) or a stop (zastávka), as the railway register lists it. */
+export const stationKind = pgEnum("station_kind", ["station", "stop"]);
 
 /** The 14 Czech regions (kraje). */
 export const regions = pgTable("regions", {
@@ -43,6 +45,9 @@ export const stations = pgTable(
     id: serial("id").primaryKey(),
     slug: text("slug").notNull().unique(),
     name: text("name").notNull(),
+    /** The station's SR70 number in the railway register (data/seed/railway-stations.csv); null for stations it no longer lists. */
+    sr70: text("sr70").unique(),
+    kind: stationKind("kind"),
     wikidataId: text("wikidata_id"),
     regionSlug: text("region_slug").references(() => regions.slug),
     lat: doublePrecision("lat").notNull(),

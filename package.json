@@ -11,6 +11,7 @@
     "db:migrate": "tsx --env-file-if-exists=.env.local src/db/migrate.ts",
     "db:import": "tsx --env-file-if-exists=.env.local src/db/import.ts",
     "db:rail-lines": "tsx --env-file-if-exists=.env.local src/db/sync-rail-lines.ts",
+    "db:stations": "tsx --env-file-if-exists=.env.local src/db/sync-stations.ts",
     "postinstall": "node scripts/copy-maplibre-worker.mjs",
     "predev": "node scripts/copy-maplibre-worker.mjs",
     "prebuild": "node scripts/copy-maplibre-worker.mjs",

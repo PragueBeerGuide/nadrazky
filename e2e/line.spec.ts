@@ -4,7 +4,7 @@ test("line 210 lists its stops from Praha and its branch", async ({ page }) => {
   await page.goto("/en/line/210");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Praha");
   const stops = await page.locator("ol > li h3").allTextContents();
-  expect(stops[0]).toBe("Praha - Braník");
+  expect(stops[0]).toBe("Praha-Braník");
   expect(stops.indexOf("Davle")).toBeGreaterThan(stops.indexOf("Vrané nad Vltavou"));
   await expect(page.getByRole("heading", { name: /^Branch from / })).toBeVisible();
   await expect(page.getByText("Badges are coming soon")).toBeVisible();
