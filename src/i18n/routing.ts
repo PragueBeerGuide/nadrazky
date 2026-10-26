@@ -21,6 +21,10 @@ export const routing = defineRouting({
     "/profile": { cs: "/profil", en: "/profile" },
     "/friends": { cs: "/pratele", en: "/friends" },
     "/moderation": { cs: "/moderace", en: "/moderation" },
+    "/admin/lines": { cs: "/sprava/trate", en: "/admin/lines" },
+    "/admin/line/[number]": { cs: "/sprava/trat/[number]", en: "/admin/line/[number]" },
+    "/admin/stations": { cs: "/sprava/stanice", en: "/admin/stations" },
+    "/admin/station/[slug]": { cs: "/sprava/stanice/[slug]", en: "/admin/station/[slug]" },
   },
 });
 

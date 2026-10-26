@@ -28,6 +28,7 @@ export function UserMenu({ user, finished, waiting, requests }: Props) {
   const pt = useTranslations("profile");
   const mt = useTranslations("moderation");
   const ft = useTranslations("friends");
+  const at = useTranslations("admin");
   const locale = useLocale();
   const [open, setOpen] = useState(false);
   const label = user.username ? `@${user.username}` : (user.name ?? user.email ?? "");
@@ -74,6 +75,11 @@ export function UserMenu({ user, finished, waiting, requests }: Props) {
             <Link href="/moderation" onClick={close} className={cn(item, "justify-between")}>
               {mt("menuLink")}
               {waiting > 0 && <Badge className="bg-yellow font-mono font-semibold text-ink">{mt("menuCount", { count: waiting })}</Badge>}
+            </Link>
+          )}
+          {user.role === "admin" && (
+            <Link href="/admin/lines" onClick={close} className={item}>
+              {at("menuLink")}
             </Link>
           )}
         </nav>

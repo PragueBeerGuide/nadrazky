@@ -24,6 +24,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
+import { canEditRailData } from "@/lib/auth/roles";
 import { getCheckInSummary, hasCheckedInToday, listRecentCheckIns } from "@/lib/checkins";
 import { avatarUrl } from "@/lib/profile";
 import { Avatar } from "@/components/Avatar";
@@ -65,6 +66,8 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
   const rt = await getTranslations("report");
   const format = await getFormatter();
   const user = await getCurrentUser();
+  const admin = canEditRailData(user?.role);
+  const at = await getTranslations("admin");
   const [summary, recent, checkedInToday] = await Promise.all([
     getCheckInSummary(pub.id),
     listRecentCheckIns(pub.id),
@@ -86,7 +89,7 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
         ]
       : []),
     [t("type"), kt(pub.kind)],
-    ...(lines.length
+    ...(lines.length || admin
       ? [
           [
             t("lines"),
@@ -99,6 +102,11 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
                   </Link>
                 </span>
               ))}
+              {admin && (
+                <Link href={{ pathname: "/admin/station/[slug]", params: { slug: station.slug } }} className="link text-sm">
+                  {at("editLines")}
+                </Link>
+              )}
             </span>,
           ] as [string, React.ReactNode],
         ]

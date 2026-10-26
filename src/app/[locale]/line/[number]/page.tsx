@@ -19,6 +19,8 @@ import { Card } from "@/components/ui/card";
 import { routeStops } from "@/lib/lineOrder";
 import { getLine, getLineStops, type LineStop } from "@/lib/queries";
 import { Progress } from "@/components/ui/progress";
+import { getCurrentUser } from "@/lib/auth/currentUser";
+import { canEditRailData } from "@/lib/auth/roles";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/line/[number]">): Promise<Metadata> {
   const { number } = await params;
@@ -35,6 +37,8 @@ export default async function LinePage({ params }: PageProps<"/[locale]/line/[nu
   if (!line) notFound();
   const t = await getTranslations("lines");
   const nav = await getTranslations("nav");
+  const at = await getTranslations("admin");
+  const admin = canEditRailData((await getCurrentUser())?.role);
   const route = await getLineStops(line.number, line.nameCs);
   const stops = routeStops(route);
   const pubs = stops.flatMap((s) => s.pubs);
@@ -141,6 +145,11 @@ export default async function LinePage({ params }: PageProps<"/[locale]/line/[nu
             <Link href={{ pathname: "/map", query: { line: line.number } }} className="link text-[15px]">
               {t("onMap", { number: line.number })}
             </Link>
+            {admin && (
+              <Link href={{ pathname: "/admin/line/[number]", params: { number: line.number } }} className="link text-[15px]">
+                {at("editStations")}
+              </Link>
+            )}
           </Card>
         </aside>
       </div>
