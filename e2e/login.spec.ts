@@ -55,7 +55,7 @@ test("sign-up needs a valid username and the 18+ confirmation", async ({ page },
 
   // Until sign-up is finished, the header menu offers to finish it.
   await page.getByLabel(/^Account:/).click();
-  await expect(page.getByRole("menuitem", { name: "Finish signing up" })).toBeVisible();
+  await expect(page.getByRole("dialog").getByRole("link", { name: "Finish signing up" })).toBeVisible();
 });
 
 test("signs up, shows the user in the header and logs out", async ({ page }, testInfo) => {
@@ -68,7 +68,7 @@ test("signs up, shows the user in the header and logs out", async ({ page }, tes
 
   await page.getByLabel(`Account: @${user.username}`).click();
   await expect(page.getByText(user.email)).toBeVisible();
-  await page.getByRole("menuitem", { name: "Log out" }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Log out" }).click();
   await expect(page.getByRole("banner").getByRole("link", { name: "Log in" })).toBeVisible();
 });
 

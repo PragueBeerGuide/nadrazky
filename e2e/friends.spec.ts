@@ -35,9 +35,9 @@ test("finds a user by username, sends a request and they accept it", async ({ pa
   // Bob sees the request waiting in his account menu and accepts it on the friends page.
   await bobPage.goto("/en");
   await bobPage.getByLabel(`Account: @${bob.username}`).click();
-  const menuItem = bobPage.getByRole("menuitem", { name: /^Friends/ });
-  await expect(menuItem).toContainText("1 new");
-  await menuItem.click();
+  const friendsLink = bobPage.getByRole("dialog").getByRole("link", { name: /^Friends/ });
+  await expect(friendsLink).toContainText("1 new");
+  await friendsLink.click();
   await expect(bobPage).toHaveURL(/\/en\/friends$/);
   await row(bobPage, "Friend requests", anna.username).getByRole("button", { name: "Accept" }).click();
   // Only sending gets a toast.
@@ -48,7 +48,7 @@ test("finds a user by username, sends a request and they accept it", async ({ pa
   await expect(bobPage.getByText("You have 1 friend.")).toBeVisible();
 
   await bobPage.getByLabel(`Account: @${bob.username}`).click();
-  await expect(bobPage.getByRole("menuitem", { name: /^Friends/ })).not.toContainText("new");
+  await expect(bobPage.getByRole("dialog").getByRole("link", { name: /^Friends/ })).not.toContainText("new");
   await bobPage.close();
 
   await page.reload();
