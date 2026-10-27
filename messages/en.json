@@ -54,7 +54,7 @@
       "pubs": "{count, plural, one {station pub} other {station pubs}}",
       "stations": "{count, plural, one {station} other {stations}}",
       "open": "{count, plural, one {confirmed open} other {confirmed open}}",
-      "waiting": "{count, plural, one {waiting for someone to check} other {waiting for someone to check}}"
+      "waiting": "{count, plural, one {unconfirmed} other {unconfirmed}}"
     },
     "byRegion": "By region",
     "byLine": "By rail line",
