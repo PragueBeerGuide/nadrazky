@@ -1,5 +1,5 @@
-/** Free OpenStreetMap-based vector tiles, no API key needed. */
-export const MAP_STYLE = "https://tiles.openfreemap.org/styles/liberty";
+/** Our railway-first basemap over free OpenFreeMap vector tiles (scripts/build-map-style.mjs). */
+export const MAP_STYLE = "/map/style.json";
 
 /** Bounding box of the Czech Republic: [west, south, east, north]. */
 export const CZ_BOUNDS: [number, number, number, number] = [12.09, 48.55, 18.86, 51.06];
