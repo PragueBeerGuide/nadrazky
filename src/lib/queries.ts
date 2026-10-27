@@ -22,6 +22,11 @@ export const confirmedMonthsAgo = sql<number | null>`coalesce(
   ${pubs.sourceLastUpdateMonthsAgo}
 )`.mapWith((v: unknown) => (v == null ? null : Number(v)));
 
+/** Rail line numbers through the station, ascending. */
+export const stationLineNumbers = sql<string[]>`(select coalesce(string_agg(${stationLines.lineNumber}, ',' order by ${stationLines.lineNumber}), '') from ${stationLines} where ${stationLines.stationId} = ${stations.id})`.mapWith(
+  (v: string) => (v ? v.split(",") : []),
+);
+
 /** Columns shared by every pub listing. */
 const pubListFields = {
   id: pubs.id,
@@ -38,10 +43,7 @@ const pubListFields = {
   monthsAgo: confirmedMonthsAgo,
   /** When a check-in or approved report last confirmed the pub; null if never (then monthsAgo is nadrazky.eu's). */
   lastConfirmedAt: pubs.lastConfirmedAt,
-  /** Rail line numbers through the station, ascending. */
-  lines: sql<string[]>`(select coalesce(string_agg(${stationLines.lineNumber}, ',' order by ${stationLines.lineNumber}), '') from ${stationLines} where ${stationLines.stationId} = ${stations.id})`.mapWith(
-    (v: string) => (v ? v.split(",") : []),
-  ),
+  lines: stationLineNumbers,
   lat: sql<number>`coalesce(${pubs.lat}, ${stations.lat})`,
   lon: sql<number>`coalesce(${pubs.lon}, ${stations.lon})`,
 };

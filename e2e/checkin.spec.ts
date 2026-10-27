@@ -1,5 +1,5 @@
 import { devSignUp, newUser, signUp } from "./auth";
-import { expect, test } from "./fixtures";
+import { closeBadgePopup, expect, test } from "./fixtures";
 
 const PUB = "davle-sk-marina-chyse";
 const PUB_NAME = "SK Marína Chýše";
@@ -26,6 +26,7 @@ test("checks in on the spot with details, once a day", async ({ page }, testInfo
   await page.getByRole("button", { name: "Check in here" }).click();
 
   await expect(page).toHaveURL(new RegExp(`/en/pub/${PUB}$`));
+  await closeBadgePopup(page);
   await expect(page.getByText("You checked in here today")).toBeVisible();
   await expect(page.getByTestId("checkin-count")).toHaveText(/^\d+ check-ins?$/);
   await expect(page.getByRole("region", { name: "Check-ins" }).getByText(`@${user.username}`)).toBeVisible();
@@ -58,6 +59,7 @@ test("checks in from anywhere, without asking for the location", async ({ page }
   const user = await signUp(page, testInfo, `/en/pub/${PUB}/check-in`);
   await page.getByRole("button", { name: "Check in here" }).click();
   await expect(page).toHaveURL(new RegExp(`/en/pub/${PUB}$`));
+  await closeBadgePopup(page);
   await expect(page.getByRole("region", { name: "Check-ins" }).getByText(`@${user.username}`)).toBeVisible();
   expect(await page.evaluate(() => (window as unknown as { geoCalls: number }).geoCalls)).toBe(0);
 });
@@ -86,6 +88,7 @@ test("checks in in Czech, reporting the pub closed", async ({ page }, testInfo) 
   await page.getByRole("button", { name: "Odbavit se tady" }).click();
 
   await expect(page).toHaveURL(new RegExp(`/cs/hospoda/${PUB}$`));
+  await closeBadgePopup(page);
   await expect(page.getByText("Dnes už tu máš odbaveno")).toBeVisible();
   const mine = page.getByRole("list", { name: "Poslední odbavení" }).getByRole("listitem").filter({ hasText: `@${user.username}` });
   await expect(mine.getByText("Zavřeno")).toBeVisible();
@@ -138,6 +141,7 @@ test("beer and shots need an amount before the check-in is sent", async ({ page 
   await expect(main.getByText("Choose how many.")).toHaveCount(0);
   await main.getByRole("button", { name: "Check in here" }).click();
   await expect(page).toHaveURL(new RegExp(`/en/pub/${PUB}$`));
+  await closeBadgePopup(page);
   const mine = page.getByRole("region", { name: "Check-ins" }).getByRole("listitem").filter({ hasText: `@${user.username}` });
   await expect(mine.getByText("2 shots", { exact: true })).toBeVisible();
 });
@@ -151,6 +155,7 @@ test("amounts in Czech", async ({ page }, testInfo) => {
   await main.getByRole("checkbox", { name: "Jídlo" }).check();
   await main.getByRole("button", { name: "Odbavit se tady" }).click();
   await expect(page).toHaveURL(new RegExp(`/cs/hospoda/${PUB}$`));
+  await closeBadgePopup(page);
   const mine = page.getByRole("region", { name: "Odbavení" }).getByRole("listitem").filter({ hasText: `@${user.username}` });
   await expect(mine.getByText("4 piva", { exact: true })).toBeVisible();
   await expect(mine.getByText("Jídlo", { exact: true })).toBeVisible();

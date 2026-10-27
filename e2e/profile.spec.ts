@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
 import { signUp } from "./auth";
-import { expect, test } from "./fixtures";
+import { closeBadgePopup, expect, test } from "./fixtures";
 
 /** A number on the profile and its label, e.g. stat(page, "pubs") -> "2" and "pubs visited out of 782". */
 function stat(page: Page, key: string) {
@@ -101,6 +101,7 @@ test("adds a hometown and a profile picture, shown in the header and next to che
   expect(await sharp(await picture.body()).metadata()).toMatchObject({ format: "webp", width: 256, height: 256 });
 
   await checkIn(page, "davle-remagen");
+  await closeBadgePopup(page);
   const mine = page.getByRole("region", { name: "Check-ins" }).getByRole("listitem").filter({ hasText: `@${user.username}` });
   await expect(mine.locator("img")).toHaveAttribute("src", src!);
 

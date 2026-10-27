@@ -30,6 +30,7 @@ import { avatarUrl } from "@/lib/profile";
 import { Avatar } from "@/components/Avatar";
 import { getLineStops, getPub } from "@/lib/queries";
 import { DeletePubButton } from "@/components/DeletePubButton";
+import { NewBadges } from "@/components/NewBadges";
 
 // Breadcrumbs on the sign-blue band
 const crumbs = {
@@ -347,6 +348,8 @@ export default async function PubPage({ params }: PageProps<"/[locale]/pub/[slug
           </Card>
         </aside>
       </div>
+      {/* After a check-in, the badge levels it reached */}
+      {user && signUpFinished(user) && <NewBadges userId={user.id} />}
     </article>
   );
 }

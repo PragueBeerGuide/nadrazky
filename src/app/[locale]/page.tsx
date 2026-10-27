@@ -13,6 +13,8 @@ import { cn } from "@/lib/utils";
 import { getTotals, listLines, listPubs, listRegions } from "@/lib/queries";
 import { compareLastConfirmed } from "@/lib/ago";
 import { Progress } from "@/components/ui/progress";
+import { BadgeMedal } from "@/components/BadgeMedal";
+import { medalRegionName } from "@/components/badgeText";
 
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const { locale: raw } = await params;
@@ -199,7 +201,7 @@ async function HelpBand({
   topRegion?: { name: string; count: number };
 }) {
   const t = await getTranslations("home");
-  const rt = await getTranslations("regions");
+  const bt = await getTranslations("badges");
   const steps = [t("step1"), t("step2"), t("step3")];
   return (
     <section className="bg-yellow py-10 text-ink md:py-16">
@@ -219,35 +221,40 @@ async function HelpBand({
               </li>
             ))}
           </ol>
-          <p className="text-[15px] font-semibold">{t("soon")}</p>
-          <div>
+          <Link href="/badges" className="link self-start text-[15px] font-semibold max-md:self-center">
+            {bt("homeLink")}
+          </Link>
+          <div className="max-md:text-center">
             <Link href={{ pathname: "/pubs", query: { status: "unknown" } }} className={cn(buttonVariants({ variant: "ink", size: "xl" }), "h-13")}>
               {t("helpCta")}
             </Link>
           </div>
         </div>
-        <div role="img" aria-label={t("badgesAlt")} className="flex flex-wrap justify-center gap-x-4 gap-y-3 md:gap-6">
+        <ul aria-label={t("badgesAlt")} className="flex flex-wrap justify-center gap-x-4 gap-y-5 md:gap-6">
+          <li>
+            <BadgeMedal kind="pubs" label={bt("kind.pubs")} title={bt("pubsName")} level={3} complete={false} fill={0.6} levelLabel={`${bt("pubsName")}: ${bt("level", { level: 3 })}`} size="lg" />
+          </li>
           {topLine && (
-            <Badge ring="bg-sign" border="border-yellow" label={t("badgeLine")} title={topLine.number} titleClass="text-5xl text-sign" sub={rt("pubCount", { count: topLine.pubCount })} subClass="text-sign" />
+            <li>
+              <BadgeMedal
+                kind="line"
+                label={bt("kind.line")}
+                title={topLine.number}
+                level={2}
+                complete={false}
+                fill={0.4}
+                levelLabel={`${bt("lineName", { number: topLine.number })}: ${bt("level", { level: 2 })}`}
+                size="lg"
+              />
+            </li>
           )}
           {topRegion && (
-            <Badge ring="bg-ink" border="border-sign" label={t("badgeRegion")} title={topRegion.name} titleClass="text-xl text-ink" sub={rt("pubCount", { count: topRegion.count })} subClass="text-sign" />
+            <li>
+              <BadgeMedal kind="region" label={bt("kind.region")} title={medalRegionName(topRegion.name)} level={1} complete levelLabel={`${topRegion.name}: ${bt("complete")}`} size="lg" />
+            </li>
           )}
-          <Badge ring="bg-[#1e7a46]" border="border-ink" label={t("badgeFirst")} title={t("badgeFirstTitle")} titleClass="text-[26px] text-[#1e7a46]" sub={t("badgeFirstText")} subClass="text-[#1e7a46]" />
-        </div>
+        </ul>
       </div>
     </section>
-  );
-}
-
-function Badge(props: { ring: string; border: string; label: string; title: string; titleClass: string; sub: string; subClass: string }) {
-  return (
-    <div className={`flex h-[150px] w-[150px] items-center justify-center rounded-full shadow-[0_10px_24px_rgb(14_26_43/0.25)] md:h-[168px] md:w-[168px] ${props.ring}`}>
-      <div className={`flex h-[122px] w-[122px] flex-col items-center justify-center gap-0.5 rounded-full border-[3px] bg-white px-2 text-center md:h-[136px] md:w-[136px] ${props.border}`}>
-        <span className="font-mono text-[11px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">{props.label}</span>
-        <span className={`font-display leading-none font-bold ${props.titleClass}`}>{props.title}</span>
-        <span className={`text-xs font-semibold ${props.subClass}`}>{props.sub}</span>
-      </div>
-    </div>
   );
 }
