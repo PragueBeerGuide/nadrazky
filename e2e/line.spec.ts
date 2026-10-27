@@ -7,7 +7,9 @@ test("line 210 lists its stops from Praha and its branch", async ({ page }) => {
   expect(stops[0]).toBe("Praha-Braník");
   expect(stops.indexOf("Davle")).toBeGreaterThan(stops.indexOf("Vrané nad Vltavou"));
   await expect(page.getByRole("heading", { name: /^Branch from / })).toBeVisible();
-  await expect(page.getByText("Badges are coming soon")).toBeVisible();
+  const badge = page.getByTestId("badge-card");
+  await expect(badge.getByRole("heading", { name: "Line 210 badge" })).toBeVisible();
+  await expect(badge.getByRole("link", { name: "Log in to collect this badge" })).toBeVisible();
 });
 
 test("links to the line on the map", async ({ page }) => {

@@ -32,6 +32,11 @@
   --open-board: #7fd39e;
   /* Rating stars */
   --star: #e3a21a;
+  /* The ring of a completed badge */
+  --gold: #c8901a;
+  /* A badge before it colours in: its ring, and the edge and title inside */
+  --medal-grey: #d3d6da;
+  --medal-grey-edge: #b3b8bf;
   --unknown: #a3abb6;
   --unknown-bg: #e7e9ed;
   --unknown-ink: #475162;
@@ -85,6 +90,11 @@
   --color-open-ink: var(--open-ink);
   --color-open-board: var(--open-board);
   --color-star: var(--star);
+  --color-gold: var(--gold);
+  --color-medal-grey: var(--medal-grey);
+  --color-medal-grey-edge: var(--medal-grey-edge);
+  /* Badges: a thin dark edge and a deep drop shadow, to stand out on yellow and white alike */
+  --shadow-medal: 0 0 0 0.12em rgb(14 26 43 / 0.22), 0 0.35em 0.7em rgb(14 26 43 / 0.3), 0 1em 2.2em rgb(14 26 43 / 0.35);
   --color-unknown: var(--unknown);
   --color-unknown-bg: var(--unknown-bg);
   --color-unknown-ink: var(--unknown-ink);
@@ -252,4 +262,23 @@
   :root {
     --toast-bottom: 24px;
   }
+}
+
+/*
+ * A badge colours in like a pie, clockwise from the top, as the user gets closer to its next
+ * level (BadgeMedal): the coloured face is masked to --medal-fill. When there is progress,
+ * MedalPie sets it back to where it was and marks it rising, and it grows to the new value.
+ */
+@property --medal-fill {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.medal-fill {
+  mask-image: conic-gradient(#000 var(--medal-fill), transparent 0);
+}
+
+.medal-fill[data-rising] {
+  transition: --medal-fill 1.4s cubic-bezier(0.25, 0.8, 0.25, 1) 0.2s;
 }

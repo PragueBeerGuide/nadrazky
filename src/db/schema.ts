@@ -285,6 +285,34 @@ export const friendRequests = pgTable(
   ],
 );
 
+/**
+ * Badge levels a user has earned, one row per level and never taken away (src/lib/badges.ts).
+ * `badge` is "pubs" (Nádražák), "line:<number>" or "region:<slug>"; `complete` marks the
+ * level that finished the line or region. `seenAt` stays empty until the user has seen
+ * the "new badge" popup.
+ */
+export const userBadges = pgTable(
+  "user_badges",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    badge: text("badge").notNull(),
+    level: smallint("level").notNull(),
+    complete: boolean("complete").notNull().default(false),
+    /** The check-in that reached the level. */
+    checkinId: integer("checkin_id").references(() => checkins.id, { onDelete: "set null" }),
+    earnedAt: timestamp("earned_at", { withTimezone: true }).notNull(),
+    seenAt: timestamp("seen_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("user_badges_user_badge_level_idx").on(t.userId, t.badge, t.level),
+    index("user_badges_unseen_idx").on(t.userId, t.seenAt),
+    check("user_badges_level_check", sql`${t.level} >= 1`),
+  ],
+);
+
 export type Pub = typeof pubs.$inferSelect;
 export type User = typeof users.$inferSelect;
 export type Station = typeof stations.$inferSelect;

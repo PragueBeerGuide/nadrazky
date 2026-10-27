@@ -9,6 +9,10 @@ import { getRegionProgress, getUserStats, listVisitedPubs } from "@/lib/checkins
 import { countFriends } from "@/lib/friends";
 import { TIME_ZONE } from "@/lib/checkin";
 import { getTotals } from "@/lib/queries";
+import { listBadges, syncBadges } from "@/lib/userBadges";
+import { badgeHref } from "@/lib/badgeLinks";
+import { BadgeMedal } from "@/components/BadgeMedal";
+import { badgeHeading, medalProps } from "@/components/badgeText";
 import { Avatar } from "@/components/Avatar";
 import { avatarUrl } from "@/lib/profile";
 import { ProfileForm } from "./ProfileForm";
@@ -33,16 +37,21 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
     redirect(getPathname({ locale, href: { pathname: "/login", query: { next: getPathname({ locale, href: "/profile" }) } } }));
   }
 
-  const [t, ft, format, stats, regions, visited, totals, friendCounts] = await Promise.all([
+  await syncBadges(user.id);
+  const [t, ft, bt, format, stats, regions, visited, totals, friendCounts, badges] = await Promise.all([
     getTranslations("profile"),
     getTranslations("friends"),
+    getTranslations("badges"),
     getFormatter(),
     getUserStats(user.id),
     getRegionProgress(user.id),
     listVisitedPubs(user.id),
     getTotals(),
     countFriends(user.id),
+    listBadges(locale, user.id),
   ]);
+  // Newest first; the time a badge last went up.
+  const earned = badges.filter((b) => b.level > 0).sort((a, b) => (b.earnedAt?.getTime() ?? 0) - (a.earnedAt?.getTime() ?? 0));
   const date = (d: Date) => format.dateTime(d, { day: "numeric", month: "short", year: "numeric", timeZone: TIME_ZONE });
   const collator = new Intl.Collator(locale);
   const regionName = (r: (typeof regions)[number]) => (locale === "cs" ? r.nameCs : r.nameEn);
@@ -92,6 +101,30 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
       </section>
 
       <div className="page-column flex flex-col gap-10 py-8 md:py-12">
+        <section aria-labelledby="badges-title" className="flex flex-col gap-4">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <h2 id="badges-title" className="text-[28px] md:text-[32px]">
+              {bt("profileTitle")} <span className="font-mono text-lg text-muted-foreground">{earned.length}</span>
+            </h2>
+            <Link href="/badges" className="link text-[15px]">
+              {bt("profileLink")}
+            </Link>
+          </div>
+          {earned.length ? (
+            <ul className="flex gap-4 overflow-x-auto px-1 pt-1 pb-3">
+              {earned.slice(0, 8).map((b) => (
+                <li key={b.key}>
+                  <Link href={badgeHref(b.key)} className="flex w-[104px] flex-col items-center gap-2.5 text-center">
+                    <BadgeMedal {...medalProps(bt, b)} size="sm" />
+                    <span className="text-sm leading-tight font-semibold">{badgeHeading(bt, b)}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-muted-foreground">{bt("profileEmpty")}</p>
+          )}
+        </section>
         {stats.checkIns === 0 ? (
           <Card render={<section />} className="flex flex-col items-start gap-3 p-5 md:p-7">
             <h2 className="text-[28px]">{t("emptyTitle")}</h2>

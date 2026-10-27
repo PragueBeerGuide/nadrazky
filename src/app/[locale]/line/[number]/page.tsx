@@ -1,3 +1,4 @@
+import { CheckIcon } from "lucide-react";
 import { asLocale } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -18,8 +19,10 @@ import {
 import { Card } from "@/components/ui/card";
 import { routeStops } from "@/lib/lineOrder";
 import { getLine, getLineStops, type LineStop } from "@/lib/queries";
-import { Progress } from "@/components/ui/progress";
-import { getCurrentUser } from "@/lib/auth/currentUser";
+import { BadgeCard } from "@/components/BadgeCard";
+import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
+import { badgeKey } from "@/lib/badges";
+import { getBadge } from "@/lib/userBadges";
 import { canEditRailData } from "@/lib/auth/roles";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/line/[number]">): Promise<Metadata> {
@@ -31,14 +34,20 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/line/[nu
 const dot = { open: "bg-open", unknown: "bg-white", closed: "bg-white" } as const;
 
 export default async function LinePage({ params }: PageProps<"/[locale]/line/[number]">) {
-  const { locale, number } = await params;
-  setRequestLocale(asLocale(locale));
+  const { locale: raw, number } = await params;
+  const locale = asLocale(raw);
+  setRequestLocale(locale);
   const line = await getLine(number);
   if (!line) notFound();
   const t = await getTranslations("lines");
   const nav = await getTranslations("nav");
   const at = await getTranslations("admin");
-  const admin = canEditRailData((await getCurrentUser())?.role);
+  const bt = await getTranslations("badges");
+  const user = await getCurrentUser();
+  const admin = canEditRailData(user?.role);
+  const userId = user && signUpFinished(user) ? user.id : undefined;
+  const badge = await getBadge(badgeKey("line", line.number), locale, userId);
+  const visited = badge?.visitedPubIds ?? new Set<number>();
   const route = await getLineStops(line.number, line.nameCs);
   const stops = routeStops(route);
   const pubs = stops.flatMap((s) => s.pubs);
@@ -100,35 +109,17 @@ export default async function LinePage({ params }: PageProps<"/[locale]/line/[nu
             </div>
             <p className="text-sm text-muted-foreground">{t("orderNote")}</p>
           </div>
-          <Stops stops={route.main} branchAt={new Set(route.branches.map((b) => b.from.stationId))} />
+          <Stops stops={route.main} branchAt={new Set(route.branches.map((b) => b.from.stationId))} visited={visited} />
           {route.branches.map((b) => (
             <section key={b.from.stationId} className="flex flex-col gap-4">
               <h3 className="mt-4 text-[28px]">{t("branch", { from: b.from.station })}</h3>
-              <Stops stops={b.stops} branchAt={new Set()} />
+              <Stops stops={b.stops} branchAt={new Set()} visited={visited} />
             </section>
           ))}
         </div>
 
         <aside className="flex min-w-0 flex-[1_1_320px] flex-col gap-4">
-          <Card className="items-center gap-4 p-6 text-center">
-            <div aria-hidden="true" className="flex h-[132px] w-[132px] items-center justify-center rounded-full bg-rule-soft">
-              <div className="flex h-[104px] w-[104px] flex-col items-center justify-center rounded-full border-[3px] border-dashed border-unknown bg-white">
-                <span className="font-mono text-[10px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">{t("eyebrow")}</span>
-                <span className="font-display text-[38px] leading-none font-bold text-muted-foreground">{line.number}</span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <h2 className="text-[28px]">{t("badgeTitle", { number: line.number })}</h2>
-              <p className="text-[15px] text-muted-foreground">{t("badgeText", { count: stops.length })}</p>
-            </div>
-            <div className="flex w-full flex-col gap-1.5">
-              <Progress value={0} aria-hidden="true" className="[&_[data-slot=progress-track]]:h-2.5" />
-              <span className="font-mono text-[13px] text-muted-foreground">{t("badgeProgress", { count: stops.length })}</span>
-            </div>
-            <Badge variant="secondary" className="h-auto w-full rounded-lg px-4 py-3 font-mono font-semibold tracking-[0.08em] whitespace-normal uppercase">
-              {t("badgesSoon")}
-            </Badge>
-          </Card>
+          {badge && <BadgeCard badge={badge} signedIn={Boolean(userId)} title={bt("lineCardTitle", { number: line.number })} />}
           <Card className="gap-3 p-5">
             <span className="label">{t("legendTitle")}</span>
             {(
@@ -157,8 +148,9 @@ export default async function LinePage({ params }: PageProps<"/[locale]/line/[nu
   );
 }
 
-async function Stops({ stops, branchAt }: { stops: LineStop[]; branchAt: Set<number> }) {
+async function Stops({ stops, branchAt, visited }: { stops: LineStop[]; branchAt: Set<number>; visited: Set<number> }) {
   const t = await getTranslations("lines");
+  const bt = await getTranslations("badges");
   const kt = await getTranslations("kind");
   return (
     <Card render={<ol />} className="block px-4 py-3 md:px-6">
@@ -190,6 +182,12 @@ async function Stops({ stops, branchAt }: { stops: LineStop[]; branchAt: Set<num
                     <span className="flex flex-wrap items-center gap-2">
                       <StatusChip status={p.status} className="text-xs" />
                       <span className="text-[13px] text-muted-foreground">{kt(p.kind)}</span>
+                      {visited.has(p.id) && (
+                        <span className="flex items-center gap-1 text-[13px] font-semibold text-sign">
+                          <CheckIcon strokeWidth={3} className="size-3.5" aria-hidden="true" />
+                          {bt("visited")}
+                        </span>
+                      )}
                     </span>
                   </Card>
                 </li>

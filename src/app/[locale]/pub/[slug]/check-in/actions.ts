@@ -10,13 +10,15 @@ import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
 import { alreadyCheckedIn, checkInDay, checkInSchema, pubChangeAfterCheckIn } from "@/lib/checkin";
 import { recentCheckInTimes } from "@/lib/checkins";
 import { livePub } from "@/lib/queries";
+import { syncBadges } from "@/lib/userBadges";
 
 export type CheckInError = "signIn" | "finishSignUp" | "invalid" | "notFound" | "alreadyToday";
 export type CheckInState = { error?: CheckInError; missingAmount?: { beer?: boolean; shot?: boolean } };
 
 /**
  * Saves a check-in unless the user has already checked in at this pub today, and with it
- * confirms the pub now and, if it was open, marks it open.
+ * confirms the pub now and, if it was open, marks it open. Badge levels it reaches wait on
+ * the pub page in the "new badge" popup.
  */
 export async function checkIn(_: CheckInState, formData: FormData): Promise<CheckInState> {
   const locale = asLocale(String(formData.get("locale")));
@@ -38,7 +40,7 @@ export async function checkIn(_: CheckInState, formData: FormData): Promise<Chec
   const now = new Date();
   if (alreadyCheckedIn(await recentCheckInTimes(user.id, pub.id, now), now)) return { error: "alreadyToday" };
 
-  const saved = await db.transaction(async (tx) => {
+  const savedId = await db.transaction(async (tx) => {
     // The unique (user, pub, day) index settles two check-ins sent at the same moment.
     const [row] = await tx
       .insert(schema.checkins)
@@ -46,9 +48,10 @@ export async function checkIn(_: CheckInState, formData: FormData): Promise<Chec
       .onConflictDoNothing()
       .returning({ id: schema.checkins.id });
     if (row) await tx.update(schema.pubs).set(pubChangeAfterCheckIn(details.pubWasOpen, now)).where(eq(schema.pubs.id, pub.id));
-    return Boolean(row);
+    return row?.id;
   });
-  if (!saved) return { error: "alreadyToday" };
+  if (!savedId) return { error: "alreadyToday" };
+  await syncBadges(user.id, savedId);
 
   const pubPath = getPathname({ locale, href: { pathname: "/pub/[slug]", params: { slug } } });
   revalidatePath(pubPath);
