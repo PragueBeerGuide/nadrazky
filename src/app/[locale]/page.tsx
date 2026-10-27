@@ -5,6 +5,7 @@ import { getPathname, Link } from "@/i18n/navigation";
 import { DepartureBoard } from "@/components/DepartureBoard";
 import { LineChip } from "@/components/LineChip";
 import { RailTrack } from "@/components/RailTrack";
+import { CountUp } from "@/components/CountUp";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
@@ -47,9 +48,9 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
     <>
       <section className="bg-sign text-white">
         <div className="page-column grid items-center gap-8 pt-6 pb-8 md:gap-12 md:pt-14 md:pb-[72px] lg:grid-cols-2">
-          <div className="flex flex-col gap-4 md:gap-6">
+          <div className="flex flex-col gap-3 md:gap-6">
             <p className="eyebrow text-xs md:text-[13px]">{t("eyebrow")}</p>
-            <h1 className="text-[52px] leading-[0.92] tracking-[-0.01em] md:text-[clamp(56px,8vw,104px)]">
+            <h1 className="mb-4 text-[52px] leading-[0.92] tracking-[-0.01em] md:mb-0 md:text-[clamp(56px,8vw,104px)]">
               {t("titleLine1")}
               <br />
               {t("titleLine2")}
@@ -58,7 +59,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
             <form
               role="search"
               action={getPathname({ href: "/pubs", locale })}
-              className="flex max-w-[520px] flex-col gap-1.5 md:gap-2"
+              className="flex max-w-[520px] flex-col gap-2"
             >
               <Label htmlFor="home-search">{pt("searchLabel")}</Label>
               <InputGroup className="h-auto gap-1 rounded-lg border-0 bg-white p-1 has-[[data-slot=input-group-control]:focus-visible]:ring-yellow md:gap-1.5 md:p-1.5">
@@ -75,7 +76,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
                 </Button>
               </InputGroup>
             </form>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex max-w-[520px] flex-wrap gap-3 md:grid md:grid-cols-2">
               <Link href={{ pathname: "/map", query: { near: "1" } }} className={cn(buttonVariants({ variant: "yellow", size: "xl" }), "w-full md:hidden")}>
                 <LocateFixedIcon className="size-5" />
                 {t("nearMe")}
@@ -117,12 +118,12 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         />
       </div>
 
-      <section aria-label={t("statsTitle")} className="mt-8 border-y border-rule bg-white py-6 md:mt-0 md:border-t-0 md:py-10">
-        <dl className="page-column grid grid-cols-2 gap-x-6 gap-y-5 md:grid-cols-4">
+      <section aria-label={t("statsTitle")} className="mt-8 border-y border-rule bg-white py-2 md:mt-0 md:border-t-0 md:py-10">
+        <dl className="page-column grid grid-cols-2 md:grid-cols-4">
           {stats.map(([key, n, color]) => (
-            <div key={key} className="flex flex-col-reverse gap-1">
+            <div key={key} className="flex flex-col-reverse items-center gap-1 border-rule px-2 py-4 text-center max-md:odd:border-r max-md:nth-[-n+2]:border-b md:p-0">
               <dt className="text-sm text-muted-foreground md:text-base">{t(`stats.${key}`, { count: n })}</dt>
-              <dd className={`font-display text-5xl leading-none font-bold md:text-[64px] ${color}`}>{n}</dd>
+              <dd className={`font-display text-5xl leading-none font-bold md:text-[64px] ${color}`}><CountUp value={n} /></dd>
             </div>
           ))}
         </dl>
