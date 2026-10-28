@@ -82,7 +82,7 @@ export function UserMenu({ user, finished, waiting, requests }: Props) {
             </Link>
           )}
           {user.role === "admin" && (
-            <Link href="/admin/lines" onClick={close} className={item}>
+            <Link href="/admin" onClick={close} className={item}>
               {at("menuLink")}
             </Link>
           )}
