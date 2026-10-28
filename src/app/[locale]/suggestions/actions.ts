@@ -1,8 +1,10 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/auth/currentUser";
+import { canDecideSuggestions } from "@/lib/auth/roles";
 import { suggestionLimitReached, suggestionSchema } from "@/lib/suggestion";
-import { countSuggestionsToday, createSuggestion } from "@/lib/suggestions";
+import { countSuggestionsToday, createSuggestion, resolveSuggestion } from "@/lib/suggestions";
 
 export type SuggestionState = {
   done?: boolean;
@@ -24,4 +26,15 @@ export async function submitSuggestion(_: SuggestionState, formData: FormData): 
 
   await createSuggestion({ userId, message: input.data.message, page: input.data.page });
   return { done: true };
+}
+
+/** Approve or decline a pending suggestion; only admins may. */
+export async function decideSuggestion(formData: FormData) {
+  const user = await getCurrentUser();
+  if (!user || !canDecideSuggestions(user.role)) throw new Error("Only admins can decide on suggestions.");
+  const id = Number(formData.get("id"));
+  if (!Number.isInteger(id)) return;
+  await resolveSuggestion(id, user.id, formData.get("decision") === "approve" ? "approved" : "declined");
+  // The moderation page, and the bell and the waiting count in the header on every page.
+  revalidatePath("/", "layout");
 }

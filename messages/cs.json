@@ -510,7 +510,13 @@
     "suggestionsTitle": "Návrhy na vylepšení",
     "suggestionsEmpty": "Zatím žádné návrhy.",
     "suggestionBy": "@{username} · {date}",
-    "suggestionAnonymous": "Nepřihlášený · {date}"
+    "suggestionAnonymous": "Nepřihlášený · {date}",
+    "suggestionsSubtitle": "{count, plural, =0 {Na admina nečeká žádný návrh.} one {Na admina čeká # návrh.} few {Na admina čekají # návrhy.} other {Na admina čeká # návrhů.}}",
+    "suggestionsAdminsOnly": "Schválit nebo zamítnout je mohou jen admini.",
+    "suggestionsPendingTitle": "Návrhy čekající na admina",
+    "suggestionsDecidedTitle": "Vyřízené návrhy",
+    "decline": "Zamítnout",
+    "declined": "Zamítnuto"
   },
   "privacy": {
     "title": "Ochrana soukromí",
@@ -645,5 +651,17 @@
       "message": "Napište alespoň {min} znaků.",
       "limit": "Dnes jste poslali příliš mnoho návrhů. Zkuste to zítra."
     }
+  },
+  "notifications": {
+    "title": "Oznámení",
+    "bell": "Oznámení",
+    "unread": "{count, plural, one {# nepřečtené} few {# nepřečtená} other {# nepřečtených}}",
+    "markAll": "Označit vše jako přečtené",
+    "empty": "Zatím žádná oznámení.",
+    "new": "Nové",
+    "friendRequest": "Žádost o přátelství od @{username}",
+    "suggestion": "Návrh od @{username}: „{text}“",
+    "suggestionAnonymous": "Návrh bez přihlášení: „{text}“",
+    "report": "Hlášení k {pub} od @{username}: {kind}"
   }
 }

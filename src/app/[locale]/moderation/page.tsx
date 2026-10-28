@@ -8,7 +8,9 @@ import { getCurrentUser } from "@/lib/auth/currentUser";
 import { canModerate } from "@/lib/auth/roles";
 import { TIME_ZONE } from "@/lib/checkin";
 import { listOpenReports, listResolvedReports, type ReportRow } from "@/lib/reports";
-import { listSuggestions } from "@/lib/suggestions";
+import { canDecideSuggestions } from "@/lib/auth/roles";
+import { listDecidedSuggestions, listPendingSuggestions } from "@/lib/suggestions";
+import { decideSuggestion } from "../suggestions/actions";
 import { decideReport } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,16 +31,21 @@ export default async function ModerationPage({ params }: PageProps<"/[locale]/mo
   if (!user) redirect(getPathname({ locale, href: { pathname: "/login", query: { next: getPathname({ locale, href: "/moderation" }) } } }));
   if (!canModerate(user.role)) notFound();
 
-  const [t, rt, st, format, open, resolved, suggestions] = await Promise.all([
+  const [t, rt, st, format, open, resolved, pending, decided] = await Promise.all([
     getTranslations("moderation"),
     getTranslations("report"),
     getTranslations("status"),
     getFormatter(),
     listOpenReports(),
     listResolvedReports(),
-    listSuggestions(),
+    listPendingSuggestions(),
+    listDecidedSuggestions(),
   ]);
   const when = (d: Date) => format.dateTime(d, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: TIME_ZONE });
+  /** Only admins approve or decline suggestions; moderators see them waiting. */
+  const decides = canDecideSuggestions(user.role);
+  const sender = (sg: { username: string | null; createdAt: Date }) =>
+    sg.username ? t("suggestionBy", { username: sg.username, date: when(sg.createdAt) }) : t("suggestionAnonymous", { date: when(sg.createdAt) });
 
   /** What the pub shows now for the field a report would change. */
   const currentValue = (r: ReportRow) => {
@@ -145,23 +152,60 @@ export default async function ModerationPage({ params }: PageProps<"/[locale]/mo
         )}
 
         <section className="flex flex-col gap-4" aria-labelledby="suggestions-title">
-          <h2 id="suggestions-title" className="text-[28px] md:text-[32px]">
-            {t("suggestionsTitle")}
-          </h2>
-          {suggestions.length === 0 ? (
-            <Card render={<p />} className="p-5 md:p-7">{t("suggestionsEmpty")}</Card>
-          ) : (
-            <Card render={<ul />} className="gap-0 divide-y divide-rule-soft py-0">
-              {suggestions.map((sg) => (
-                <li key={sg.id} className="flex flex-col gap-2 px-4 py-4 md:px-5">
+          <div className="flex flex-col gap-1">
+            <h2 id="suggestions-title" className="text-[28px] md:text-[32px]">
+              {t("suggestionsTitle")}
+            </h2>
+            <p className="text-muted-foreground">
+              {t("suggestionsSubtitle", { count: pending.length })}
+              {!decides && pending.length > 0 && <> {t("suggestionsAdminsOnly")}</>}
+            </p>
+          </div>
+          {pending.length > 0 && (
+            <ul aria-label={t("suggestionsPendingTitle")} className="flex flex-col gap-4">
+              {pending.map((sg) => (
+                <Card render={<li />} key={sg.id} className="flex flex-col gap-4 p-5 md:p-6">
                   <p className="text-[15px] whitespace-pre-line">{sg.message}</p>
-                  <span className="font-mono text-xs text-muted-foreground">
-                    {sg.username ? t("suggestionBy", { username: sg.username, date: when(sg.createdAt) }) : t("suggestionAnonymous", { date: when(sg.createdAt) })}
-                    {sg.page && <> · {sg.page}</>}
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-rule-soft pt-4">
+                    <span className="font-mono text-xs text-muted-foreground">
+                      {sender(sg)}
+                      {sg.page && <> · {sg.page}</>}
+                    </span>
+                    {decides && (
+                      <form action={decideSuggestion} className="flex gap-2">
+                        <input type="hidden" name="id" value={sg.id} />
+                        <Button variant="outline" size="xl" type="submit" name="decision" value="decline" className="h-11">
+                          {t("decline")}
+                        </Button>
+                        <Button size="xl" type="submit" name="decision" value="approve" className="h-11">
+                          {t("approve")}
+                        </Button>
+                      </form>
+                    )}
+                  </div>
+                </Card>
+              ))}
+            </ul>
+          )}
+          {decided.length > 0 && (
+            <Card render={<ul aria-label={t("suggestionsDecidedTitle")} />} className="gap-0 divide-y divide-rule-soft py-0">
+              {decided.map((sg) => (
+                <li key={sg.id} className="flex flex-col gap-2 px-4 py-3 md:px-5">
+                  <p className="text-[15px] whitespace-pre-line">{sg.message}</p>
+                  <span className="flex flex-wrap items-center gap-2 font-mono text-xs text-muted-foreground">
+                    <Badge variant={sg.status === "approved" ? "open" : "closed"}>
+                      {sg.status === "approved" ? t("accepted") : t("declined")}
+                    </Badge>
+                    {t("resolvedBy", { username: sg.decider ?? "?" })}
+                    {sg.decidedAt && <> · {when(sg.decidedAt)}</>}
+                    <span>· {sender(sg)}</span>
                   </span>
                 </li>
               ))}
             </Card>
+          )}
+          {pending.length === 0 && decided.length === 0 && (
+            <Card render={<p />} className="p-5 md:p-7">{t("suggestionsEmpty")}</Card>
           )}
         </section>
       </div>

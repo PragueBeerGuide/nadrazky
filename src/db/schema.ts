@@ -313,10 +313,12 @@ export const userBadges = pgTable(
   ],
 );
 
+export const suggestionStatus = pgEnum("suggestion_status", ["pending", "approved", "declined"]);
+
 /**
  * "Suggest an improvement" from the floating button on every page: free-text ideas about the
  * app itself. Anyone may send one; `userId` is empty for signed-out visitors and `page` is the
- * path they were on.
+ * path they were on. Each waits as "pending" until an admin approves or declines it.
  */
 export const appSuggestions = pgTable(
   "app_suggestions",
@@ -325,13 +327,48 @@ export const appSuggestions = pgTable(
     userId: text("user_id").references(() => users.id, { onDelete: "set null" }),
     message: text("message").notNull(),
     page: text("page"),
+    status: suggestionStatus("status").notNull().default("pending"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    decidedAt: timestamp("decided_at", { withTimezone: true }),
+    decidedBy: text("decided_by").references(() => users.id, { onDelete: "set null" }),
   },
   (t) => [
     index("app_suggestions_created_idx").on(t.createdAt),
+    index("app_suggestions_status_idx").on(t.status, t.createdAt),
     index("app_suggestions_user_idx").on(t.userId, t.createdAt),
     check("app_suggestions_message_check", sql`char_length(${t.message}) <= 2000`),
     check("app_suggestions_page_check", sql`char_length(${t.page}) <= 300`),
+  ],
+);
+
+export const notificationKind = pgEnum("notification_kind", ["friend_request", "suggestion", "report"]);
+
+/**
+ * In-app notifications, one row per recipient (src/lib/notifications.ts): a friend request
+ * for its recipient, and a new suggestion or a report waiting for review for every admin.
+ * Each points at what it is about, so deleting that (a cancelled request) deletes it too.
+ * `actorId` is who caused it, empty for a signed-out visitor; `readAt` stays empty until read.
+ */
+export const notifications = pgTable(
+  "notifications",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    kind: notificationKind("kind").notNull(),
+    actorId: text("actor_id").references(() => users.id, { onDelete: "set null" }),
+    friendRequestId: integer("friend_request_id").references(() => friendRequests.id, { onDelete: "cascade" }),
+    suggestionId: integer("suggestion_id").references(() => appSuggestions.id, { onDelete: "cascade" }),
+    reportId: integer("report_id").references(() => pubReports.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    readAt: timestamp("read_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("notifications_user_idx").on(t.userId, t.createdAt),
+    index("notifications_unread_idx").on(t.userId, t.readAt),
+    index("notifications_friend_request_idx").on(t.friendRequestId),
+    index("notifications_report_idx").on(t.reportId),
   ],
 );
 

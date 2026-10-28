@@ -82,3 +82,52 @@ test("one user can send 5 suggestions a day", async ({ page }, testInfo) => {
   await dialog.getByRole("button", { name: "Send suggestion" }).click();
   await expect(dialog.getByRole("alert")).toHaveText("Too many suggestions today. Try again tomorrow.");
 });
+
+/** A suggestion's card among those waiting for an admin on the moderation page. */
+const pendingItem = (page: Page, message: string) =>
+  page.getByRole("list", { name: "Suggestions waiting for an admin" }).getByRole("listitem").filter({ hasText: message });
+
+for (const [decision, status] of [
+  ["Approve", "Approved"],
+  ["Decline", "Declined"],
+] as const) {
+  test(`a suggestion waits as pending until an admin chooses ${decision.toLowerCase()}`, async ({ page, browser }, testInfo) => {
+    const adminPage = await browser.newPage();
+    const admin = await signUp(adminPage, testInfo, "/en", "admin");
+    const message = unique(`${decision} me`);
+    await page.goto("/en/pubs");
+    await sendSuggestion(page, message);
+
+    // The admin is notified, and the suggestion waits on the moderation page.
+    await adminPage.reload();
+    await adminPage.getByRole("button", { name: /^Notifications/ }).click();
+    const notification = adminPage.getByRole("dialog").getByRole("link", { name: `Suggestion from a signed-out visitor: “${message}”` });
+    await expect(notification).toContainText("New:");
+    await adminPage.keyboard.press("Escape");
+    await adminPage.goto("/en/moderation");
+    await pendingItem(adminPage, message).getByRole("button", { name: decision }).click();
+
+    await expect(pendingItem(adminPage, message)).toHaveCount(0);
+    const decided = adminPage.getByRole("list", { name: "Decided suggestions" }).getByRole("listitem").filter({ hasText: message });
+    await expect(decided).toContainText(status);
+    await expect(decided).toContainText(`by @${admin.username}`);
+
+    // Deciding settles the notification.
+    await adminPage.getByRole("button", { name: /^Notifications/ }).click();
+    await expect(notification).not.toContainText("New:");
+    await adminPage.close();
+  });
+}
+
+test("moderators see pending suggestions but only admins decide", async ({ page, browser }, testInfo) => {
+  const message = unique("Moderators only read me");
+  await page.goto("/en/pubs");
+  await sendSuggestion(page, message);
+
+  const moderator = await browser.newPage();
+  await signUp(moderator, testInfo, "/en/moderation", "moderator");
+  await expect(pendingItem(moderator, message)).toBeVisible();
+  await expect(pendingItem(moderator, message).getByRole("button")).toHaveCount(0);
+  await expect(moderator.getByRole("region", { name: "Suggestions for the app" })).toContainText("Only admins can approve or decline them.");
+  await moderator.close();
+});

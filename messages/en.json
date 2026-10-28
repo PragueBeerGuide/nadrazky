@@ -510,7 +510,13 @@
     "suggestionsTitle": "Suggestions for the app",
     "suggestionsEmpty": "No suggestions yet.",
     "suggestionBy": "@{username} · {date}",
-    "suggestionAnonymous": "Signed out · {date}"
+    "suggestionAnonymous": "Signed out · {date}",
+    "suggestionsSubtitle": "{count, plural, =0 {No suggestions are waiting for an admin.} one {# suggestion is waiting for an admin.} other {# suggestions are waiting for an admin.}}",
+    "suggestionsAdminsOnly": "Only admins can approve or decline them.",
+    "suggestionsPendingTitle": "Suggestions waiting for an admin",
+    "suggestionsDecidedTitle": "Decided suggestions",
+    "decline": "Decline",
+    "declined": "Declined"
   },
   "privacy": {
     "title": "Privacy",
@@ -645,5 +651,17 @@
       "message": "Write at least {min} characters.",
       "limit": "Too many suggestions today. Try again tomorrow."
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "bell": "Notifications",
+    "unread": "{count} unread",
+    "markAll": "Mark all as read",
+    "empty": "No notifications yet.",
+    "new": "New",
+    "friendRequest": "Friend request from @{username}",
+    "suggestion": "Suggestion from @{username}: “{text}”",
+    "suggestionAnonymous": "Suggestion from a signed-out visitor: “{text}”",
+    "report": "Report about {pub} from @{username}: {kind}"
   }
 }
