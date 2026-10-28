@@ -2,7 +2,7 @@ import { expect, test } from "./fixtures";
 
 test("the language switch keeps you on the same page", async ({ page }) => {
   await page.goto("/cs/hospody");
-  await expect(page.getByRole("heading", { level: 1, name: "Nádražní hospody" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Nádražky" })).toBeVisible();
   await page.getByRole("button", { name: "Jazyk: Čeština" }).click();
   await page.getByRole("menuitemradio", { name: "English" }).click();
   await expect(page).toHaveURL(/\/en\/pubs$/);

@@ -39,8 +39,8 @@ test.describe("on a phone", () => {
 
   test("shows the selected station as a bottom sheet", async ({ page }) => {
     await page.goto(`/cs/mapa?pub=${DAVLE_PUB}`);
-    await expect(page.getByText(/3 hospody na stanici/)).toBeVisible();
+    await expect(page.getByText(/3 nádražky na stanici/)).toBeVisible();
     await page.getByRole("button", { name: "Zavřít" }).click();
-    await expect(page.getByText(/3 hospody na stanici/)).toBeHidden();
+    await expect(page.getByText(/3 nádražky na stanici/)).toBeHidden();
   });
 });

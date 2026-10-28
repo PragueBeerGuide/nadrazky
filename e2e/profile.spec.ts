@@ -69,7 +69,7 @@ test("the profile is in Czech too", async ({ page }, testInfo) => {
   await page.goto("/cs/profil");
   await expect(page.getByRole("main").getByText("Tvůj profil")).toBeVisible();
   await expect(stat(page, "pubs").value).toHaveText("1");
-  await expect(stat(page, "pubs").label).toHaveText(/^navštívená hospodaz celkem \d+$/);
+  await expect(stat(page, "pubs").label).toHaveText(/^navštívená nádražkaz celkem \d+$/);
   await expect(page.getByText("1 pivo", { exact: true })).toBeVisible();
 });
 

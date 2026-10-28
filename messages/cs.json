@@ -1,12 +1,12 @@
 {
   "meta": {
-    "title": "Nádražky — nádražní hospody v Česku",
-    "description": "Databáze nádražních hospod v České republice. Najdi otevřenou nádražku na své trati, odbav se a sbírej odznaky."
+    "title": "Nádražky — databáze nádražek v Česku",
+    "description": "Databáze nádražek v České republice. Najdi otevřenou nádražku na své trati, odbav se a sbírej odznaky."
   },
   "nav": {
     "home": "Domů",
     "map": "Mapa",
-    "pubs": "Hospody",
+    "pubs": "Nádražky",
     "regions": "Kraje",
     "lines": "Tratě",
     "about": "O aplikaci",
@@ -34,24 +34,24 @@
     "thisWeekShort": "tento týd."
   },
   "home": {
-    "eyebrow": "Nádražní hospody v Česku",
+    "eyebrow": "Nádražky v Česku",
     "titleLine1": "Další zastávka:",
     "titleLine2": "nádražka",
-    "lead": "Najdi nádražní hospodu na své trati, dej si jedno na peróně a sbírej odznaky za kraje a tratě.",
+    "lead": "Najdi nádražku na své trati, dej si jedno na peróně a sbírej odznaky za kraje a tratě.",
     "openMap": "Otevřít mapu",
-    "nearMe": "Hospody poblíž",
-    "browseAll": "{count, plural, one {Procházet # hospodu} few {Procházet všechny # hospody} other {Procházet všech # hospod}}",
+    "nearMe": "Nádražky poblíž",
+    "browseAll": "{count, plural, one {Procházet # nádražku} few {Procházet všechny # nádražky} other {Procházet všech # nádražek}}",
     "boardTitle": "V provozu — nedávno ověřeno",
-    "boardCount": "{open} z {total} hospod",
+    "boardCount": "{open} z {total} nádražek",
     "boardAll": "Všechny ověřeně otevřené →",
     "boardAllShort": "Všech {count}",
     "colLine": "Trať",
     "colStation": "Stanice",
-    "colPub": "Hospoda",
+    "colPub": "Nádražka",
     "colStatus": "Stav",
     "statsTitle": "V číslech",
     "stats": {
-      "pubs": "{count, plural, one {nádražní hospoda} few {nádražní hospody} other {nádražních hospod}}",
+      "pubs": "{count, plural, one {nádražka} few {nádražky} other {nádražek}}",
       "stations": "{count, plural, one {stanice} few {stanice} other {stanic}}",
       "open": "{count, plural, one {ověřeně otevřená} few {ověřeně otevřené} other {ověřeně otevřených}}",
       "waiting": "{count, plural, one {čeká na ověření} few {čekají na ověření} other {čeká na ověření}}"
@@ -61,23 +61,23 @@
     "allRegions": "Všechny kraje →",
     "allLines": "Všechny tratě →",
     "helpTitle": "Pomoz nám s daty",
-    "helpText": "U většiny hospod nevíme, jestli ještě fungují. Každé odbavení potvrdí, že je otevřeno.",
-    "helpWaiting": "{count, plural, one {Na ověření čeká ještě # hospoda.} few {Na ověření čekají ještě # hospody.} other {Na ověření čeká ještě # hospod.}}",
-    "step1": "Vystup na stanici a najdi hospodu.",
+    "helpText": "U většiny nádražek nevíme, jestli ještě fungují. Každé odbavení potvrdí, že je otevřeno.",
+    "helpWaiting": "{count, plural, one {Na ověření čeká ještě # nádražka.} few {Na ověření čekají ještě # nádražky.} other {Na ověření čeká ještě # nádražek.}}",
+    "step1": "Vystup na stanici a najdi nádražku.",
     "step2": "Odbav se a dej ostatním vědět, jestli je otevřeno.",
     "step3": "Sbírej odznaky za kraje a tratě.",
-    "helpCta": "Najdi hospodu k ověření",
+    "helpCta": "Najdi nádražku k ověření",
     "badgesAlt": "Ukázka odznaků",
     "badgeLine": "Trať",
     "badgeRegion": "Kraj"
   },
   "pubs": {
-    "title": "Nádražní hospody",
-    "subtitle": "{pubs, plural, one {# hospoda} few {# hospody} other {# hospod}} na {stations, plural, one {# stanici} other {# stanicích}}, od A do Ž",
+    "title": "Nádražky",
+    "subtitle": "{pubs, plural, one {# nádražka} few {# nádražky} other {# nádražek}} na {stations, plural, one {# stanici} other {# stanicích}}, od A do Ž",
     "viewLabel": "Zobrazení",
     "viewList": "Seznam",
     "viewMap": "Mapa",
-    "searchLabel": "Hledat stanici nebo hospodu",
+    "searchLabel": "Hledat stanici nebo nádražku",
     "searchPlaceholder": "např. Břeclav nebo Bufet",
     "search": "Hledat",
     "region": "Kraj",
@@ -87,7 +87,7 @@
     "status": "Stav",
     "anyStatus": "Jakýkoli stav",
     "jump": "Přejít na písmeno",
-    "colPub": "Hospoda",
+    "colPub": "Nádražka",
     "colStation": "Stanice",
     "colLines": "Tratě",
     "colRegion": "Kraj",
@@ -95,7 +95,7 @@
     "colStatus": "Stav",
     "colConfirmed": "Ověřeno",
     "colActions": "Akce",
-    "results": "{count, plural, one {# hospoda} few {# hospody} other {# hospod}}",
+    "results": "{count, plural, one {# nádražka} few {# nádražky} other {# nádražek}}",
     "clear": "Zrušit filtry",
     "empty": "Nic jsme nenašli. Zkus jiný název stanice."
   },
@@ -105,23 +105,23 @@
     "lines": "Tratě",
     "type": "Typ podniku",
     "status": "Stav",
-    "about": "O hospodě",
+    "about": "O nádražce",
     "lastConfirmed": "Naposledy ověřeno",
     "openingHours": "Otevírací doba",
     "address": "Adresa",
     "beers": "Na čepu",
     "notKnownYet": "Zatím nevíme",
-    "alsoHere": "Další hospody na této stanici",
+    "alsoHere": "Další nádražky na této stanici",
     "alongLine": "Podél trati {number}",
     "youAreHere": "jsi tady",
     "checkInTitle": "Sedíš tu právě teď?",
-    "checkInText": "Odbav se a dej ostatním vědět, že hospoda pořád funguje.",
+    "checkInText": "Odbav se a dej ostatním vědět, že nádražka pořád funguje.",
     "checkIn": "Odbavit se",
     "checkIns": "Odbavení",
     "source": "Zdroj dat",
     "sourceText": "Stanice, její poloha a tratě jsou z Wikidat.",
     "openOnMap": "Otevřít na velké mapě →",
-    "positionNote": "Poloha je zatím poloha stanice, ne přímo hospody.",
+    "positionNote": "Poloha je zatím poloha stanice, ne přímo nádražky.",
     "reviewNote": "Přiřazení ke stanici čeká na kontrolu.",
     "navigate": "Navigovat",
     "checkInLogin": "Přihlas se a odbav se",
@@ -137,14 +137,14 @@
     "reportedClosed": "Zavřeno",
     "rating": "Hodnocení {count} z 5",
     "delete": {
-      "button": "Smazat hospodu",
+      "button": "Smazat nádražku",
       "label": "Smazat {name}",
-      "hint": "Moderátoři a správci můžou smazat hospodu, která sem nepatří.",
+      "hint": "Moderátoři a správci můžou smazat nádražku, která sem nepatří.",
       "title": "Smazat {name}?",
       "text": "Zmizí ze seznamů, z mapy, ze statistik i z profilů všech uživatelů. Její odbavení a hlášení zůstanou uložené v databázi.",
       "cancel": "Zrušit",
       "confirm": "Smazat",
-      "done": "Hospoda {name} je smazaná."
+      "done": "Nádražka {name} je smazaná."
     }
   },
   "status": {
@@ -163,7 +163,7 @@
     "closed": "{count} zavřeno"
   },
   "kind": {
-    "pub": "Hospoda",
+    "pub": "Nádražka",
     "restaurant": "Restaurace",
     "kiosk": "Bufet / stánek",
     "cafe": "Kavárna",
@@ -171,39 +171,39 @@
   },
   "regions": {
     "title": "Kraje",
-    "subtitle": "Nádražní hospody ve 14 krajích",
-    "pubCount": "{count, plural, one {# hospoda} few {# hospody} other {# hospod}}",
+    "subtitle": "Nádražky ve 14 krajích",
+    "pubCount": "{count, plural, one {# nádražka} few {# nádražky} other {# nádražek}}",
     "openCount": "{count} v provozu"
   },
   "lines": {
     "title": "Tratě",
-    "subtitle": "{count, plural, one {# trať s nádražní hospodou} few {# tratě s nádražní hospodou} other {# tratí s nádražní hospodou}}",
+    "subtitle": "{count, plural, one {# trať s nádražkou} few {# tratě s nádražkou} other {# tratí s nádražkou}}",
     "eyebrow": "Trať",
     "line": "Trať {number}",
-    "pubCount": "{count, plural, one {# hospoda} few {# hospody} other {# hospod}}",
-    "statPubs": "Hospody",
-    "statStations": "Stanice s hospodou",
+    "pubCount": "{count, plural, one {# nádražka} few {# nádražky} other {# nádražek}}",
+    "statPubs": "Nádražky",
+    "statStations": "Stanice s nádražkou",
     "statOpen": "V provozu",
     "statWaiting": "Čeká na ověření",
     "stopByStop": "Zastávka po zastávce",
     "direction": "{from} → {to}",
-    "orderNote": "Ukazujeme jen stanice s hospodou. Jejich pořadí odvozujeme z polohy stanic, u odboček nemusí sedět.",
+    "orderNote": "Ukazujeme jen stanice s nádražkou. Jejich pořadí odvozujeme z polohy stanic, u odboček nemusí sedět.",
     "branch": "Odbočka ze stanice {from}",
     "branchTag": "odbočka ↓",
     "legendTitle": "Tečky stanic",
-    "legendOpen": "Hospoda v provozu",
+    "legendOpen": "Nádražka v provozu",
     "legendNone": "Nedávno nikdo neověřil",
     "onMap": "Trať {number} na mapě →"
   },
   "badges": {
     "title": "Odznaky",
     "subtitle": "Sbírej odznaky za tratě, kraje a každou nádražku, kterou navštívíš. Každý odznak postupně stoupá na vyšší úrovně.",
-    "signedOut": "Přihlas se a odbav se v nádražní hospodě, ať můžeš začít sbírat.",
+    "signedOut": "Přihlas se a odbav se v nádražce, ať můžeš začít sbírat.",
     "logIn": "Přihlásit se",
     "menuLink": "Tvoje odznaky",
     "count": "{count, plural, one {# odznak} few {# odznaky} other {# odznaků}}",
     "kind": {
-      "pubs": "Hospody",
+      "pubs": "Nádražky",
       "line": "Trať",
       "region": "Kraj"
     },
@@ -215,28 +215,28 @@
       "region": "Kraje"
     },
     "sectionText": {
-      "pubs": "Všechny nádražky v Česku. Úroveň 1 za první hospodu, pak nová úroveň každých 10 hospod.",
-      "line": "Úroveň 1 za první hospodu na trati, pak nová úroveň každých 5 hospod a poslední za všechny hospody na trati.",
-      "region": "Úroveň 1 za první hospodu v kraji, pak nová úroveň každých 5 hospod a poslední za všechny hospody v kraji."
+      "pubs": "Všechny nádražky v Česku. Úroveň 1 za první nádražku, pak nová úroveň každých 10 nádražek.",
+      "line": "Úroveň 1 za první nádražku na trati, pak nová úroveň každých 5 nádražek a poslední za všechny nádražky na trati.",
+      "region": "Úroveň 1 za první nádražku v kraji, pak nová úroveň každých 5 nádražek a poslední za všechny nádražky v kraji."
     },
     "level": "Úroveň {level}",
     "levelOf": "Úroveň {level} z {levels}",
     "locked": "Zatím nezačato",
     "complete": "Splněno",
-    "progress": "{visited} z {total, plural, one {# hospody} other {# hospod}}",
-    "toNext": "{count, plural, one {Ještě # hospoda do úrovně {level}} few {Ještě # hospody do úrovně {level}} other {Ještě # hospod do úrovně {level}}}",
-    "newPubs": "{count, plural, one {Od splnění přibyla # hospoda} few {Od splnění přibyly # hospody} other {Od splnění přibylo # hospod}}",
+    "progress": "{visited} z {total, plural, one {# nádražky} other {# nádražek}}",
+    "toNext": "{count, plural, one {Ještě # nádražka do úrovně {level}} few {Ještě # nádražky do úrovně {level}} other {Ještě # nádražek do úrovně {level}}}",
+    "newPubs": "{count, plural, one {Od splnění přibyla # nádražka} few {Od splnění přibyly # nádražky} other {Od splnění přibylo # nádražek}}",
     "earned": "Získáno {date}",
     "history": "Tvoje úrovně",
-    "historyAt": "v hospodě {pub}",
+    "historyAt": "v nádražce {pub}",
     "levelsTitle": "Úrovně",
     "moreLevels": "{count, plural, one {a ještě # úroveň} few {a ještě # úrovně} other {a ještě # úrovní}}",
-    "levelNeeds": "{count, plural, one {# hospoda} few {# hospody} other {# hospod}}",
-    "levelNeedsAll": "všechny hospody",
+    "levelNeeds": "{count, plural, one {# nádražka} few {# nádražky} other {# nádražek}}",
+    "levelNeedsAll": "všechny nádražky",
     "toVisit": "Ještě tě čeká",
-    "toVisitNone": "Nic nezbývá, byl(a) jsi ve všech hospodách.",
+    "toVisitNone": "Nic nezbývá, byl(a) jsi ve všech nádražkách.",
     "seeLine": "Trať {number} zastávku po zastávce →",
-    "seeRegion": "Všechny hospody v kraji {name} →",
+    "seeRegion": "Všechny nádražky v kraji {name} →",
     "allBadges": "Všechny odznaky →",
     "badgeLink": "Úrovně odznaku →",
     "lineCardTitle": "Odznak za trať {number}",
@@ -260,23 +260,23 @@
     "mapLabel": "Mapa",
     "onLine": "na trati {number}",
     "openFirst": "Otevřené první",
-    "pubsHere": "{count, plural, one {# hospoda na stanici} few {# hospody na stanici} other {# hospod na stanici}}",
+    "pubsHere": "{count, plural, one {# nádražka na stanici} few {# nádražky na stanici} other {# nádražek na stanici}}",
     "alsoHere": "Také tady:",
     "confirmed": "ověřeno {when}",
-    "detail": "Detail hospody",
+    "detail": "Detail nádražky",
     "close": "Zavřít",
     "empty": "Nic neodpovídá. Zkus jiný název nebo zapni další stav."
   },
   "about": {
     "title": "O aplikaci",
-    "body": "Nádražky jsou databáze nádražních hospod v České republice, kde se můžeš odbavovat a sbírat odznaky. Aplikaci připravuje Prague Beer Guides.",
+    "body": "Nádražky jsou databáze nádražek v České republice, kde se můžeš odbavovat a sbírat odznaky. Aplikaci připravuje Prague Beer Guides.",
     "dataTitle": "Odkud jsou data",
     "dataBody": "Polohy stanic, kraje a tratě jsou z Wikidat (CC0). Mapové podklady jsou z OpenStreetMap.",
     "credit": "Vytvořilo Prague Beer Guides"
   },
   "notFound": {
     "title": "Tenhle vlak sem nejede",
-    "body": "Stránku jsme nenašli. Zkus mapu nebo seznam hospod.",
+    "body": "Stránku jsme nenašli. Zkus mapu nebo seznam nádražek.",
     "back": "Zpět na úvod"
   },
   "footer": {
@@ -328,7 +328,7 @@
     "title": "Tvůj profil",
     "memberSince": "Členem od {date}",
     "statsTitle": "Tvoje čísla",
-    "pubs": "{count, plural, one {navštívená hospoda} few {navštívené hospody} other {navštívených hospod}}",
+    "pubs": "{count, plural, one {navštívená nádražka} few {navštívené nádražky} other {navštívených nádražek}}",
     "outOf": "z celkem {total}",
     "checkIns": "{count, plural, other {odbavení}}",
     "stations": "{count, plural, one {stanice} few {stanice} other {stanic}}",
@@ -341,12 +341,12 @@
     "food": "{count}× jídlo",
     "regionsTitle": "Podle krajů",
     "regionProgress": "{visited} / {total}",
-    "visitedTitle": "Hospody, kde jsi byl(a)",
+    "visitedTitle": "Nádražky, kde jsi byl(a)",
     "visits": "{count, plural, one {# návštěva} few {# návštěvy} other {# návštěv}}",
     "lastVisit": "naposledy {date}",
     "emptyTitle": "Zatím žádné odbavení",
     "emptyText": "Odbav se v nějaké nádražce a objeví se tady.",
-    "emptyCta": "Najdi hospodu",
+    "emptyCta": "Najdi nádražku",
     "menuLink": "Tvůj profil",
     "detailsTitle": "Tvoje údaje",
     "picture": "Profilová fotka",
@@ -424,12 +424,12 @@
       "invalid": "Ve formuláři něco nesedí. Zkus to znovu.",
       "signIn": "Pro odbavení se přihlas.",
       "finishSignUp": "Pro odbavení dokonči registraci.",
-      "notFound": "Tuhle hospodu jsme nenašli."
+      "notFound": "Tuhle nádražku jsme nenašli."
     },
     "alreadyTitle": "Dnes odbaveno",
-    "alreadyText": "V hospodě {name} už máš dnes odbaveno. Počítá se jedno odbavení v hospodě za den.",
-    "back": "Zpět na hospodu",
-    "oncePerDay": "Počítá se jedno odbavení v hospodě za den.",
+    "alreadyText": "V nádražce {name} už máš dnes odbaveno. Počítá se jedno odbavení v nádražce za den.",
+    "back": "Zpět na nádražku",
+    "oncePerDay": "Počítá se jedno odbavení v nádražce za den.",
     "howManyBeers": "Kolik piv?",
     "howManyShots": "Kolik panáků?",
     "amountMissing": "Vyber kolik.",
@@ -438,7 +438,7 @@
   },
   "report": {
     "title": "Nahlásit změnu",
-    "intro": "Nesedí něco u hospody {name} nebo už to neplatí? Dej nám vědět a zkontrolujeme to.",
+    "intro": "Nesedí něco u nádražky {name} nebo už to neplatí? Dej nám vědět a zkontrolujeme to.",
     "kindTitle": "Co se změnilo?",
     "kinds": {
       "closed": "Natrvalo zavřela",
@@ -469,9 +469,9 @@
     "submit": "Odeslat hlášení",
     "sending": "Odesílám…",
     "doneTitle": "Díky!",
-    "doneText": "Hlášení o hospodě {name} jsme dostali a zkontrolujeme ho. Na stránce hospody se změna projeví, až ji schválíme.",
-    "doneTextApproved": "Hlášení o hospodě {name} je rovnou schválené, protože jsi moderátor(ka). Nový stav, název, otevírací doba, adresa nebo pivo se na stránce hospody ukážou hned.",
-    "back": "Zpět na hospodu",
+    "doneText": "Hlášení o nádražce {name} jsme dostali a zkontrolujeme ho. Na stránce nádražky se změna projeví, až ji schválíme.",
+    "doneTextApproved": "Hlášení o nádražce {name} je rovnou schválené, protože jsi moderátor(ka). Nový stav, název, otevírací doba, adresa nebo pivo se na stránce nádražky ukážou hned.",
+    "back": "Zpět na nádražku",
     "another": "Nahlásit ještě něco",
     "errors": {
       "kind": "Vyber, co se změnilo.",
@@ -480,7 +480,7 @@
       "limit": "Dnes jsi poslal(a) už {max} hlášení. Zkus to zase zítra.",
       "signIn": "Pro nahlášení změny se přihlas.",
       "finishSignUp": "Pro nahlášení změny dokonči registraci.",
-      "notFound": "Tuhle hospodu jsme nenašli."
+      "notFound": "Tuhle nádražku jsme nenašli."
     },
     "linkText": "Nesedí tu něco?",
     "link": "Nahlásit změnu"
@@ -494,7 +494,7 @@
     "current": "Teď uvádíme",
     "byHand": {
       "location": "Schválení špendlík nepřesune: polohu oprav ručně.",
-      "other": "Schválení hospodu nezmění: změnu udělej ručně."
+      "other": "Schválení nádražku nezmění: změnu udělej ručně."
     },
     "reportedBy": "@{username} · {date}",
     "approve": "Schválit",
@@ -514,8 +514,8 @@
     "summary": {
       "browse": "Nádražky můžeš procházet bez účtu. Nepoužíváme žádnou analytiku, reklamu ani sledování.",
       "google": "Pro odbavení se přihlásíš přes Google. Uchováváme tvé jméno, e-mail a profilovou fotku z Googlu a přezdívku, kterou si vybereš.",
-      "checkins": "Odbavení nepoužívá tvou polohu. Uložíme hospodu, čas a podrobnosti, které přidáš.",
-      "public": "Tvoje přezdívka a odbavení jsou veřejně vidět na stránce hospody. Účet i se vším, co v něm je, si můžeš kdykoli nechat smazat."
+      "checkins": "Odbavení nepoužívá tvou polohu. Uložíme nádražku, čas a podrobnosti, které přidáš.",
+      "public": "Tvoje přezdívka a odbavení jsou veřejně vidět na stránce nádražky. Účet i se vším, co v něm je, si můžeš kdykoli nechat smazat."
     },
     "controller": {
       "title": "Kdo za tím stojí",
@@ -523,7 +523,7 @@
     },
     "browsing": {
       "title": "Procházení bez účtu",
-      "p1": "Hospody, mapu i odbavení si může prohlédnout kdokoli bez účtu. Nepoužíváme analytiku, reklamu ani sledovací cookies. Abychom ti web mohli zobrazit, zpracovávají se přesto některé údaje:",
+      "p1": "Nádražky, mapu i odbavení si může prohlédnout kdokoli bez účtu. Nepoužíváme analytiku, reklamu ani sledovací cookies. Abychom ti web mohli zobrazit, zpracovávají se přesto některé údaje:",
       "logs": "<strong>Serverové logy.</strong> Náš hosting Vercel vyřizuje každý požadavek a krátce si zaznamenává technické údaje, jako je IP adresa, prohlížeč a stránka, kterou sis vyžádal(a), aby mohl web doručit a chránit.",
       "map": "<strong>Mapové podklady.</strong> Mapy se načítají z OpenFreeMap, takže když otevřeš mapu, tvůj prohlížeč mu pošle tvou IP adresu.",
       "language": "<strong>Jazyk.</strong> Cookie <code>NEXT_LOCALE</code> si pamatuje, jaký jazyk používáš."
@@ -537,12 +537,12 @@
     "checkins": {
       "title": "Odbavení",
       "p1": "Odbavení nepoužívá polohu tvého telefonu: nikdy se na ni neptáme a nikdy ji neukládáme.",
-      "p2": "U každého odbavení uložíme hospodu, čas, jestli bylo otevřeno a podrobnosti, které přidáš: co sis dal(a), hodnocení a poznámku.",
-      "p3": "Odbavení jsou veřejná: na stránce hospody je vidět tvoje přezdívka, čas, podrobnosti a poznámka."
+      "p2": "U každého odbavení uložíme nádražku, čas, jestli bylo otevřeno a podrobnosti, které přidáš: co sis dal(a), hodnocení a poznámku.",
+      "p3": "Odbavení jsou veřejná: na stránce nádražky je vidět tvoje přezdívka, čas, podrobnosti a poznámka."
     },
     "reports": {
       "title": "Hlášení změn",
-      "p1": "Když nahlásíš změnu u hospody, uložíme hlášení k tvému účtu a přezdívce. Vidí ho moderátoři a správci, aby ho mohli zkontrolovat a upravit stránku hospody. Hlášení nejsou veřejná."
+      "p1": "Když nahlásíš změnu u nádražky, uložíme hlášení k tvému účtu a přezdívce. Vidí ho moderátoři a správci, aby ho mohli zkontrolovat a upravit stránku nádražky. Hlášení nejsou veřejná."
     },
     "friends": {
       "title": "Přátelé",
@@ -582,7 +582,7 @@
     },
     "age": {
       "title": "Jen pro dospělé",
-      "p1": "Nádražky jsou o hospodách a jsou pro dospělé: registrovat se můžeš až od 18 let."
+      "p1": "Nádražky jsou o nádražkách a jsou pro dospělé: registrovat se můžeš až od 18 let."
     },
     "changes": {
       "title": "Změny",
