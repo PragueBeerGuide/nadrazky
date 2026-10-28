@@ -313,6 +313,28 @@ export const userBadges = pgTable(
   ],
 );
 
+/**
+ * "Suggest an improvement" from the floating button on every page: free-text ideas about the
+ * app itself. Anyone may send one; `userId` is empty for signed-out visitors and `page` is the
+ * path they were on.
+ */
+export const appSuggestions = pgTable(
+  "app_suggestions",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id").references(() => users.id, { onDelete: "set null" }),
+    message: text("message").notNull(),
+    page: text("page"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("app_suggestions_created_idx").on(t.createdAt),
+    index("app_suggestions_user_idx").on(t.userId, t.createdAt),
+    check("app_suggestions_message_check", sql`char_length(${t.message}) <= 2000`),
+    check("app_suggestions_page_check", sql`char_length(${t.page}) <= 300`),
+  ],
+);
+
 export type Pub = typeof pubs.$inferSelect;
 export type User = typeof users.$inferSelect;
 export type Station = typeof stations.$inferSelect;

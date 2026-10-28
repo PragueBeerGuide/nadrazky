@@ -18,7 +18,8 @@
     "cs": "Čeština",
     "en": "English",
     "login": "Přihlášení",
-    "privacy": "Ochrana soukromí"
+    "privacy": "Ochrana soukromí",
+    "suggest": "Navrhnout"
   },
   "ago": {
     "months": "{count, plural, =0 {tento měsíc} one {před # měsícem} few {před # měsíci} other {před # měsíci}}",
@@ -505,7 +506,11 @@
     "resolvedBy": "vyřídil(a) @{username}",
     "auto": "@{username}, schváleno automaticky",
     "menuLink": "Moderace",
-    "menuCount": "čeká {count}"
+    "menuCount": "čeká {count}",
+    "suggestionsTitle": "Návrhy na vylepšení",
+    "suggestionsEmpty": "Zatím žádné návrhy.",
+    "suggestionBy": "@{username} · {date}",
+    "suggestionAnonymous": "Nepřihlášený · {date}"
   },
   "privacy": {
     "title": "Ochrana soukromí",
@@ -624,5 +629,21 @@
     "publicLine": "Veřejná stránka tratě →",
     "editStations": "Upravit stanice",
     "editLines": "Upravit tratě"
+  },
+  "suggestion": {
+    "button": "Navrhnout vylepšení",
+    "title": "Navrhnout vylepšení",
+    "intro": "Něco vám chybí nebo vadí? Napište nám, jak Nádražky vylepšit.",
+    "label": "Váš nápad",
+    "placeholder": "např. filtr nádražek podle otevírací doby",
+    "submit": "Odeslat návrh",
+    "sending": "Odesílám…",
+    "doneTitle": "Děkujeme!",
+    "doneText": "Váš návrh máme a přečteme si ho.",
+    "close": "Zavřít",
+    "errors": {
+      "message": "Napište alespoň {min} znaků.",
+      "limit": "Dnes jste poslali příliš mnoho návrhů. Zkuste to zítra."
+    }
   }
 }
