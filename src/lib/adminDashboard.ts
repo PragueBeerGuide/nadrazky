@@ -16,6 +16,12 @@ import {
 import { containsPattern } from "./friend";
 import { avatarUrl } from "./profile";
 
+/**
+ * A time as a query parameter in raw sql. Drizzle's postgres-js driver turns off the
+ * driver's own date handling, so a Date passed as is fails on Postgres (PGlite copes).
+ */
+const timestamp = (d: Date) => sql`${d.toISOString()}::timestamptz`;
+
 const { appSuggestions, checkins, friendRequests, pubReports, pubs, regions, userBadges, users } = s;
 
 /**
@@ -73,8 +79,8 @@ export async function listUsersForAdmin(filters: DashboardFilters["users"], now 
   }
   const since = activeSince(now);
   if (filters.status === "unfinished") where.push(sql`not ${finishedSql}`);
-  if (filters.status === "active") where.push(and(finishedSql, sql`${lastActiveAt} >= ${since}`));
-  if (filters.status === "inactive") where.push(and(finishedSql, sql`coalesce(${lastActiveAt} < ${since}, true)`));
+  if (filters.status === "active") where.push(and(finishedSql, sql`${lastActiveAt} >= ${timestamp(since)}`));
+  if (filters.status === "inactive") where.push(and(finishedSql, sql`coalesce(${lastActiveAt} < ${timestamp(since)}, true)`));
 
   const [rows, [total]] = await Promise.all([
     db
@@ -140,7 +146,7 @@ function armQuery(kind: ActivityKind, since: Date | null, q: string) {
   const col = (c: unknown) => sql`${c}`;
   const filters = (a: Arm) => {
     const parts: (SQL | undefined)[] = [];
-    if (since) parts.push(sql`${a.at} >= ${since}`);
+    if (since) parts.push(sql`${a.at} >= ${timestamp(since)}`);
     if (q) parts.push(sql`concat_ws(' ', ${a.username}, ${a.email}, ${a.subject}, ${a.detail}) ilike ${containsPattern(q)}`);
     return and(...parts);
   };

@@ -44,7 +44,9 @@ export default async function AdminDashboardPage({ params, searchParams }: PageP
   const locale = asLocale(raw);
   setRequestLocale(locale);
   const filters = parseDashboardFilters(await searchParams);
-  await requireAdminPage(locale, getPathname({ locale, href: { pathname: "/admin", query: dashboardQuery(filters) } }));
+  const query = dashboardQuery(filters);
+  // With no filters, no query string: an empty one would leave "/admin?" in the login link.
+  await requireAdminPage(locale, getPathname({ locale, href: Object.keys(query).length ? { pathname: "/admin", query } : "/admin" }));
 
   const [t, at, bt, rt, format, stats, users, activity] = await Promise.all([
     getTranslations("adminDashboard"),
