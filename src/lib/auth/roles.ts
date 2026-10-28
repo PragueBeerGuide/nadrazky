@@ -1,4 +1,4 @@
-/** The three user levels. Moderators and admins review reports and delete pubs, admins also edit rail data; roles are set in the database. */
+/** The three user levels. Moderators and admins review reports and delete pubs, admins also edit rail data and decide on suggestions; roles are set in the database. */
 export const ROLES = ["user", "moderator", "admin"] as const;
 export type Role = (typeof ROLES)[number];
 
@@ -10,6 +10,11 @@ export function canModerate(role: Role | null | undefined) {
 /** Moderators and admins may delete a pub; it is hidden, not erased (pubs.deletedAt). */
 export function canDeletePubs(role: Role | null | undefined) {
   return canModerate(role);
+}
+
+/** Only admins approve or decline suggestions for the app; moderators may read them. */
+export function canDecideSuggestions(role: Role | null | undefined) {
+  return role === "admin";
 }
 
 /** Only admins link stations and rail lines (the admin pages under /admin). */

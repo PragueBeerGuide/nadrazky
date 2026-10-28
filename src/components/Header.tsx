@@ -1,13 +1,17 @@
 import { UserRoundIcon } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { authEnabled } from "@/lib/auth/config";
 import { getCurrentUser, signUpFinished } from "@/lib/auth/currentUser";
-import { canModerate } from "@/lib/auth/roles";
+import { canDecideSuggestions, canModerate } from "@/lib/auth/roles";
 import { avatarUrl } from "@/lib/profile";
 import { countOpenReports } from "@/lib/reports";
 import { countIncomingRequests } from "@/lib/friends";
+import { TIME_ZONE } from "@/lib/checkin";
+import { countUnread, listNotifications } from "@/lib/notifications";
+import { countPendingSuggestions } from "@/lib/suggestions";
 import { LanguageSwitch } from "./LanguageSwitch";
+import { NotificationBell } from "./NotificationBell";
 import { NavLinks } from "./NavLinks";
 import { UserMenu } from "./UserMenu";
 import { buttonVariants } from "@/components/ui/button";
@@ -17,12 +21,19 @@ export async function Header() {
   const t = await getTranslations("auth");
   const user = await getCurrentUser();
   const finished = user ? signUpFinished(user) : false;
-  const [waiting, requests] = await Promise.all([
-    // Moderators and admins see how many reports are waiting.
-    user && canModerate(user.role) ? countOpenReports() : null,
+  const [waiting, requests, notifications, unread, format] = await Promise.all([
+    // Moderators and admins see how many reports are waiting; admins also the suggestions they decide on.
+    user && canModerate(user.role)
+      ? Promise.all([countOpenReports(), canDecideSuggestions(user.role) ? countPendingSuggestions() : 0]).then(([r, sg]) => r + sg)
+      : null,
     // Friend requests waiting for an answer.
     user && finished ? countIncomingRequests(user.id) : 0,
+    // The bell: friend requests for everyone, new suggestions and reports for admins.
+    user && finished ? listNotifications(user.id) : [],
+    user && finished ? countUnread(user.id) : 0,
+    getFormatter(),
   ]);
+  const when = (d: Date) => format.dateTime(d, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: TIME_ZONE });
   return (
     <header className="bg-sign text-white">
       <div className="page-column flex h-16 items-center gap-3 md:h-[74px] md:gap-7">
@@ -36,6 +47,12 @@ export async function Header() {
         </Link>
         <NavLinks />
         <div className="ml-auto flex shrink-0 items-center gap-2 md:gap-3">
+          {user && finished && (
+            <NotificationBell
+              unread={unread}
+              items={notifications.map(({ createdAt, readAt, ...n }) => ({ ...n, read: readAt !== null, when: when(createdAt) }))}
+            />
+          )}
           {user ? (
             <UserMenu
               user={{ name: user.name, username: user.username, email: user.email, role: user.role, avatarUrl: avatarUrl(user.id, user.avatarUpdatedAt) }}

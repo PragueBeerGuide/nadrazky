@@ -1,6 +1,7 @@
 import "server-only";
 import { and, asc, count, desc, eq, isNotNull, ne, or, sql } from "drizzle-orm";
 import { db, schema as s } from "@/db";
+import { notifyFriendRequest, settleFriendRequest } from "./notifications";
 import { avatarUrl } from "./profile";
 import { changeFor, containsPattern, relationFor, SEARCH_LIMIT, type FriendAction, type FriendChange, type Relation } from "./friend";
 
@@ -39,7 +40,9 @@ export async function applyFriendAction(meId: string, themId: string, action: Fr
         .values({ requesterId: meId, recipientId: themId })
         .onConflictDoNothing()
         .returning({ id: friendRequests.id });
-      return rows.length > 0 ? change : null;
+      if (rows.length === 0) return null;
+      await notifyFriendRequest(tx, { recipientId: themId, requesterId: meId, friendRequestId: rows[0].id });
+      return change;
     }
     // The row as read: if it changed since, nothing happens.
     const same = and(eq(friendRequests.id, request!.id), eq(friendRequests.status, request!.status));
@@ -47,7 +50,10 @@ export async function applyFriendAction(meId: string, themId: string, action: Fr
       change.kind === "respond"
         ? await tx.update(friendRequests).set({ status: change.status, respondedAt: new Date() }).where(same).returning({ id: friendRequests.id })
         : await tx.delete(friendRequests).where(same).returning({ id: friendRequests.id });
-    return rows.length > 0 ? change : null;
+    if (rows.length === 0) return null;
+    // Deleting the request deletes its notification; answering it marks it read.
+    if (change.kind === "respond") await settleFriendRequest(tx, request!.id);
+    return change;
   });
 }
 

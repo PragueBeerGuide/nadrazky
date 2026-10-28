@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canDeletePubs, canEditRailData, canModerate } from "./roles";
+import { canDecideSuggestions, canDeletePubs, canEditRailData, canModerate } from "./roles";
 
 describe("canModerate", () => {
   it("lets moderators and admins review reports", () => {
@@ -20,6 +20,15 @@ describe("canEditRailData", () => {
     expect(canEditRailData("moderator")).toBe(false);
     expect(canEditRailData("user")).toBe(false);
     expect(canEditRailData(null)).toBe(false);
+  });
+});
+
+describe("canDecideSuggestions", () => {
+  it("lets only admins approve or decline suggestions", () => {
+    expect(canDecideSuggestions("admin")).toBe(true);
+    expect(canDecideSuggestions("moderator")).toBe(false);
+    expect(canDecideSuggestions("user")).toBe(false);
+    expect(canDecideSuggestions(null)).toBe(false);
   });
 });
 

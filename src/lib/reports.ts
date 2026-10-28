@@ -5,6 +5,7 @@ import { db, schema as s } from "@/db";
 import type { Role } from "./auth/roles";
 import { checkInDay, TIME_ZONE } from "./checkin";
 import { changeFor, isAutoApproved, type ReportKind } from "./report";
+import { notifyAdmins, settleReport } from "./notifications";
 import { livePub } from "./queries";
 
 const { pubReports, pubs, stations, users } = s;
@@ -32,22 +33,26 @@ async function applyToPub(tx: Tx, report: { pubId: number; kind: ReportKind; val
 
 /**
  * Stores a report. A moderator's or admin's report is approved by themselves at once and
- * its change applied; anyone else's waits as "open" for review.
+ * its change applied; anyone else's waits as "open" for review, and the admins are told.
  */
 export async function createReport(input: { pubId: number; user: { id: string; role: Role }; kind: ReportKind; value?: string; message?: string }) {
   const now = new Date();
   const approved = isAutoApproved(input.user.role);
   await db.transaction(async (tx) => {
-    await tx.insert(pubReports).values({
-      pubId: input.pubId,
-      userId: input.user.id,
-      kind: input.kind,
-      value: input.value,
-      message: input.message,
-      createdAt: now,
-      ...(approved ? { status: "accepted" as const, resolvedAt: now, resolvedBy: input.user.id } : {}),
-    });
+    const [report] = await tx
+      .insert(pubReports)
+      .values({
+        pubId: input.pubId,
+        userId: input.user.id,
+        kind: input.kind,
+        value: input.value,
+        message: input.message,
+        createdAt: now,
+        ...(approved ? { status: "accepted" as const, resolvedAt: now, resolvedBy: input.user.id } : {}),
+      })
+      .returning({ id: pubReports.id });
     if (approved) await applyToPub(tx, { pubId: input.pubId, kind: input.kind, value: input.value ?? null }, now);
+    else await notifyAdmins(tx, { kind: "report", actorId: input.user.id, reportId: report.id });
   });
   return { autoApproved: approved };
 }
@@ -66,6 +71,7 @@ export async function resolveReport(reportId: number, moderatorId: string, decis
       .returning({ pubId: pubReports.pubId, kind: pubReports.kind, value: pubReports.value });
     if (!report) return false;
     if (decision === "accepted") await applyToPub(tx, report, now);
+    await settleReport(tx, reportId, now);
     return true;
   });
 }

@@ -113,6 +113,20 @@
       "when": 1793209721399,
       "tag": "0015_app_suggestions",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1793214256336,
+      "tag": "0016_notifications",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1793215062073,
+      "tag": "0017_suggestion_status",
+      "breakpoints": true
     }
   ]
 }
