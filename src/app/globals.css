@@ -257,10 +257,14 @@
   }
 }
 
-/* No tab bar from md up, so toasts sit near the bottom edge. */
+/*
+ * No tab bar from md up: the "suggest an improvement" button (src/components/SuggestionButton.tsx)
+ * sits near the bottom edge, and toasts above it.
+ */
 @media (min-width: 768px) {
   :root {
-    --toast-bottom: 24px;
+    --fab-bottom: 24px;
+    --toast-bottom: calc(var(--fab-bottom) + 56px + 12px);
   }
 }
 

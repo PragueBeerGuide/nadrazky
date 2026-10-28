@@ -8,6 +8,7 @@ import { getCurrentUser } from "@/lib/auth/currentUser";
 import { canModerate } from "@/lib/auth/roles";
 import { TIME_ZONE } from "@/lib/checkin";
 import { listOpenReports, listResolvedReports, type ReportRow } from "@/lib/reports";
+import { listSuggestions } from "@/lib/suggestions";
 import { decideReport } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,13 +29,14 @@ export default async function ModerationPage({ params }: PageProps<"/[locale]/mo
   if (!user) redirect(getPathname({ locale, href: { pathname: "/login", query: { next: getPathname({ locale, href: "/moderation" }) } } }));
   if (!canModerate(user.role)) notFound();
 
-  const [t, rt, st, format, open, resolved] = await Promise.all([
+  const [t, rt, st, format, open, resolved, suggestions] = await Promise.all([
     getTranslations("moderation"),
     getTranslations("report"),
     getTranslations("status"),
     getFormatter(),
     listOpenReports(),
     listResolvedReports(),
+    listSuggestions(),
   ]);
   const when = (d: Date) => format.dateTime(d, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: TIME_ZONE });
 
@@ -141,6 +143,27 @@ export default async function ModerationPage({ params }: PageProps<"/[locale]/mo
             </Card>
           </section>
         )}
+
+        <section className="flex flex-col gap-4" aria-labelledby="suggestions-title">
+          <h2 id="suggestions-title" className="text-[28px] md:text-[32px]">
+            {t("suggestionsTitle")}
+          </h2>
+          {suggestions.length === 0 ? (
+            <Card render={<p />} className="p-5 md:p-7">{t("suggestionsEmpty")}</Card>
+          ) : (
+            <Card render={<ul />} className="gap-0 divide-y divide-rule-soft py-0">
+              {suggestions.map((sg) => (
+                <li key={sg.id} className="flex flex-col gap-2 px-4 py-4 md:px-5">
+                  <p className="text-[15px] whitespace-pre-line">{sg.message}</p>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {sg.username ? t("suggestionBy", { username: sg.username, date: when(sg.createdAt) }) : t("suggestionAnonymous", { date: when(sg.createdAt) })}
+                    {sg.page && <> · {sg.page}</>}
+                  </span>
+                </li>
+              ))}
+            </Card>
+          )}
+        </section>
       </div>
     </>
   );
