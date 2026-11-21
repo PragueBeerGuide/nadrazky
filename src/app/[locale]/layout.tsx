@@ -3,6 +3,7 @@ import { Barlow_Condensed, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Analytics } from "@vercel/analytics/next";
 import { asLocale, routing } from "@/i18n/routing";
 import { Header } from "@/components/Header";
 import { BottomNav } from "@/components/BottomNav";
@@ -47,6 +48,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
           <SuggestionButton />
           <Toaster />
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );
